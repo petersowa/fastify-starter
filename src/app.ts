@@ -3,6 +3,8 @@ import { Server, IncomingMessage, ServerResponse } from 'http';
 
 let count = 0;
 
+const PORT: number = (process.env as { PORT?: number }).PORT || 3000;
+
 const server: fastify.FastifyInstance<
 	Server,
 	IncomingMessage,
@@ -62,7 +64,7 @@ server.post('/counter', postCounter, async (request, reply) => {
 	return { count };
 });
 
-server.listen(3000, err => {
+server.listen(PORT, err => {
 	if (err) {
 		server.log.error(err);
 		process.exit(1);
