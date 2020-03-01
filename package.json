@@ -1,0 +1,39 @@
+{
+	"name": "fastify-starter",
+	"version": "0.1.0",
+	"description": "Backend API Fastify server with Typescript support.",
+	"main": "dist/app.js",
+	"engines": {
+		"node": "13.9.0"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"dev": "concurrently \"npm run watch-ts\" \"nodemon --ignore data/ dist/app.js\"",
+		"start": "npm run serve",
+		"serve": "node dist/app.js",
+		"watch-node": "nodemon --ignore data/ dist/app.js",
+		"watch-ts": "tsc -w",
+		"build": "npm run build-ts",
+		"build-ts": "tsc",
+		"lint": "eslint . --ext .ts --ext .js"
+	},
+	"keywords": [
+		"fastify",
+		"starter",
+		"node",
+		"http-server"
+	],
+	"author": "Peter Sowa",
+	"license": "ISC",
+	"dependencies": {
+		"fastify": "^2.12.1"
+	},
+	"devDependencies": {
+		"@types/node": "^13.7.7",
+		"@typescript-eslint/eslint-plugin": "^2.21.0",
+		"@typescript-eslint/parser": "^2.21.0",
+		"concurrently": "^5.1.0",
+		"eslint": "^6.8.0",
+		"typescript": "^3.8.3"
+	}
+}
