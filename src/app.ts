@@ -3,7 +3,7 @@ import { Server, IncomingMessage, ServerResponse } from 'http';
 
 let count = 0;
 
-const PORT: number = parseInt(process.env.PORT!, 10) || 3000;
+const PORT: number = parseInt(process.env.PORT || '3000', 10);
 
 const server: fastify.FastifyInstance<
 	Server,
