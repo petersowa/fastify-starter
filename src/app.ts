@@ -1,5 +1,8 @@
+import './utils/setup';
 import fastify from 'fastify';
 import { Server, IncomingMessage, ServerResponse } from 'http';
+import { UserModel } from './models/userModel';
+import { DataModel } from './models/dataModel';
 
 let count = 0;
 
@@ -70,3 +73,24 @@ server.listen(PORT, '0.0.0.0', err => {
 		process.exit(1);
 	}
 });
+
+DataModel.find({ name: 'pinky' }, (err, cat) => {
+	if (err) {
+		return console.log(err);
+	}
+	if (cat.length === 1) {
+		const nameData = new DataModel({ name: 'pinky' });
+		console.log(nameData.save().then(res => console.log(res.id)));
+	}
+	console.log(cat);
+});
+
+const user = new UserModel({
+	name: 'joe',
+	password: 'abc123',
+	email: 'alpha@test.com',
+});
+
+user.save().catch(err => console.log('got an error saving data'));
+
+//
