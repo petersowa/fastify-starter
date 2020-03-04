@@ -3,6 +3,7 @@ import fastify from 'fastify';
 import { Server, IncomingMessage, ServerResponse } from 'http';
 import { UserModel } from './models/userModel';
 import { DataModel } from './models/dataModel';
+import { hash, compare } from './utils/encrypt';
 
 let count = 0;
 
@@ -85,12 +86,20 @@ DataModel.find({ name: 'pinky' }, (err, cat) => {
 	console.log(cat);
 });
 
-const user = new UserModel({
-	name: 'joe',
-	password: 'abc123',
-	email: 'alpha@test.com',
-});
+const PW =
+	'this is a long passphrase password to test 123. this is even longer 9999';
+hash(PW)
+	.then(hash => {
+		console.log(hash);
+		compare(PW + '.', hash).then(isEqual => console.log({ isEqual }));
+		const user = new UserModel({
+			name: 'joe',
+			password: hash,
+			email: 'alpha2@test.com',
+		});
 
-user.save().catch(err => console.log('got an error saving data'));
+		user.save().catch(err => console.log('got an error saving data'));
+	})
+	.catch(err => console.log(err));
 
-//
+///
