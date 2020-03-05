@@ -9,14 +9,15 @@
 	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "concurrently \"npm run watch-ts\" \"nodemon --ignore data/ dist/app.js\"",
+		"dev": "npm run copy-static-assets && concurrently \"npm run watch-ts\" \"nodemon --ignore data/ dist/app.js\"",
 		"start": "npm run serve",
 		"serve": "node dist/app.js",
 		"watch-node": "nodemon --ignore data/ dist/app.js",
 		"watch-ts": "tsc -w",
-		"build": "npm run build-ts",
+		"build": "npm run build-ts && npm run copy-static-assets",
 		"build-ts": "tsc",
-		"lint": "eslint . --ext .ts --ext .js"
+		"lint": "eslint . --ext .ts --ext .js",
+		"copy-static-assets": "ts-node copyStaticAssets.ts"
 	},
 	"keywords": [
 		"fastify",
@@ -31,16 +32,28 @@
 		"dotenv": "^8.2.0",
 		"fastify": "^2.12.1",
 		"fastify-plugin": "^1.6.1",
+		"fastify-static": "^2.6.0",
 		"mongoose": "^5.9.3"
 	},
 	"devDependencies": {
 		"@types/bcrypt": "^3.0.0",
 		"@types/mongoose": "^5.7.3",
 		"@types/node": "^13.7.7",
+		"@types/shelljs": "^0.8.6",
 		"@typescript-eslint/eslint-plugin": "^2.22.0",
 		"@typescript-eslint/parser": "^2.22.0",
 		"concurrently": "^5.1.0",
 		"eslint": "^6.8.0",
+		"shelljs": "^0.8.3",
+		"ts-node": "^8.6.2",
 		"typescript": "^3.8.3"
-	}
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/petersowa/fastify-starter.git"
+	},
+	"bugs": {
+		"url": "https://github.com/petersowa/fastify-starter/issues"
+	},
+	"homepage": "https://github.com/petersowa/fastify-starter#readme"
 }
