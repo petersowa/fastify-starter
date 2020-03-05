@@ -4,6 +4,7 @@ import { Server, IncomingMessage, ServerResponse } from 'http';
 import { UserModel } from './models/userModel';
 import { DataModel } from './models/dataModel';
 import { hash, compare } from './utils/encrypt';
+import authRoutes from './routes/auth';
 
 let count = 0;
 
@@ -14,6 +15,8 @@ const server: fastify.FastifyInstance<
 	IncomingMessage,
 	ServerResponse
 > = fastify({ logger: true, http2: false });
+
+server.register(authRoutes, { prefix: '/auth' });
 
 const opts: fastify.RouteShorthandOptions = {
 	schema: {
