@@ -3,6 +3,7 @@ import path from 'path';
 
 import { Server, IncomingMessage, ServerResponse } from 'http';
 import authRoutes from '../routes/auth';
+import templateRoutes from '../routes/template';
 
 let count = 0;
 
@@ -14,11 +15,23 @@ const server: fastify.FastifyInstance<
 	ServerResponse
 > = fastify({ logger: true, http2: false });
 
+// add auth routes
 server.register(authRoutes, { prefix: '/auth' });
+
+// add static routes
 server.register(require('fastify-static'), {
 	root: path.join(__dirname, '..', 'public'),
 	prefix: '/',
 });
+
+// add template support
+server.register(require('point-of-view'), {
+	engine: {
+		ejs: require('ejs'),
+	},
+});
+
+server.register(templateRoutes, { prefix: '/template' });
 
 const opts: fastify.RouteShorthandOptions = {
 	schema: {
