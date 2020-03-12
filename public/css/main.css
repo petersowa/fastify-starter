@@ -1,0 +1,242 @@
+@import url('https://fonts.googleapis.com/css?family=Alegreya+Sans+SC|Merriweather|Noto+Serif|Open+Sans|Roboto|Source+Sans+Pro|Vollkorn|Work+Sans|Abril+Fatface&display=swap');
+
+html {
+	box-sizing: border-box;
+	font-size: calc(0.9em + 0.1vw);
+}
+
+*,
+*::before,
+*::after {
+	margin: 0;
+	box-sizing: inherit;
+}
+
+:root {
+	--clr-header: #999999;
+	--clr-header-text: #263632;
+	--clr-header-section: #b9b9b9;
+	--clr-body: #efefef;
+	--clr-body-text: #303030;
+	--clr-shadow-button: hsla(0, 0%, 22%, 0.3);
+	--clr-outline-focus: rgba(255, 52, 228, 0.856);
+	--clr-button-default: #b0b0b0;
+}
+
+body {
+	background-color: var(--clr-body);
+	color: var(--clr-body-text);
+	min-height: 100vh;
+}
+
+html {
+	font-family: 'Roboto', 'Work Sans', 'Segoe UI', Tahoma, Geneva, Verdana,
+		sans-serif;
+}
+
+h1,
+h2,
+h3 {
+	font-family: 'Abril Fatface', 'Noto Serif', 'Merriweather',
+		'Alegreya Sans SC', 'Vollkorn', 'Times New Roman', Times, serif;
+	font-weight: bold;
+	/* background-color: var(--clr-header); */
+	color: var(--clr-header-text);
+	letter-spacing: 0.05em;
+	/* text-transform: capitalize; */
+	padding: 0.1rem 0.3rem;
+}
+
+h1 {
+	font-size: 1.8em;
+}
+
+ol,
+ul {
+	list-style: none;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+p {
+	line-height: 1.6rem;
+	padding: 0 0 0.2rem;
+}
+
+button,
+input,
+textarea {
+	font-size: inherit;
+	border: 0;
+	outline: none;
+	padding: 0.2rem 0.5rem;
+	cursor: pointer;
+}
+
+button {
+	text-transform: uppercase;
+	background-color: var(--clr-button-default);
+}
+
+*:focus {
+	outline: 2px solid var(--clr-outline-focus);
+}
+
+.container {
+	max-width: 50rem;
+	width: 60vw;
+	min-width: 14cm;
+	margin: 1em auto;
+	padding: 1em 1em;
+}
+
+.header-section {
+	background-color: var(--clr-header-section);
+	margin: 0 0 0.8rem;
+	padding: 0 0.5rem;
+}
+
+.min-shadow {
+	box-shadow: 3px 2px 12px 2px var(--clr-shadow-button);
+}
+
+.min-round {
+	border-radius: 2px;
+}
+
+.med-round {
+	border-radius: 5px;
+}
+
+.neg-margin {
+	margin: 1rem -0.5rem -0.5rem;
+}
+
+.bg-header {
+	background: linear-gradient(rgb(255, 255, 255) 0%, rgb(141, 141, 141) 90%);
+	background-blend-mode: screen;
+	background-size: cover;
+}
+
+.bg-img-coffee {
+	background: linear-gradient(rgb(255, 255, 255) 0%, rgb(49, 49, 49) 90%),
+		url('../images/silver-ipad-545057.jpg') no-repeat center center fixed;
+	background-blend-mode: screen;
+	background-size: cover;
+}
+
+.h-flex-container {
+	display: flex;
+	flex-direction: row;
+	flex-grow: 1;
+}
+
+.v-flex-container {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	outline: 1px solid red;
+}
+
+.main-content {
+	flex-grow: 1;
+	flex-basis: 80%;
+	max-width: 50rem;
+	margin: 0 auto;
+	padding: 1rem 1rem;
+}
+
+.sidebar-left {
+	flex-grow: 1;
+	min-width: 8rem;
+	padding: 1rem 0.2em;
+}
+
+.sidebar-right {
+	flex-grow: 1;
+	min-width: 8rem;
+	padding: 1rem 0.2rem;
+}
+
+.border-small {
+	border: 1px solid silver;
+}
+
+/* @media (max-width: 768px) {
+	.sidebar-right {
+		display: none;
+	}
+}
+
+@media (max-width: 480px) {
+	.sidebar-left {
+		display: none;
+	}
+} */
+
+.margin-auto {
+	margin: auto;
+}
+
+.block {
+	width: auto;
+	height: 200px;
+	background: url('../images/silver-ipad-545057.jpg') center center no-repeat;
+	background-size: cover;
+	margin: 1em -3em;
+}
+
+.footer {
+	padding: 2rem 5%;
+	background-color: #555;
+	color: #eee;
+}
+
+.nav-menu {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: stretch;
+}
+
+.side-card {
+	display: flex;
+	flex-direction: column;
+	background: #ddd;
+	width: 100%;
+	max-width: 10rem;
+	margin: auto;
+	margin-bottom: 1em;
+	/* box-shadow: 3px 2px 12px 2px var(--clr-shadow-button); */
+	/* border: 1px solid #ddd; */
+	/* border-radius: 3px; */
+	padding: 0;
+}
+
+.side-card > img {
+	object-fit: cover;
+	height: auto;
+}
+
+.nav-menu > li:hover {
+	outline: 1px solid white;
+}
+
+.flex-row {
+	display: flex;
+	flex-direction: row;
+	justify-items: stretch;
+	width: 100%;
+	justify-content: space-evenly;
+}
+
+.flex-row button {
+	width: 100%;
+}
+
+.flex-row button:hover {
+	width: 100%;
+	filter: brightness(1.2);
+}
