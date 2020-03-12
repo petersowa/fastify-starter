@@ -20,7 +20,7 @@ server.register(authRoutes, { prefix: '/auth' });
 
 // add static routes
 server.register(require('fastify-static'), {
-	root: path.join(__dirname, '..', 'public'),
+	root: path.join(__dirname, '..', '..', 'public'),
 	prefix: '/',
 });
 
@@ -31,7 +31,7 @@ server.register(require('point-of-view'), {
 	},
 });
 
-server.register(templateRoutes, { prefix: '/template' });
+server.register(templateRoutes);
 
 const opts: fastify.RouteShorthandOptions = {
 	schema: {

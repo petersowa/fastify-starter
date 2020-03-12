@@ -3,7 +3,7 @@ import pov from 'point-of-view';
 
 async function routes(fastify: fastify.FastifyInstance, options: {}) {
 	fastify.get('/home', (request, reply) => {
-		reply.view('/templates/home.ejs', { name: 'home page' });
+		reply.view('/views/pages/index.ejs', { name: 'home page' });
 	});
 }
 
