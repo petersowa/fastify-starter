@@ -5,33 +5,47 @@ import { Server, IncomingMessage, ServerResponse } from 'http';
 import authRoutes from '../routes/auth';
 import templateRoutes from '../routes/template';
 
+import socketIo from './socket-io';
+
 let count = 0;
 
 const PORT: number = parseInt(process.env.PORT || '3000', 10);
 
-const server: fastify.FastifyInstance<
+const app: fastify.FastifyInstance<
 	Server,
 	IncomingMessage,
 	ServerResponse
 > = fastify({ logger: true, http2: false });
 
 // add auth routes
-server.register(authRoutes, { prefix: '/auth' });
+app.register(authRoutes, { prefix: '/auth' });
+const io = socketIo.init(app.server);
+
+io.on('connection', function(socket) {
+	console.log('a user connected', JSON.stringify(socket.id, null, 2));
+	socket.on('query', (query: any) => {
+		console.log(query, socket.id);
+	});
+});
+
+setInterval(() => {
+	io.emit('update', 'server message: hi');
+}, 1000);
 
 // add static routes
-server.register(require('fastify-static'), {
+app.register(require('fastify-static'), {
 	root: path.join(__dirname, '..', '..', 'public'),
 	prefix: '/',
 });
 
 // add template support
-server.register(require('point-of-view'), {
+app.register(require('point-of-view'), {
 	engine: {
 		ejs: require('ejs'),
 	},
 });
 
-server.register(templateRoutes);
+app.register(templateRoutes);
 
 const opts: fastify.RouteShorthandOptions = {
 	schema: {
@@ -75,20 +89,20 @@ const postCounter: fastify.RouteShorthandOptions = {
 	},
 };
 
-server.get('/ping', opts, async (request, reply) => {
+app.get('/ping', opts, async (request, reply) => {
 	return { pong: 'it worked!', count };
 });
 
-server.post('/counter', postCounter, async (request, reply) => {
+app.post('/counter', postCounter, async (request, reply) => {
 	request.log.info('request to increment count');
 	console.log(request.body);
 	++count;
 	return { count };
 });
 
-server.listen(PORT, '0.0.0.0', err => {
+app.listen(PORT, '0.0.0.0', err => {
 	if (err) {
-		server.log.error(err);
+		app.log.error(err);
 		process.exit(1);
 	}
 });
