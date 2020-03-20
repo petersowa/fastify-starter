@@ -10,5 +10,5 @@ socket.on('update', msg => {
 });
 
 document.getElementById('query-button').addEventListener('click', () => {
-	socket.emit('query', 'button clicked');
+	socket.emit('query', 'button clicked' + socket.id);
 });
