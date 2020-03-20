@@ -19,18 +19,8 @@ const app: fastify.FastifyInstance<
 
 // add auth routes
 app.register(authRoutes, { prefix: '/auth' });
-const io = socketIo.init(app.server);
 
-io.on('connection', function(socket) {
-	console.log('a user connected', JSON.stringify(socket.id, null, 2));
-	socket.on('query', (query: any) => {
-		console.log(query, socket.id);
-	});
-});
-
-setInterval(() => {
-	io.emit('update', 'server message: hi');
-}, 1000);
+socketIo.init(app.server);
 
 // add static routes
 app.register(require('fastify-static'), {
