@@ -3,6 +3,7 @@
 html {
 	box-sizing: border-box;
 	font-size: calc(0.9em + 0.1vw);
+	scroll-behavior: smooth;
 }
 
 *,
@@ -248,7 +249,11 @@ button {
 .nav-menu {
 	display: flex;
 	justify-content: space-evenly;
+	justify-content: space-between;
 	align-items: stretch;
+	align-items: flex-start;
+	/* outline: 1px solid red; */
+	padding: 0 5em;
 }
 
 header {
@@ -347,6 +352,73 @@ header {
 	100% {
 		transform: scale(0);
 	}
+}
+
+.nav-menu__link {
+	text-decoration: none;
+}
+
+.nav-menu__link:visited {
+	color: inherit;
+}
+
+body.show-modal {
+	margin-top: -0em;
+	overflow: hidden;
+	outline: 2px solid red;
+	padding-right: 0.98rem;
+	/* position: fixed; */
+}
+
+#login {
+	position: fixed;
+	display: flex;
+	left: 0;
+	top: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 100;
+	scroll-margin-top: 50em;
+	background: rgba(0, 0, 0, 0.65);
+	transform: scaleX(0);
+	/* transform: translate(-50%, -50%); */
+	transition: opacity 200ms ease-in-out 100ms, transform 300ms ease-in-out;
+	opacity: 0;
+	transform-origin: left;
+}
+
+/*
+#login:not(:target) {
+	transform: scale(0);
+	transition: opacity 200ms ease-in-out 100ms, transform 200ms ease-in-out;
+	opacity: 0;
+}*/
+
+#login:target {
+	transform: scaleX(1);
+	/* transform: translate(-50%, -50%); */
+	transition: opacity 200ms ease-in-out, transform 300ms ease-in-out 100ms;
+	transform-origin: right;
+	opacity: 1;
+}
+
+.login-form {
+	display: flex;
+	flex-direction: column;
+	width: 20rem;
+	height: 10rem;
+	padding: 0.5em;
+	background: silver;
+	margin: auto;
+	overflow: visible;
+	border-radius: 0.2em;
+	justify-content: space-between;
+}
+
+.h-controls {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
 }
 
 #menu-toggle {
