@@ -24,12 +24,25 @@
 					<li>Menu</li>
 					<li>Item1</li>
 					<li>Item2</li>
-					<li>Item3</li>
+					<li><a class="nav-menu__link" href="#login">Login</a></li>
 				</ul>
 			</nav>
 		</header>
 
 		<div class="v-flex-container">
+			<aside id="login">
+				<form id="login-form" class="login-form">
+					Login Form
+					<input type="text" placeholder="email" />
+					<input type="password" placeholder="password" />
+					<div class="h-controls">
+						<button type="submit">Submit</button>
+						<button id="login-cancel-btn" type="button">
+							Cancel
+						</button>
+					</div>
+				</form>
+			</aside>
 			<div class="h-flex-container min-shadow">
 				<aside class="sidebar">
 					<div class="side-card">
