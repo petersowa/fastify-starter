@@ -473,8 +473,6 @@ body.show-modal {
 	#menu-toggle + label {
 		display: block;
 		transform: translate(-0.1em, -0.25em);
-		background-color: #fff2;
-		outline: 1px solid red;
 	}
 
 	#menu-toggle:checked + label::after {
