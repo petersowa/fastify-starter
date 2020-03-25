@@ -12,3 +12,8 @@ socket.on('update', msg => {
 document.getElementById('query-button').addEventListener('click', () => {
 	socket.emit('query', 'button clicked' + socket.id);
 });
+
+const loginCancelBtn = document.getElementById('login-cancel-btn');
+loginCancelBtn.addEventListener('click', () => {
+	window.history.back();
+});
