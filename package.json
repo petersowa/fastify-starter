@@ -40,8 +40,8 @@
 	},
 	"devDependencies": {
 		"@types/bcrypt": "^3.0.0",
-		"@types/mongoose": "^5.7.7",
-		"@types/node": "^13.9.4",
+		"@types/mongoose": "^5.7.8",
+		"@types/node": "^13.9.5",
 		"@types/shelljs": "^0.8.7",
 		"@types/socket.io": "^2.1.4",
 		"@types/socket.io-client": "^1.4.32",
