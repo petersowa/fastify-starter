@@ -37,15 +37,16 @@ app.register(require('point-of-view'), {
 		handlebars: require('handlebars'),
 	},
 	includeViewExtension: true,
-	layout: './views/layout',
+	templates: './views',
+	layout: './layout',
 	options: {
 		partials: {
-			main: './views/partials/content/main.hbs',
-			leftSidebar: './views/partials/content/left-sidebar.hbs',
-			rightSidebar: './views/partials/content/right-sidebar.hbs',
-			footer: './views/partials/footer.hbs',
-			header: './views/partials/header.hbs',
-			loginModal: './views/partials/components/login.hbs',
+			main: './partials/content/main.hbs',
+			leftSidebar: './partials/content/left-sidebar.hbs',
+			rightSidebar: './partials/content/right-sidebar.hbs',
+			footer: './partials/footer.hbs',
+			header: './partials/header.hbs',
+			loginModal: './partials/components/login.hbs',
 		},
 	},
 });

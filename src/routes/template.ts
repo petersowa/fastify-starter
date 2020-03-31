@@ -9,8 +9,22 @@ We can quickly view the Emmet abbreviation by clicking the info icon next to lis
 
 async function routes(fastify: fastify.FastifyInstance, options: {}) {
 	fastify.get('/', (request, reply) => {
-		reply.view('./views/layout', {
+		reply.view('./pages/index', {
 			name: 'home page',
+			article,
+		});
+	});
+
+	fastify.get('/about', (request, reply) => {
+		reply.view('./pages/about', {
+			name: 'about page',
+			article,
+		});
+	});
+
+	fastify.get('/blog', (request, reply) => {
+		reply.view('./pages/blog', {
+			name: 'blog page',
 			article,
 		});
 	});
