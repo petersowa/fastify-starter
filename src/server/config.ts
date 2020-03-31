@@ -4,6 +4,7 @@ import path from 'path';
 import { Server, IncomingMessage, ServerResponse } from 'http';
 import authRoutes from '../routes/auth';
 import templateRoutes from '../routes/template';
+import helmet from 'fastify-helmet';
 
 import socketIo from './socket-io';
 
@@ -16,6 +17,8 @@ const app: fastify.FastifyInstance<
 	IncomingMessage,
 	ServerResponse
 > = fastify({ logger: true, http2: false });
+
+app.register(helmet);
 
 // add auth routes
 app.register(authRoutes, { prefix: '/auth' });
