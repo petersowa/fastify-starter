@@ -31,7 +31,19 @@ app.register(require('fastify-static'), {
 // add template support
 app.register(require('point-of-view'), {
 	engine: {
-		ejs: require('ejs'),
+		handlebars: require('handlebars'),
+	},
+	includeViewExtension: true,
+	layout: './views/layout',
+	options: {
+		partials: {
+			main: './views/partials/content/main.hbs',
+			leftSidebar: './views/partials/content/left-sidebar.hbs',
+			rightSidebar: './views/partials/content/right-sidebar.hbs',
+			footer: './views/partials/footer.hbs',
+			header: './views/partials/header.hbs',
+			loginModal: './views/partials/components/login.hbs',
+		},
 	},
 });
 
