@@ -362,6 +362,10 @@ header {
 	color: inherit;
 }
 
+.nav-menu__link:not(:visited) {
+	color: inherit;
+}
+
 body.show-modal {
 	margin-top: -0em;
 	overflow: hidden;

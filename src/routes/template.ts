@@ -7,6 +7,12 @@ An important change is that the Tab key is no longer the default way to expand E
 We can quickly view the Emmet abbreviation by clicking the info icon next to list shown. By typing text next to hash (#) will be taken as id and text next to period(.) will be considered as class name. Emmet basically works related to CSS selectors.	
 `;
 
+const images = [
+	{ src: 'https://picsum.photos/300' },
+	{ src: 'https://picsum.photos/350' },
+	{ src: 'https://picsum.photos/370' },
+];
+
 async function routes(fastify: fastify.FastifyInstance, options: {}) {
 	fastify.get('/', (request, reply) => {
 		reply.view('./pages/index', {
@@ -19,6 +25,7 @@ async function routes(fastify: fastify.FastifyInstance, options: {}) {
 		reply.view('./pages/about', {
 			name: 'about page',
 			article,
+			images,
 		});
 	});
 

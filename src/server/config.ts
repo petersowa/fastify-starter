@@ -5,8 +5,13 @@ import { Server, IncomingMessage, ServerResponse } from 'http';
 import authRoutes from '../routes/auth';
 import templateRoutes from '../routes/template';
 import helmet from 'fastify-helmet';
+import hbs from 'handlebars';
 
 import socketIo from './socket-io';
+
+hbs.registerHelper('debugJSON', function(value) {
+	return new hbs.SafeString(`<pre>${JSON.stringify(value, null, 2)}</pre>`);
+});
 
 let count = 0;
 
@@ -34,19 +39,21 @@ app.register(require('fastify-static'), {
 // add template support
 app.register(require('point-of-view'), {
 	engine: {
-		handlebars: require('handlebars'),
+		handlebars: hbs,
 	},
 	includeViewExtension: true,
 	templates: './views',
-	layout: './layout',
+	layout: './partials/layout/layout',
 	options: {
 		partials: {
-			main: './partials/content/main.hbs',
-			leftSidebar: './partials/content/left-sidebar.hbs',
-			rightSidebar: './partials/content/right-sidebar.hbs',
-			footer: './partials/footer.hbs',
-			header: './partials/header.hbs',
+			main: './partials/layout/main.hbs',
+			leftSidebar: './partials/layout/left-sidebar.hbs',
+			rightSidebar: './partials/layout/right-sidebar.hbs',
+			footer: './partials/layout/footer.hbs',
+			header: './partials/layout/header.hbs',
 			loginModal: './partials/components/login.hbs',
+			imagesLeftContent: './content/sidebar-images-left.hbs',
+			imagesRightContent: './content/sidebar-images-right.hbs',
 		},
 	},
 });
