@@ -15,6 +15,7 @@ const images = [
 
 async function routes(fastify: fastify.FastifyInstance, options: {}) {
 	fastify.get('/', (request, reply) => {
+		console.log('>>>> HOME', request.body);
 		reply.view('./pages/index', {
 			name: 'home page',
 			article,

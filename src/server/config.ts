@@ -1,4 +1,6 @@
 import fastify from 'fastify';
+import fastifySession from 'fastify-session';
+import fastifyCookie from 'fastify-cookie';
 import path from 'path';
 
 import { Server, IncomingMessage, ServerResponse } from 'http';
@@ -6,7 +8,7 @@ import authRoutes from '../routes/auth';
 import templateRoutes from '../routes/template';
 import helmet from 'fastify-helmet';
 import hbs from 'handlebars';
-
+import formBody from 'fastify-formbody';
 import socketIo from './socket-io';
 
 hbs.registerHelper('debugJSON', function(value) {
@@ -24,7 +26,7 @@ const app: fastify.FastifyInstance<
 > = fastify({ logger: true, http2: false });
 
 app.register(helmet);
-
+app.register(formBody);
 // add auth routes
 app.register(authRoutes, { prefix: '/auth' });
 
@@ -111,6 +113,12 @@ app.post('/counter', postCounter, async (request, reply) => {
 	console.log(request.body);
 	++count;
 	return { count };
+});
+
+app.post('/login', async (request, reply) => {
+	//reply.send(request.body);
+	console.log(request.body);
+	return reply.redirect('/');
 });
 
 app.listen(PORT, '0.0.0.0', err => {
