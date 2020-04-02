@@ -19,6 +19,7 @@ async function routes(fastify: fastify.FastifyInstance, options: {}) {
 		reply.view('./pages/index', {
 			name: 'home page',
 			article,
+			username: request.session.username,
 		});
 	});
 
@@ -27,6 +28,7 @@ async function routes(fastify: fastify.FastifyInstance, options: {}) {
 			name: 'about page',
 			article,
 			images,
+			username: request.session.username,
 		});
 	});
 
@@ -34,8 +36,9 @@ async function routes(fastify: fastify.FastifyInstance, options: {}) {
 		reply.view('./pages/blog', {
 			name: 'blog page',
 			article,
+			username: request.session.username,
 		});
 	});
 }
-
+//
 export default routes;

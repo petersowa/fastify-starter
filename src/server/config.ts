@@ -1,5 +1,4 @@
 import fastify from 'fastify';
-import fastifySession from 'fastify-session';
 import fastifyCookie from 'fastify-cookie';
 import path from 'path';
 
@@ -10,6 +9,9 @@ import helmet from 'fastify-helmet';
 import hbs from 'handlebars';
 import formBody from 'fastify-formbody';
 import socketIo from './socket-io';
+
+import fastifySession from 'fastify-session';
+import FastifySessionPlugin from 'fastify-session';
 
 hbs.registerHelper('debugJSON', function(value) {
 	return new hbs.SafeString(`<pre>${JSON.stringify(value, null, 2)}</pre>`);
@@ -24,6 +26,14 @@ const app: fastify.FastifyInstance<
 	IncomingMessage,
 	ServerResponse
 > = fastify({ logger: true, http2: false });
+
+app.register(fastifyCookie);
+app.register(fastifySession, {
+	cookieName: 'qqSsessionId',
+	secret: 'jkdsle fjkdsl jkdeop roqdr pviesi 84malo',
+	cookie: { secure: true },
+	expires: 128000,
+} as FastifySessionPlugin.Options);
 
 app.register(helmet);
 app.register(formBody);
@@ -105,7 +115,13 @@ const postCounter: fastify.RouteShorthandOptions = {
 };
 
 app.get('/ping', opts, async (request, reply) => {
-	return { pong: 'it worked!', count };
+	const { session } = request;
+	console.log('***** session *****', session);
+	return {
+		pong: 'it worked2!',
+		count,
+		isAuth: session.isAuth || 'undefined',
+	};
 });
 
 app.post('/counter', postCounter, async (request, reply) => {
@@ -118,6 +134,13 @@ app.post('/counter', postCounter, async (request, reply) => {
 app.post('/login', async (request, reply) => {
 	//reply.send(request.body);
 	console.log(request.body);
+	const { password, username } = request.body;
+	request.session.isAuth = false;
+	request.session.username = '';
+	if (username === 'jack' && password === 'black') {
+		request.session.isAuth = true;
+		request.session.username = username;
+	}
 	return reply.redirect('/');
 });
 
