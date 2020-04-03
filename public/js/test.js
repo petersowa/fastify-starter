@@ -17,3 +17,14 @@ const loginCancelBtn = document.getElementById('login-cancel-btn');
 loginCancelBtn.addEventListener('click', () => {
 	window.history.back();
 });
+
+const loginSubmit = document.getElementById('login-form');
+
+loginSubmit.addEventListener('submit', event => {
+	// event.preventDefault();
+	// const csrf = /_csrf=(\S*);/.exec(document.cookie)[1];
+	const csrf = document
+		.querySelector('meta[name="csrf-token"]')
+		.getAttribute('content');
+	event.target._csrf.value = csrf;
+});

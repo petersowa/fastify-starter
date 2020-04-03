@@ -15,28 +15,34 @@ const images = [
 
 async function routes(fastify: fastify.FastifyInstance, options: {}) {
 	fastify.get('/', (request, reply) => {
+		const { csrfToken } = request.session;
 		console.log('>>>> HOME', request.body);
 		reply.view('./pages/index', {
 			name: 'home page',
 			article,
 			username: request.session.username,
+			csrfToken,
 		});
 	});
 
 	fastify.get('/about', (request, reply) => {
+		const { csrfToken } = request.session;
 		reply.view('./pages/about', {
 			name: 'about page',
 			article,
 			images,
 			username: request.session.username,
+			csrfToken,
 		});
 	});
 
 	fastify.get('/blog', (request, reply) => {
+		const { csrfToken } = request.session;
 		reply.view('./pages/blog', {
 			name: 'blog page',
 			article,
 			username: request.session.username,
+			csrfToken,
 		});
 	});
 }

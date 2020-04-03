@@ -11,6 +11,7 @@ import formBody from 'fastify-formbody';
 import socketIo from './socket-io';
 
 import FastifySessionPlugin from 'fastify-session'; // session types
+import fastifyCsrfPlugin from 'fastify-csrf';
 
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
@@ -18,6 +19,8 @@ const MongoStore = require('connect-mongo');
 const fastifySession = require('fastify-session');
 fastifySession.MemoryStore = {}; // MongoStore fails if not added
 const store = MongoStore(fastifySession);
+
+const fastifyCSRF = require('fastify-csrf');
 
 hbs.registerHelper('debugJSON', function(value) {
 	return new hbs.SafeString(`<pre>${JSON.stringify(value, null, 2)}</pre>`);
@@ -33,10 +36,14 @@ const app: fastify.FastifyInstance<
 	ServerResponse
 > = fastify({ logger: false, http2: false });
 
+app.register(helmet);
+
 app.register(fastifyCookie);
 app.register(fastifySession, {
 	cookieName: 'qqSessionId',
 	secret: 'jkdsle fjkdsl jkdeop roqdr pviesi 84malo',
+	resave: false,
+	saveUninitialized: false,
 	cookie: {
 		secure: process.env.NODE_ENV === 'production',
 		maxAge: 15 * 60 * 1000,
@@ -44,8 +51,21 @@ app.register(fastifySession, {
 	store: new store({ mongooseConnection: mongoose.connection }),
 });
 
-app.register(helmet);
+app.register(fastifyCSRF, {
+	key: '_csrf',
+	ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
+});
+
+app.addHook('preHandler', (request, reply, next) => {
+	if (!request.session.csrfToken) {
+		request.session.csrfToken = request.csrfToken();
+	}
+	// console.log('CSRF:', request.session);
+	next();
+});
+
 app.register(formBody);
+
 // add auth routes
 app.register(authRoutes, { prefix: '/auth' });
 
@@ -75,6 +95,7 @@ app.register(require('point-of-view'), {
 			loginModal: './partials/components/login.hbs',
 			imagesLeftContent: './content/sidebar-images-left.hbs',
 			imagesRightContent: './content/sidebar-images-right.hbs',
+			head: './partials/components/head.hbs',
 		},
 	},
 });
