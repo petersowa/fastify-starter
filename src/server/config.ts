@@ -10,8 +10,14 @@ import hbs from 'handlebars';
 import formBody from 'fastify-formbody';
 import socketIo from './socket-io';
 
-import fastifySession from 'fastify-session';
-import FastifySessionPlugin from 'fastify-session';
+import FastifySessionPlugin from 'fastify-session'; // session types
+
+const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo');
+
+const fastifySession = require('fastify-session');
+fastifySession.MemoryStore = {}; // MongoStore fails if not added
+const store = MongoStore(fastifySession);
 
 hbs.registerHelper('debugJSON', function(value) {
 	return new hbs.SafeString(`<pre>${JSON.stringify(value, null, 2)}</pre>`);
@@ -25,15 +31,18 @@ const app: fastify.FastifyInstance<
 	Server,
 	IncomingMessage,
 	ServerResponse
-> = fastify({ logger: true, http2: false });
+> = fastify({ logger: false, http2: false });
 
 app.register(fastifyCookie);
 app.register(fastifySession, {
-	cookieName: 'qqSsessionId',
+	cookieName: 'qqSessionId',
 	secret: 'jkdsle fjkdsl jkdeop roqdr pviesi 84malo',
-	cookie: { secure: true },
-	expires: 128000,
-} as FastifySessionPlugin.Options);
+	cookie: {
+		secure: process.env.NODE_ENV === 'production',
+		maxAge: 15 * 60 * 1000,
+	},
+	store: new store({ mongooseConnection: mongoose.connection }),
+});
 
 app.register(helmet);
 app.register(formBody);
@@ -116,7 +125,6 @@ const postCounter: fastify.RouteShorthandOptions = {
 
 app.get('/ping', opts, async (request, reply) => {
 	const { session } = request;
-	console.log('***** session *****', session);
 	return {
 		pong: 'it worked2!',
 		count,
@@ -132,8 +140,6 @@ app.post('/counter', postCounter, async (request, reply) => {
 });
 
 app.post('/login', async (request, reply) => {
-	//reply.send(request.body);
-	console.log(request.body);
 	const { password, username } = request.body;
 	request.session.isAuth = false;
 	request.session.username = '';
@@ -142,6 +148,19 @@ app.post('/login', async (request, reply) => {
 		request.session.username = username;
 	}
 	return reply.redirect('/');
+});
+
+app.get('/logout', async (request, reply) => {
+	if (!request.session.isAuth) return reply.redirect('/');
+	request.destroySession(err => {
+		if (err) {
+			reply.status(500);
+			return reply.send('Internal Server Error: ES1');
+		} else {
+			console.log('session destroyed');
+			return reply.redirect('/');
+		}
+	});
 });
 
 app.listen(PORT, '0.0.0.0', err => {
