@@ -39,7 +39,7 @@
 		"fastify-plugin": "^1.6.1",
 		"fastify-session": "^3.3.0",
 		"fastify-static": "^2.6.0",
-		"handlebars": "^4.7.5",
+		"handlebars": "^4.7.6",
 		"mongoose": "^5.9.7",
 		"point-of-view": "^3.8.0",
 		"socket.io": "^2.3.0"
@@ -58,7 +58,7 @@
 		"concurrently": "^5.1.0",
 		"eslint": "^6.8.0",
 		"shelljs": "^0.8.3",
-		"ts-node": "^8.8.1",
+		"ts-node": "^8.8.2",
 		"typescript": "^3.8.3"
 	},
 	"repository": {
