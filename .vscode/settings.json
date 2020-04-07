@@ -1,3 +1,19 @@
 {
-	"eslint.alwaysShowStatus": true
+	"eslint.alwaysShowStatus": true,
+	"cSpell.words": [
+		"APPSTORE",
+		"certbot",
+		"clearfix",
+		"csrf",
+		"devtools",
+		"firestore",
+		"immer",
+		"keyframes",
+		"letsencrypt",
+		"lightgreen",
+		"middlewares",
+		"nginx",
+		"unmount",
+		"watchlist"
+	]
 }
