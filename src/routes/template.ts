@@ -1,5 +1,5 @@
 import fastify from 'fastify';
-import pov from 'point-of-view'; // import for type support
+import 'point-of-view'; // import for type support
 
 const article = `
 An important change is that the Tab key is no longer the default way to expand Emmet abbreviations. Instead, Emmet abbreviations will now appear in the suggestion list. They can be selected like any other smart completion and on selection, the abbreviation will be expanded.

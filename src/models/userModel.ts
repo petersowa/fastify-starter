@@ -1,6 +1,6 @@
 import dbInstance from '../utils/db';
 
-interface IUser {
+interface UserModel {
 	name: string;
 	password: string;
 	email: string;
@@ -12,7 +12,7 @@ const schema = {
 	email: { type: String, required: true, unique: true },
 };
 
-const UserModel = dbInstance.createModel<IUser>('Users', schema);
+const UserModel = dbInstance.createModel<UserModel>('Users', schema);
 // console.log(dbInstance.getSchema());
 
 export { UserModel };

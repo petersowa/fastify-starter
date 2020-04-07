@@ -10,8 +10,8 @@ import hbs from 'handlebars';
 import formBody from 'fastify-formbody';
 import socketIo from './socket-io';
 
-import FastifySessionPlugin from 'fastify-session'; // session types
-import fastifyCsrfPlugin from 'fastify-csrf';
+import 'fastify-session'; // session types
+import 'fastify-csrf';
 
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
@@ -144,7 +144,7 @@ const postCounter: fastify.RouteShorthandOptions = {
 	},
 };
 
-app.get('/ping', opts, async (request, reply) => {
+app.get('/ping', opts, async (request) => {
 	const { session } = request;
 	return {
 		pong: 'it worked2!',
@@ -153,7 +153,7 @@ app.get('/ping', opts, async (request, reply) => {
 	};
 });
 
-app.post('/counter', postCounter, async (request, reply) => {
+app.post('/counter', postCounter, async (request) => {
 	request.log.info('request to increment count');
 	console.log(request.body);
 	++count;

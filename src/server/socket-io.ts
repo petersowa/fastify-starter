@@ -7,7 +7,7 @@ function init(server: Server): socket.Server {
 	return io;
 }
 
-function eventsInit(io: socket.Server) {
+function eventsInit(io: socket.Server): void {
 	io.on('connection', function(socket) {
 		console.log('a user connected', JSON.stringify(socket.id, null, 2));
 		socket.on('query', (query: any) => {

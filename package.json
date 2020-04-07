@@ -9,7 +9,7 @@
 	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "npm run copy-static-assets && concurrently \"npm run watch-ts\" \"nodemon --ignore data/ dist/app.js\"",
+		"dev": "npm run copy-static-assets && concurrently \"npm run dev:client\" \"npm run watch-ts\" \"nodemon --ignore data/ dist/app.js\"",
 		"start": "npm run serve",
 		"serve": "node dist/app.js",
 		"watch-node": "nodemon --ignore data/ dist/app.js",
@@ -17,7 +17,8 @@
 		"build": "npm run build-ts && npm run copy-static-assets",
 		"build-ts": "tsc",
 		"lint": "eslint . --ext .ts --ext .js",
-		"copy-static-assets": "ts-node copyStaticAssets.ts"
+		"copy-static-assets": "ts-node copyStaticAssets.ts",
+		"dev:client": "npm run dev --prefix ./src/client/"
 	},
 	"keywords": [
 		"fastify",
@@ -55,8 +56,11 @@
 		"@types/socket.io-client": "^1.4.32",
 		"@typescript-eslint/eslint-plugin": "^2.26.0",
 		"@typescript-eslint/parser": "^2.26.0",
+		"babel-eslint": "^10.1.0",
 		"concurrently": "^5.1.0",
 		"eslint": "^6.8.0",
+		"eslint-plugin-eslint-plugin": "^2.2.1",
+		"eslint-plugin-prettier": "^3.1.2",
 		"shelljs": "^0.8.3",
 		"ts-loader": "^6.2.2",
 		"ts-node": "^8.8.2",
