@@ -13,7 +13,10 @@ const images = [
 	{ src: 'https://picsum.photos/370' },
 ];
 
-async function routes(fastify: fastify.FastifyInstance, options: {}) {
+async function routes(
+	fastify: fastify.FastifyInstance,
+	options: {}
+): Promise<void> {
 	fastify.get('/', (request, reply) => {
 		const { csrfToken } = request.session;
 		console.log('>>>> HOME', request.body);
