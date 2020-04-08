@@ -42,6 +42,7 @@ body {
 	background-color: var(--clr-body);
 	color: var(--clr-body-text);
 	min-height: 100vh;
+	opacity: 0;
 }
 
 html {
@@ -374,31 +375,29 @@ body.show-modal {
 	/* position: fixed; */
 }
 
-#login {
+.login {
 	position: fixed;
-	display: flex;
+	display: none;
 	left: 0;
 	top: 0;
 	width: 100vw;
 	height: 100vh;
-	z-index: 100;
 	scroll-margin-top: 50em;
 	background: rgba(0, 0, 0, 0.65);
+	z-index: 100;
+}
+
+.login--hide {
+	display: flex;
 	transform: scaleX(0);
 	/* transform: translate(-50%, -50%); */
 	transition: opacity 200ms ease-in-out 100ms, transform 300ms ease-in-out;
-	opacity: 0;
 	transform-origin: left;
+	opacity: 0;
 }
 
-/*
-#login:not(:target) {
-	transform: scale(0);
-	transition: opacity 200ms ease-in-out 100ms, transform 200ms ease-in-out;
-	opacity: 0;
-}*/
-
-#login:target {
+.login--show {
+	display: flex;
 	transform: scaleX(1);
 	/* transform: translate(-50%, -50%); */
 	transition: opacity 200ms ease-in-out, transform 300ms ease-in-out 100ms;
@@ -511,5 +510,18 @@ body.show-modal {
 	.nav-menu li {
 		width: 100%;
 		text-align: center;
+	}
+}
+
+body {
+	animation: body-fade-in 400ms ease forwards;
+}
+
+@keyframes body-fade-in {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
 	}
 }

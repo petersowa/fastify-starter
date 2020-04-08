@@ -1,6 +1,10 @@
 import io from 'socket.io-client';
 
 const socket = io();
+const loginCancelBtn = document.getElementById('login-cancel-btn');
+const loginSubmit = document.getElementById('login-form');
+const loginButton = document.getElementById('login-button');
+const loginModal = document.getElementById('login-modal');
 
 socket.on('connect', () => {
 	console.log('connected');
@@ -15,12 +19,11 @@ document.getElementById('query-button').addEventListener('click', () => {
 	socket.emit('query', 'button clicked' + socket.id);
 });
 
-const loginCancelBtn = document.getElementById('login-cancel-btn');
 loginCancelBtn.addEventListener('click', () => {
-	window.history.back();
+	loginModal.classList.remove('login--show');
+	setTimeout(() => loginModal.classList.remove('login--hide'), 300);
+	// window.history.back();
 });
-
-const loginSubmit = document.getElementById('login-form');
 
 loginSubmit.addEventListener('submit', (event) => {
 	// event.preventDefault();
@@ -29,4 +32,9 @@ loginSubmit.addEventListener('submit', (event) => {
 		.querySelector('meta[name="csrf-token"]')
 		.getAttribute('content');
 	event.target._csrf.value = csrf;
+});
+
+loginButton.addEventListener('click', () => {
+	loginModal.classList.add('login--hide');
+	setTimeout(() => loginModal.classList.add('login--show'), 10);
 });
