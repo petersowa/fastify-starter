@@ -41,7 +41,6 @@ html {
 body {
 	background-color: var(--clr-body);
 	color: var(--clr-body-text);
-	min-height: 100vh;
 	opacity: 0;
 }
 
@@ -123,7 +122,6 @@ button {
 	color: var(--clr-header-text);
 	margin: 0;
 	padding: 0 0.5em;
-	/* transition: all 500ms; */
 }
 
 .min-shadow {
@@ -165,11 +163,12 @@ button {
 .v-flex-container {
 	display: flex;
 	flex-direction: column;
-	min-height: 100vh;
+	/* min-height: calc(100vh - 0.6em); */
 	margin: 0.3em;
 	border-radius: 0.3em;
 	overflow: hidden;
 	background-color: var(--clr-content);
+	min-height: calc(100vh - 11em);
 }
 
 .main-content {
@@ -242,9 +241,12 @@ button {
 }
 
 .footer {
+	position: sticky;
+	bottom: 0;
 	padding: 2rem 5%;
 	background-color: var(--clr-footer-section);
 	color: var(--clr-footer-text);
+	width: 100%;
 }
 
 .nav-menu {
@@ -375,7 +377,7 @@ body.show-modal {
 	/* position: fixed; */
 }
 
-.login {
+.modal {
 	position: fixed;
 	display: none;
 	left: 0;
@@ -387,7 +389,7 @@ body.show-modal {
 	z-index: 100;
 }
 
-.login--hide {
+.modal--hide {
 	display: flex;
 	transform: scaleX(0);
 	/* transform: translate(-50%, -50%); */
@@ -396,7 +398,7 @@ body.show-modal {
 	opacity: 0;
 }
 
-.login--show {
+.modal--show {
 	display: flex;
 	transform: scaleX(1);
 	/* transform: translate(-50%, -50%); */
@@ -434,6 +436,9 @@ body.show-modal {
 }
 
 @media (max-width: 768px) {
+	.v-flex-container {
+		min-height: calc(100vh - 9em);
+	}
 	.h-flex-container {
 		display: flex;
 		flex-direction: column;
