@@ -4,8 +4,12 @@ import { Server, IncomingMessage, ServerResponse } from 'http';
 
 import templateRoutes from '../routes/template';
 
-hbs.registerHelper('debugJSON', function (value) {
+hbs.registerHelper('debugJSON', (value) => {
 	return new hbs.SafeString(`<pre>${JSON.stringify(value, null, 2)}</pre>`);
+});
+
+hbs.registerHelper('getForm', () => {
+	return 'loginForm';
 });
 
 // add template support
@@ -26,7 +30,8 @@ const register = (
 				rightSidebar: './partials/layout/right-sidebar.hbs',
 				footer: './partials/layout/footer.hbs',
 				header: './partials/layout/header.hbs',
-				loginModal: './partials/components/login.hbs',
+				loginForm: './partials/forms/login.hbs',
+				modal: './partials/components/modal.hbs',
 				imagesLeftContent: './content/sidebar-images-left.hbs',
 				imagesRightContent: './content/sidebar-images-right.hbs',
 				head: './partials/components/head.hbs',
