@@ -4,7 +4,22 @@ const socket = io();
 const loginCancelBtn = document.getElementById('login-cancel-btn');
 const loginSubmit = document.getElementById('login-form');
 const loginButton = document.getElementById('login-button');
-const loginModal = document.getElementById('login-modal');
+const modal = document.getElementById('modal');
+
+const loginForm = `
+<form id="login-form" class="login-form" action='/auth/login' method="post">
+	Login Form 2
+	<input type="text" placeholder="email" name="username" />
+	<input type="password" placeholder="password" name="password" />
+	<div class="h-controls">
+		<button type="submit">Submit</button>
+		<button id="login-cancel-btn" type="button">
+			Cancel
+		</button>
+	</div>
+	<input type="hidden" value="" name="_csrf" />
+</form>
+`;
 
 socket.on('connect', () => {
 	console.log('connected');
@@ -20,8 +35,8 @@ document.getElementById('query-button').addEventListener('click', () => {
 });
 
 loginCancelBtn.addEventListener('click', () => {
-	loginModal.classList.remove('login--show');
-	setTimeout(() => loginModal.classList.remove('login--hide'), 300);
+	modal.classList.remove('modal--show');
+	setTimeout(() => modal.classList.remove('modal--hide'), 300);
 	// window.history.back();
 });
 
@@ -35,6 +50,7 @@ loginSubmit.addEventListener('submit', (event) => {
 });
 
 loginButton.addEventListener('click', () => {
-	loginModal.classList.add('login--hide');
-	setTimeout(() => loginModal.classList.add('login--show'), 10);
+	// modal.innerHTML = loginForm;
+	modal.classList.add('modal--hide');
+	setTimeout(() => modal.classList.add('modal--show'), 10);
 });

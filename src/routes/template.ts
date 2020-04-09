@@ -13,6 +13,8 @@ const images = [
 	{ src: 'https://picsum.photos/370' },
 ];
 
+const whichModal = 'loginForm';
+
 async function routes(
 	fastify: fastify.FastifyInstance,
 	options: {}
@@ -25,6 +27,7 @@ async function routes(
 			article,
 			username: request.session.username,
 			csrfToken,
+			whichModal,
 		});
 	});
 
@@ -36,6 +39,7 @@ async function routes(
 			images,
 			username: request.session.username,
 			csrfToken,
+			whichModal,
 		});
 	});
 
@@ -46,6 +50,7 @@ async function routes(
 			article,
 			username: request.session.username,
 			csrfToken,
+			whichModal,
 		});
 	});
 }
