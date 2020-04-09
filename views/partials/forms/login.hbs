@@ -1,0 +1,12 @@
+<form id="login-form" class="login-form" action='/auth/login' method="post">
+	Login Form
+	<input type="text" placeholder="email" name="username" />
+	<input type="password" placeholder="password" name="password" />
+	<div class="h-controls">
+		<button type="submit">Submit</button>
+		<button id="login-cancel-btn" type="button">
+			Cancel
+		</button>
+	</div>
+	<input type="hidden" value="" name="_csrf" />
+</form>
