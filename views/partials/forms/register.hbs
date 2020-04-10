@@ -1,0 +1,13 @@
+<form id="form-submit" class="login-form" action='/auth/register' method="post">
+	Create Account
+	<input type="email" placeholder="email" name="username" required />
+	<input type="password" placeholder="password" name="password" required />
+	<input type="password" placeholder="password" name="password-match" required />
+	<div class="h-controls">
+		<button type="submit">Submit</button>
+		<button id="form-cancel" type="button">
+			Cancel
+		</button>
+	</div>
+	<input type="hidden" value={{ csrfToken }} name="_csrf" />
+</form>

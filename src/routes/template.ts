@@ -13,21 +13,23 @@ const images = [
 	{ src: 'https://picsum.photos/370' },
 ];
 
-const whichModal = 'loginForm';
-
 async function routes(
 	fastify: fastify.FastifyInstance,
 	options: {}
 ): Promise<void> {
 	fastify.get('/', (request, reply) => {
 		const { csrfToken } = request.session;
-		console.log('>>>> HOME', request.body);
+		console.log(
+			'>>>> HOME',
+			request.session.csrfToken,
+			request.session.appState.modal
+		);
 		reply.view('./pages/index', {
 			name: 'home page',
 			article,
 			username: request.session.username,
 			csrfToken,
-			whichModal,
+			whichModal: request.session.appState.modal,
 		});
 	});
 
@@ -39,7 +41,7 @@ async function routes(
 			images,
 			username: request.session.username,
 			csrfToken,
-			whichModal,
+			whichModal: request.session.appState.modal,
 		});
 	});
 
@@ -50,7 +52,18 @@ async function routes(
 			article,
 			username: request.session.username,
 			csrfToken,
-			whichModal,
+			whichModal: request.session.appState.modal,
+		});
+	});
+
+	fastify.get('/register', (request, reply) => {
+		const { csrfToken } = request.session;
+		reply.view('./pages/register', {
+			name: '',
+			article,
+			username: request.session.username,
+			csrfToken,
+			whichModal: 'registerForm',
 		});
 	});
 }

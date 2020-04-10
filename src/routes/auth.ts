@@ -25,6 +25,16 @@ async function routes(
 		return reply.redirect('/');
 	});
 
+	fastify.post('/register', async (request, reply) => {
+		const {
+			password,
+			username,
+			'password-match': passwordMatch,
+		} = request.body;
+		console.log(username, password, passwordMatch);
+		return reply.redirect('/');
+	});
+
 	fastify.get('/logout', async (request, reply) => {
 		if (!request.session.isAuth) return reply.redirect('/');
 		request.destroySession((err) => {

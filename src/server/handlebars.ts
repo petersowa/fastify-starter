@@ -8,10 +8,6 @@ hbs.registerHelper('debugJSON', (value) => {
 	return new hbs.SafeString(`<pre>${JSON.stringify(value, null, 2)}</pre>`);
 });
 
-hbs.registerHelper('getForm', () => {
-	return 'loginForm';
-});
-
 // add template support
 const register = (
 	app: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse>
@@ -31,6 +27,7 @@ const register = (
 				footer: './partials/layout/footer.hbs',
 				header: './partials/layout/header.hbs',
 				loginForm: './partials/forms/login.hbs',
+				registerForm: './partials/forms/register.hbs',
 				modal: './partials/components/modal.hbs',
 				imagesLeftContent: './content/sidebar-images-left.hbs',
 				imagesRightContent: './content/sidebar-images-right.hbs',

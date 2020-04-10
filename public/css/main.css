@@ -90,19 +90,30 @@ p {
 	padding: 0 0 0.2rem;
 }
 
+a,
 button,
 input,
 textarea {
+	font-family: inherit;
 	font-size: inherit;
 	border: 0;
 	outline: none;
-	padding: 0.2rem 0.5rem;
+	padding: 0;
 	cursor: pointer;
+	background: transparent;
 }
 
-button {
+input,
+textarea {
+	background-color: var(--clr-content);
+	padding: 0.2rem 0.5rem;
+}
+
+.button {
 	text-transform: uppercase;
 	background-color: var(--clr-button-default);
+	padding: 0.2em 0.5em;
+	margin: 0.2em;
 }
 
 *:focus {
@@ -309,13 +320,7 @@ header {
 	justify-content: space-evenly;
 }
 
-.flex-row button {
-	width: 100%;
-	margin: 2px;
-}
-
-.flex-row button:hover {
-	width: 100%;
+.hover-brighten:hover {
 	filter: brightness(1.2);
 }
 
@@ -411,13 +416,17 @@ body.show-modal {
 	display: flex;
 	flex-direction: column;
 	width: 20rem;
-	height: 10rem;
+	height: 12rem;
 	padding: 0.5em;
 	background: silver;
 	margin: auto;
 	overflow: visible;
 	border-radius: 0.2em;
 	justify-content: space-between;
+}
+
+.link-register {
+	margin: 0.2em auto;
 }
 
 .h-controls {

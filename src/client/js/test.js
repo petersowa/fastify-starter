@@ -1,8 +1,8 @@
 import io from 'socket.io-client';
 
 const socket = io();
-const loginCancelBtn = document.getElementById('login-cancel-btn');
-const loginSubmit = document.getElementById('login-form');
+const formCancelBtn = document.getElementById('form-cancel');
+const formSubmit = document.getElementById('form-submit');
 const loginButton = document.getElementById('login-button');
 const modal = document.getElementById('modal');
 
@@ -34,14 +34,14 @@ document.getElementById('query-button').addEventListener('click', () => {
 	socket.emit('query', 'button clicked' + socket.id);
 });
 
-loginCancelBtn.addEventListener('click', () => {
+formCancelBtn.addEventListener('click', () => {
 	modal.classList.remove('modal--show');
 	setTimeout(() => modal.classList.remove('modal--hide'), 300);
 	// window.history.back();
 });
 
-loginSubmit.addEventListener('submit', (event) => {
-	// event.preventDefault();
+formSubmit.addEventListener('submit', (event) => {
+	event.preventDefault();
 	// const csrf = /_csrf=(\S*);/.exec(document.cookie)[1];
 	const csrf = document
 		.querySelector('meta[name="csrf-token"]')

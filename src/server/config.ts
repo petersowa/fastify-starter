@@ -31,7 +31,13 @@ app.register(fastifyCSRF, {
 	ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
 });
 
+const appState = { modal: 'loginForm' };
+
 app.addHook('preHandler', (request, reply, next) => {
+	console.log('preHandler', appState);
+	request.session.appState = appState;
+	console.log(request.session.appState);
+
 	if (!request.session.csrfToken) {
 		request.session.csrfToken = request.csrfToken();
 	}
