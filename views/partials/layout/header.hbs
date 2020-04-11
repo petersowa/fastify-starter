@@ -18,7 +18,8 @@
 				{{#if username}}
 				<a class="nav-menu__link" href="/auth/logout">Logout {{ username }}</a>
 				{{else}}
-				<button id="login-button" class="nav-menu__link">Login</button>
+				<a class="nav-menu__link" href="/login">Login</a>
+				{{!-- <button id="login-button" class="nav-menu__link">Login</button> --}}
 				{{/if}}
 			</li>
 		</ul>
