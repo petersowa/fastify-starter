@@ -1,6 +1,7 @@
 import * as fastify from 'fastify';
 
 import { Server, IncomingMessage, ServerResponse } from 'http';
+import { UserModel } from '../models/userModel';
 
 async function routes(
 	fastify: fastify.FastifyInstance,
@@ -32,7 +33,21 @@ async function routes(
 			'password-match': passwordMatch,
 		} = request.body;
 		console.log(username, password, passwordMatch);
-		return reply.redirect('/');
+		const newUser = new UserModel({
+			name: username,
+			password: password,
+			email: username,
+		});
+		newUser
+			.save()
+			.then((result: {}) => {
+				console.log('created user', result);
+				return reply.redirect('/');
+			})
+			.catch((err: {}) => {
+				console.error(err);
+				return reply.redirect('/register');
+			});
 	});
 
 	fastify.get('/logout', async (request, reply) => {
