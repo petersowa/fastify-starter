@@ -16,7 +16,7 @@ const register = (
 	app.register(fastifyCookie);
 	app.register(fastifySession, {
 		cookieName: 'qqSessionId',
-		secret: 'jkdsle fjkdsl jkdeop roqdr pviesi 84malo',
+		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: false,
 		cookie: {
