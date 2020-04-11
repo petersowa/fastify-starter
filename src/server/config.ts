@@ -6,6 +6,7 @@ import authRoutes from '../routes/auth';
 import helmet from 'fastify-helmet';
 import formBody from 'fastify-formbody';
 import socketIo from './socket-io';
+import fastifyFlash from 'fastify-flash';
 
 import 'fastify-csrf';
 
@@ -25,6 +26,8 @@ const app: fastify.FastifyInstance<
 app.register(helmet);
 
 registerSessions(app);
+
+app.register(fastifyFlash);
 
 app.register(fastifyCSRF, {
 	key: '_csrf',
