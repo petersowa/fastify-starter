@@ -66,6 +66,32 @@ async function routes(
 			whichModal: 'registerForm',
 		});
 	});
+
+	fastify.get('/login', (request, reply) => {
+		const { csrfToken } = request.session;
+		reply.view('./pages/login', {
+			name: '',
+			article,
+			username: request.session.username,
+			csrfToken,
+			whichModal: 'loginForm',
+		});
+	});
+
+	fastify.get(
+		'/test-auth',
+		{
+			async preHandler(request, reply) {
+				console.log('prehandler');
+				if (!request.session.username) reply.redirect('/login');
+				else reply.status(200).send('authorized');
+				return reply;
+			},
+		},
+		(request, reply) => {
+			reply.send('test auth reply');
+		}
+	);
 }
 //
 export default routes;
