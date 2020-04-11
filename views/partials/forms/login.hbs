@@ -4,10 +4,12 @@
 	<input type="password" placeholder="password" name="password" />
 	<div class="h-controls">
 		<button type="submit" class="button">Submit</button>
-		<button id="form-cancel" type="button" class="button">
+		{{!-- <button id="form-cancel" type="button" class="button">
 			Cancel
-		</button>
+		</button> --}}
+		<a class="nav-menu__link button hover-brighten" href="/">Cancel</a>
 	</div>
-	<input type="hidden" value="" name="_csrf" />
-	<a class="link-register nav-menu__link button hover-brighten" href="/register">Register</a>
+	<input type="hidden" value="{{ csrfToken }}" name="_csrf" />
+	<hr />
+	<a class="link-register nav-menu__link button hover-brighten" href="/register">Create Account</a>
 </form>
