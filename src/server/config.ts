@@ -22,6 +22,31 @@ const app: fastify.FastifyInstance<
 	ServerResponse
 > = fastify({ logger: false, http2: false });
 
+interface Flash {
+	add: (type: string, message: string) => void;
+	get: (type: string) => string;
+}
+
+const flash = (): Flash => {
+	interface FlashMessagesType {
+		[propName: string]: string[] | undefined;
+	}
+	const messages: FlashMessagesType = {};
+
+	function add(type: string, message: string): void {
+		if (!(type in messages)) messages[type] = [];
+		messages[type]?.push(message);
+		console.log('flash add', { messages });
+	}
+	function get(type: string): string {
+		console.log('flash get', { messages });
+		if (!(type in messages)) return '';
+		const typeMessages = messages[type] || [''];
+		return typeMessages.pop() || '';
+	}
+	return { add, get };
+};
+
 app.register(helmet);
 
 registerSessions(app);
@@ -32,10 +57,12 @@ app.register(fastifyCSRF, {
 });
 
 const appState = { modal: 'loginForm' };
+const flashState = flash();
 
 app.addHook('preHandler', (request, reply, next) => {
 	console.log('preHandler', appState);
 	request.session.appState = appState;
+	request.session.flash = flashState;
 	console.log(request.session.appState);
 
 	if (!request.session.csrfToken) {
