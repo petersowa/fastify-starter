@@ -7,10 +7,10 @@ An important change is that the Tab key is no longer the default way to expand E
 We can quickly view the Emmet abbreviation by clicking the info icon next to list shown. By typing text next to hash (#) will be taken as id and text next to period(.) will be considered as class name. Emmet basically works related to CSS selectors.	
 `;
 
-const images = [
-	{ src: 'https://picsum.photos/300' },
-	{ src: 'https://picsum.photos/350' },
-	{ src: 'https://picsum.photos/370' },
+const images: { src: string }[] = [
+	// { src: 'https://picsum.photos/300' },
+	// { src: 'https://picsum.photos/350' },
+	// { src: 'https://picsum.photos/370' },
 ];
 
 async function routes(
@@ -58,12 +58,16 @@ async function routes(
 
 	fastify.get('/register', (request, reply) => {
 		const { csrfToken } = request.session;
+		// const errors = reply.flash('auth');
+		const errors = request.session.flash.get('auth');
+		console.log({ errors });
 		reply.view('./pages/register', {
 			name: '',
 			article,
 			username: request.session.username,
 			csrfToken,
 			whichModal: 'registerForm',
+			errors,
 		});
 	});
 
@@ -82,7 +86,7 @@ async function routes(
 		'/test-auth',
 		{
 			async preHandler(request, reply) {
-				console.log('prehandler');
+				// console.log('prehandler', request.session);
 				if (!request.session.username) reply.redirect('/login');
 				else reply.status(200).send('authorized');
 				return reply;

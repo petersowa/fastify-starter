@@ -33,6 +33,11 @@ async function routes(
 			'password-match': passwordMatch,
 		} = request.body;
 		console.log(username, password, passwordMatch);
+		if (password !== passwordMatch) {
+			// request.flash('auth', 'Passwords do not match.');
+			request.session.flash.add('auth', 'Passwords do not match');
+			return reply.redirect('/register');
+		}
 		const newUser = new UserModel({
 			name: username,
 			password: password,
@@ -44,8 +49,9 @@ async function routes(
 				console.log('created user', result);
 				return reply.redirect('/');
 			})
-			.catch((err: {}) => {
+			.catch((err: Error) => {
 				console.error(err);
+				request.session.flash.add('auth', err.message);
 				return reply.redirect('/register');
 			});
 	});
