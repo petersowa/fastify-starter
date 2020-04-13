@@ -19,11 +19,33 @@ async function routes(
 		const { password, username } = request.body;
 		request.session.isAuth = false;
 		request.session.username = '';
+		UserModel.findOne({ email: username })
+			.then(async (user) => {
+				if (user) {
+					const isValidPW = await user.validatePassword(password);
+					if (isValidPW) {
+						// console.log({ user, isValidPW, username });
+						request.session.isAuth = true;
+						request.session.username = username;
+						return reply.redirect('/');
+					} else {
+						console.log('password invalid');
+						return reply.redirect('/login');
+					}
+				} else {
+					console.log('user not found');
+					return reply.redirect('/login');
+				}
+			})
+			.catch((err) => {
+				console.log({ err });
+				return reply.redirect('/login');
+			});
 		if (username === 'jack' && password === 'black') {
 			request.session.isAuth = true;
 			request.session.username = username;
+			return reply.redirect('/');
 		}
-		return reply.redirect('/');
 	});
 
 	fastify.post('/register', async (request, reply) => {
