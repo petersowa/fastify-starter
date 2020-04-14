@@ -3,6 +3,8 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebPackPlugin = require('copy-webpack-plugin');
+const ImageminPlugin = require('imagemin-webpack-plugin').default;
+const imageminMozjpeg = require('imagemin-mozjpeg');
 const path = require('path');
 
 const mode = process.env.NODE_ENV || 'development';
@@ -83,9 +85,22 @@ module.exports = {
 	plugins: [
 		new MiniCssExtractPlugin({
 			filename: 'css/[name].css',
+			chunkFilename: '[id].css',
 		}),
-		// new CleanWebpackPlugin(),
+		new CleanWebpackPlugin(),
 		new CopyWebPackPlugin([{ from: './images', to: 'images' }]),
+		new ImageminPlugin({
+			test: /\.(jpe?g|png|gif|svg)$/i,
+			minFileSize: 10000, // Only apply this one to files over 10kb
+			plugins: [
+				imageminMozjpeg({
+					quality: 70,
+					progressive: true,
+				}),
+			],
+			// jpegtran: { progressive: true, quality: 70 },
+			cacheFolder: path.resolve(__dirname, './cache'),
+		}),
 	],
 	devtool: prod ? false : 'inline-source-map',
 };
