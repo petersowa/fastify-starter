@@ -6,6 +6,11 @@ const formSubmit = document.getElementById('form-submit');
 const loginButton = document.getElementById('login-button');
 const modal = document.getElementById('modal');
 
+import App from './test-app.svelte';
+
+const app = new App({ target: document.getElementById('app'), data: {} });
+console.log({ app });
+
 import '../styles/main.css';
 
 socket.on('connect', () => {
