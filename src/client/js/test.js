@@ -6,8 +6,10 @@ const formSubmit = document.getElementById('form-submit');
 const loginButton = document.getElementById('login-button');
 const modal = document.getElementById('modal');
 
+import '../styles/main.css';
+
 socket.on('connect', () => {
-	console.log('connected');
+	console.log('connected ');
 	socket.emit('query', 'query data');
 });
 
