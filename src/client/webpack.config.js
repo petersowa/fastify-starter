@@ -21,7 +21,7 @@ module.exports = {
 		mainFields: ['svelte', 'browser', 'module', 'main'],
 	},
 	output: {
-		filename: 'js/test.js',
+		filename: 'js/[name].js',
 		path: path.resolve(__dirname, '..', '..', 'public'),
 	},
 	module: {
@@ -87,7 +87,7 @@ module.exports = {
 			filename: 'css/[name].css',
 			chunkFilename: '[id].css',
 		}),
-		new CleanWebpackPlugin(),
+		// new CleanWebpackPlugin(),
 		new CopyWebPackPlugin([{ from: './images', to: 'images' }]),
 		new ImageminPlugin({
 			test: /\.(jpe?g|png|gif|svg)$/i,
