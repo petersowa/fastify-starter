@@ -17,8 +17,6 @@ async function routes(
 
 	fastify.post('/login', async (request, reply) => {
 		const { password, username } = request.body;
-		request.session.isAuth = false;
-		request.session.username = '';
 		UserModel.findOne({ email: username })
 			.then(async (user) => {
 				if (user) {
@@ -41,11 +39,6 @@ async function routes(
 				console.log({ err });
 				return reply.redirect('/login');
 			});
-		if (username === 'jack' && password === 'black') {
-			request.session.isAuth = true;
-			request.session.username = username;
-			return reply.redirect('/');
-		}
 	});
 
 	fastify.post('/register', async (request, reply) => {
