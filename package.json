@@ -9,7 +9,7 @@
 	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "npm run copy-static-assets && concurrently \"npm run dev:client\" \"npm run watch-ts\" \"nodemon --ignore data/ dist/app.js\"",
+		"dev": "npm run copy-static-assets && concurrently \"npm run watch-ts\" \"nodemon --ignore data/ --ignore public/ dist/app.js\" \"npm run dev:client\"",
 		"start": "npm run serve",
 		"serve": "node dist/app.js",
 		"watch-node": "nodemon --ignore data/ dist/app.js",
