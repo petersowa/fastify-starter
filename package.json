@@ -14,12 +14,11 @@
 		"serve": "node dist/app.js",
 		"watch-node": "nodemon --ignore data/ dist/app.js",
 		"watch-ts": "tsc -w",
-		"build": "npm run build-ts && npm run copy-static-assets && npm run build:client",
+		"build": "npm run build-ts && npm run copy-static-assets",
 		"build-ts": "tsc",
 		"lint": "eslint . --ext .ts --ext .js",
 		"copy-static-assets": "ts-node copyStaticAssets.ts",
-		"dev:client": "npm run dev --prefix ./src/client/",
-		"build:client": "npm run build --prefix ./src/client/"
+		"dev:client": "npm run dev --prefix ./src/client/"
 	},
 	"keywords": [
 		"fastify",
