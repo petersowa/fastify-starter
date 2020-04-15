@@ -21,7 +21,7 @@
 		"lint": "eslint . --ext .ts --ext .js",
 		"copy-static-assets": "ts-node copyStaticAssets.ts",
 		"dev:client": "npm run dev --prefix ./src/client/",
-		"heroku-postbuild": "cd src/client/ && npm install && npm run build"
+		"heroku-postbuild": "npm install --prefix src/client && npm run build --prefix src/client"
 	},
 	"keywords": [
 		"fastify",
