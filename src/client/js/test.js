@@ -6,7 +6,7 @@ const formSubmit = document.getElementById('form-submit');
 const loginButton = document.getElementById('login-button');
 const modal = document.getElementById('modal');
 
-import App from './test-app.svelte';
+import App from './quote.svelte';
 
 const app = new App({ target: document.getElementById('app'), data: {} });
 console.log({ app });
@@ -22,6 +22,7 @@ socket.on('update', (msg) => {
 	console.log(msg);
 });
 
+// query-button no longer on page
 document.getElementById('query-button').addEventListener('click', () => {
 	socket.emit('query', 'button clicked' + socket.id);
 });
