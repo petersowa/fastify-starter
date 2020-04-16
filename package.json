@@ -31,6 +31,7 @@
 	"author": "Peter Sowa",
 	"license": "ISC",
 	"dependencies": {
+		"axios": "^0.19.2",
 		"bcrypt": "^4.0.1",
 		"connect-mongo": "^3.2.0",
 		"dotenv": "^8.2.0",
