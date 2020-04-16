@@ -10,7 +10,7 @@ DataModel.find({ name: 'pinky' }, (err, cat) => {
 	}
 	if (cat.length === 1) {
 		const nameData = new DataModel({ name: 'pinky' });
-		console.log(nameData.save().then(res => console.log(res.id)));
+		console.log(nameData.save().then((res) => console.log(res.id)));
 	}
 	console.log(cat);
 });
@@ -18,17 +18,16 @@ DataModel.find({ name: 'pinky' }, (err, cat) => {
 const PW =
 	'this is a long passphrase password to test 123. this is even longer 9999';
 hash(PW)
-	.then(hash => {
-		console.log(hash);
-		compare(PW + '.', hash).then(isEqual => console.log({ isEqual }));
+	.then((hash) => {
+		compare(PW + '.', hash).then((isEqual) => console.log({ isEqual }));
 		const user = new UserModel({
 			name: 'joe',
 			password: hash,
 			email: 'alpha2@test.com',
 		});
 
-		user.save().catch(err => console.log('got an error saving data'));
+		user.save().catch((err) => console.log('got an error saving data'));
 	})
-	.catch(err => console.log(err));
+	.catch((err) => console.log(err));
 
 ///
