@@ -3,6 +3,7 @@ import path from 'path';
 
 import { Server, IncomingMessage, ServerResponse } from 'http';
 import authRoutes from '../routes/auth';
+import stockRoutes from '../routes/stocks';
 import helmet from 'fastify-helmet';
 import formBody from 'fastify-formbody';
 import socketIo from './socket-io';
@@ -84,6 +85,7 @@ app.register(require('fastify-static'), {
 
 registerHandlebars(app);
 app.register(authRoutes, { prefix: '/auth' }); // add auth routes
+app.register(stockRoutes, { prefix: '/stocks' }); // add auth routes
 
 app.listen(PORT, '0.0.0.0', (err) => {
 	if (err) {
