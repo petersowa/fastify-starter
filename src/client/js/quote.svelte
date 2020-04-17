@@ -2,27 +2,32 @@
 	import { onMount } from 'svelte';
 
 	let quote = {};
-	let symbol = 'ibm';
+	let symbol = '';
 
-	onMount(async () => {
-		try {
-			quote = await getQuote(symbol);
-		} catch (err) {
-			console.error('unable to get quote on mount');
-		}
-	});
+	$: fracHigh = quote && (quote.latestPrice / quote.week52High) * 100;
+
+	// onMount(async () => {
+	// 	try {
+	// 		quote = await getQuote(symbol);
+	// 	} catch (err) {
+	// 		console.error('unable to get quote on mount');
+	// 	}
+	// });
 
 	async function getQuote(symbol) {
 		const res = await fetch(`/stocks/quote/${symbol}`);
-		return await res.json();
+		console.log({ res });
+		if (res.status === 200) return await res.json();
+		else return null;
 	}
 
 	async function handleSubmit() {
 		console.log(symbol);
 		try {
-			quote = await getQuote(symbol);
+			const data = await getQuote(symbol);
+			if (data) quote = data;
 		} catch (err) {
-			console.error(err);
+			console.error({ err });
 		}
 		console.log({ quote });
 		symbol = '';
@@ -60,6 +65,7 @@
 		<pre>{quote.companyName}</pre>
 		<pre>{quote.primaryExchange}</pre>
 		<pre>Close Price: {quote.latestPrice}</pre>
+		<pre>Percent of 52 Week High: {fracHigh.toFixed(1)}%</pre>
 	{:else}
 		<pre>LOADING</pre>
 	{/if}
