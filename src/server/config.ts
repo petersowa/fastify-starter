@@ -60,6 +60,11 @@ app.register(fastifyCSRF, {
 const appState = { modal: 'loginForm' };
 const flashState = flash();
 
+app.setErrorHandler((err, request, reply) => {
+	console.error({ ServerError: err });
+	return;
+});
+
 app.addHook('preHandler', (request, reply, next) => {
 	console.log('preHandler', appState);
 	request.session.appState = appState;
