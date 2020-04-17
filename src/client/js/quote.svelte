@@ -3,6 +3,8 @@
 
 	let quote = {};
 	let symbol = '';
+	let change = '';
+	let isLoaded = false;
 
 	$: fracHigh = quote && (quote.latestPrice / quote.week52High) * 100;
 
@@ -27,15 +29,34 @@
 	}
 
 	async function handleSubmit() {
+		isLoaded = false;
 		console.log(symbol);
 		try {
 			const data = await getQuote(symbol);
-			if (data) quote = data;
+			if (data) {
+				quote = data;
+				updateStats();
+				isLoaded = true;
+			}
 		} catch (err) {
 			console.error({ err });
 		}
 		console.log({ quote });
 		symbol = '';
+	}
+
+	function updateStats() {
+		const {
+			latestPrice,
+			previousClose,
+			previousVolume,
+			week52High,
+			week52Low,
+		} = quote;
+		change = (
+			((latestPrice - previousClose) / previousClose) *
+			100
+		).toFixed(2);
 	}
 </script>
 
@@ -66,12 +87,13 @@
 </form>
 
 <div class="quotes">
-	{#if quote && quote.symbol}
+	{#if isLoaded}
 		<pre>{quote.companyName}</pre>
 		<pre>{quote.primaryExchange}</pre>
 		<pre>Close Price: {quote.latestPrice}</pre>
 		<pre>Percent of 52 Week High: {fracHigh.toFixed(1)}%</pre>
-	{:else}
+		<pre>Change: {change}%</pre>
+	{:else if quote.symbol}
 		<pre>LOADING</pre>
 	{/if}
 </div>
