@@ -62,7 +62,7 @@ async function routes(
 		const errors = request.session.flash.get('auth');
 		console.log({ errors });
 		reply.view('./pages/register', {
-			name: '',
+			name: 'Create Account',
 			article,
 			username: request.session.username,
 			csrfToken,
@@ -74,7 +74,7 @@ async function routes(
 	fastify.get('/login', (request, reply) => {
 		const { csrfToken } = request.session;
 		reply.view('./pages/login', {
-			name: '',
+			name: 'Login',
 			article,
 			username: request.session.username,
 			csrfToken,
