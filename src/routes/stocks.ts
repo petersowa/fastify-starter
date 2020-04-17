@@ -83,13 +83,17 @@ async function routes(
 		'/quote/:symbol',
 		{
 			async preHandler(request, reply) {
-				if (!request.session.username) reply.redirect('/login'); // check if return is needed
-				return;
+				if (!request.session.username) {
+					reply.status(401).send({ error: 'not authorized' });
+				}
 			},
 		},
 		async (request, reply): Promise<StockData | null> => {
 			console.log(request.params.symbol);
-			return getQuote(request.params.symbol);
+			const quote = await getQuote(request.params.symbol);
+			if (quote === null)
+				reply.status(404).send({ error: 'unable to get data' });
+			return quote;
 		}
 	);
 }
@@ -113,7 +117,7 @@ async function getQuote(symbol: string): Promise<StockData | null> {
 		console.log({ hashTable });
 		return quote.data;
 	} catch (err) {
-		console.error(err.message);
+		console.error('Fetch Quote Error: ', (err as Error).message);
 		return null;
 	}
 }
