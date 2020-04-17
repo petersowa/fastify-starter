@@ -5,13 +5,32 @@ const MINUTES = 60 * 1000;
 const HOURS = 60 * MINUTES;
 const QUOTE_AGE = 4 * HOURS;
 
-interface HashTable {
+interface Query {
+	foo?: number;
+}
+
+interface Params {
+	symbol: string;
+}
+
+interface Body {
+	baz?: string;
+}
+
+interface Headers {
+	a?: string;
+}
+
+interface StockData {
+	[key: string]: string;
+}
+interface HashTable<T> {
 	key: string;
-	data?: {};
+	data?: T;
 	time: number;
 }
 
-const hashTable: HashTable[] = new Array(541);
+const hashTable: HashTable<StockData>[] = new Array(541);
 
 const ageStamp = (interval: number = QUOTE_AGE): number => {
 	return Math.floor(Date.now() / interval);
@@ -33,7 +52,7 @@ const hashStringToInt: (str: string) => number = (str) => {
 	return hash;
 };
 
-function getCache(key: string): HashTable | null {
+function getCache(key: string): HashTable<{}> | null {
 	const index = hashStringToInt(key);
 	if (index in hashTable) {
 		const data = hashTable[index];
@@ -54,26 +73,6 @@ function setCache(key: string, data: {}): boolean {
 	}
 	hashTable[index] = { key, data, time: Date.now() };
 	return true;
-}
-
-interface Query {
-	foo?: number;
-}
-
-interface Params {
-	symbol: string;
-}
-
-interface Body {
-	baz?: string;
-}
-
-interface Headers {
-	a?: string;
-}
-
-interface StockData {
-	[key: string]: string;
 }
 
 async function routes(
@@ -102,10 +101,10 @@ async function getQuote(symbol: string): Promise<StockData | null> {
 	let quote: AxiosResponse<StockData> | null = null;
 
 	try {
-		const cacheData: HashTable | null = getCache(symbol);
+		const cacheData: HashTable<StockData> | null = getCache(symbol);
 		if (cacheData) {
 			console.log('hit');
-			return cacheData.data as StockData;
+			return cacheData.data || null;
 		}
 		quote = await axios.get<StockData>(
 			`${iexURL}/stock/${symbol}/quote?token=${apiToken}`
