@@ -5,7 +5,11 @@
 	let symbol = 'ibm';
 
 	onMount(async () => {
-		quote = await getQuote(symbol);
+		try {
+			quote = await getQuote(symbol);
+		} catch (err) {
+			console.error('unable to get quote on mount');
+		}
 	});
 
 	async function getQuote(symbol) {
@@ -15,7 +19,12 @@
 
 	async function handleSubmit() {
 		console.log(symbol);
-		quote = await getQuote(symbol);
+		try {
+			quote = await getQuote(symbol);
+		} catch (err) {
+			console.error(err);
+		}
+		console.log({ quote });
 		symbol = '';
 	}
 </script>
@@ -47,7 +56,7 @@
 </form>
 
 <div class="quotes">
-	{#if quote.close}
+	{#if quote && quote.symbol}
 		<pre>{quote.companyName}</pre>
 		<pre>{quote.primaryExchange}</pre>
 		<pre>Close Price: {quote.latestPrice}</pre>
