@@ -35,6 +35,7 @@
 			const data = await getQuote(symbol);
 			if (data) {
 				quote = data;
+				console.log({ quote, error: data.error });
 				updateStats();
 				isLoaded = true;
 			}
@@ -87,13 +88,15 @@
 </form>
 
 <div class="quotes">
-	{#if isLoaded}
+	{#if isLoaded && quote.symbol}
 		<pre>{quote.companyName}</pre>
 		<pre>{quote.primaryExchange}</pre>
 		<pre>Close Price: {quote.latestPrice}</pre>
 		<pre>Percent of 52 Week High: {fracHigh.toFixed(1)}%</pre>
 		<pre>Change: {change}%</pre>
-	{:else if quote.symbol}
+	{:else if quote.symbol && !quote.error}
 		<pre>LOADING</pre>
+	{:else if quote.error}
+		<pre>{quote.error}</pre>
 	{/if}
 </div>
