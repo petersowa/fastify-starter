@@ -16,9 +16,14 @@
 
 	async function getQuote(symbol) {
 		const res = await fetch(`/stocks/quote/${symbol}`);
+		let data;
 		console.log({ res });
-		if (res.status === 200) return await res.json();
-		else return null;
+		try {
+			data = await res.json();
+		} catch (err) {
+			console.error('unable to parse', { res });
+		}
+		return data;
 	}
 
 	async function handleSubmit() {
