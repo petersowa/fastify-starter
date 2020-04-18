@@ -77,6 +77,7 @@ const flashState = flash();
 
 app.setErrorHandler((err, request, reply) => {
 	console.error({ ServerError: err });
+	reply.status(500).send({ error: err.message });
 	return;
 });
 
