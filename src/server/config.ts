@@ -57,7 +57,22 @@ app.register(fastifyCSRF, {
 	ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
 });
 
-const appState = { modal: 'loginForm' };
+function sessionInfo(): {} {
+	let info = {};
+	function getInfo(): {} {
+		return info;
+	}
+	function setInfo(data: {}): void {
+		info = data;
+	}
+	return { getInfo, setInfo };
+}
+
+const appState = {
+	modal: 'loginForm',
+	info: sessionInfo(),
+};
+
 const flashState = flash();
 
 app.setErrorHandler((err, request, reply) => {
@@ -66,10 +81,15 @@ app.setErrorHandler((err, request, reply) => {
 });
 
 app.addHook('preHandler', (request, reply, next) => {
-	console.log('preHandler', appState);
-	request.session.appState = appState;
+	request.session.appState = { ...appState, timeStamp: Date.now() };
+	console.log('preHandler', request.session.appState);
 	request.session.flash = flashState;
-	console.log(request.session.appState);
+	request.session.appState.info.setInfo({
+		ip: request.ip,
+		hostname: request.hostname,
+		header: request.headers['user-agent'],
+		referer: request.headers['referer'],
+	});
 
 	if (!request.session.csrfToken) {
 		request.session.csrfToken = request.csrfToken();
