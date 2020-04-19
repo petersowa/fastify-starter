@@ -2,12 +2,12 @@ import io from 'socket.io-client';
 import App from './quote.svelte';
 import '../styles/main.css';
 
-const app = new App({ target: document.getElementById('app'), data: {} });
-console.log({ app });
+const app = document.getElementById('app');
+app && new App({ target: app, data: {} });
 
 const socket = io();
 
-const elements = {
+const idTable = {
 	'form-cancel': {
 		events: {
 			click: () => {
@@ -40,16 +40,22 @@ const elements = {
 			},
 		},
 	},
+	'menu-toggle': {
+		events: {
+			click: () => {
+				console.log('menu-toggle');
+			},
+		},
+	},
 };
 
-for (const element in elements) {
-	const elem = document.getElementById(element);
-	console.log(elem);
+for (const id in idTable) {
+	const elem = document.getElementById(id);
 	if (elem) {
-		elements[element].elem = elem;
-		for (const event in elements[element].events) {
-			console.log(event, elements[element].events[event]);
-			elem.addEventListener(event, elements[element].events[event]);
+		const el = idTable[id];
+		el.elem = elem;
+		for (const event in el.events) {
+			elem.addEventListener(event, el.events[event]);
 		}
 	}
 }
