@@ -8,7 +8,7 @@ function init(server: Server): socket.Server {
 }
 
 function eventsInit(io: socket.Server): void {
-	io.on('connection', function(socket) {
+	io.on('connection', function (socket) {
 		console.log('a user connected', JSON.stringify(socket.id, null, 2));
 		socket.on('query', (query: any) => {
 			console.log(query, socket.id);
@@ -18,7 +18,7 @@ function eventsInit(io: socket.Server): void {
 
 	setInterval(() => {
 		io.emit('update', 'server message: ' + Date.now());
-	}, 1000);
+	}, 10000);
 }
 
 export default { init };
