@@ -17,13 +17,13 @@
 	// });
 
 	async function getQuote(symbol) {
-		const res = await fetch(`/stocks/quote/${symbol}`);
-		let data;
-		console.log({ res });
+		let data = null;
 		try {
+			const res = await fetch(`/stocks/quote/${symbol}`);
+			console.log({ res });
 			data = await res.json();
 		} catch (err) {
-			console.error('unable to parse', { res });
+			console.error('unable to fetch or parse', { res });
 		}
 		return data;
 	}
