@@ -2,11 +2,22 @@ import io from 'socket.io-client';
 import App from './quote.svelte';
 import '../styles/main.css';
 
+// setup svelte app
 const app = document.getElementById('app');
 app && new App({ target: app, data: {} });
 
+// setup sockets
 const socket = io();
+socket.on('connect', () => {
+	console.log('connected ');
+	socket.emit('query', 'query data');
+});
 
+socket.on('update', (msg) => {
+	console.log(msg);
+});
+
+// setup dom elements
 const idTable = {
 	'form-cancel': {
 		events: {
@@ -49,6 +60,7 @@ const idTable = {
 	},
 };
 
+// add event listeners
 for (const id in idTable) {
 	const elem = document.getElementById(id);
 	if (elem) {
@@ -59,12 +71,3 @@ for (const id in idTable) {
 		}
 	}
 }
-
-socket.on('connect', () => {
-	console.log('connected ');
-	socket.emit('query', 'query data');
-});
-
-socket.on('update', (msg) => {
-	console.log(msg);
-});
