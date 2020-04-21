@@ -12,6 +12,7 @@ import 'fastify-csrf';
 
 import registerHandlebars from './handlebars';
 import registerSessions from './sessions';
+import { WebStatsModel } from '../models/webStats';
 
 const fastifyCSRF = require('fastify-csrf');
 
@@ -91,6 +92,31 @@ app.addHook('preHandler', (request, reply, next) => {
 		header: request.headers['user-agent'],
 		referer: request.headers['referer'],
 	});
+
+	WebStatsModel.findOne({ ip: request.ip })
+		.then((doc) => {
+			if (doc) {
+				console.log(doc);
+				doc.count++;
+				doc.save();
+			} else {
+				const webState = new WebStatsModel({
+					ip: request.ip,
+					header: request.headers['referer'],
+				});
+				webState
+					.save()
+					.then((doc) => {
+						console.log({ WebStatsModel: doc });
+					})
+					.catch((err) => {
+						console.error({ WebStatsModel: err.message });
+					});
+			}
+		})
+		.catch((err) => {
+			console.error({ WebStatsModel: err.message });
+		});
 
 	if (!request.session.csrfToken) {
 		request.session.csrfToken = request.csrfToken();
