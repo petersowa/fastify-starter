@@ -93,41 +93,42 @@ app.addHook('preHandler', (request, reply, next) => {
 		referer: request.headers['referer'],
 	});
 
-	WebStatsModel.findOne({ ip: request.ip })
-		.then((doc) => {
-			if (doc) {
-				console.log(doc);
-				doc.count++;
-				doc.save();
-			} else {
-				const webState = new WebStatsModel({
-					ip: request.ip,
-					header: request.headers['referer'],
-				});
-				webState
-					.save()
-					.then((doc) => {
-						console.log({ WebStatsModel: doc });
-					})
-					.catch((err) => {
-						console.error({ WebStatsModel: err.message });
-					});
-			}
-		})
-		.catch((err) => {
-			console.error({ WebStatsModel: err.message });
-		});
-
 	if (!request.session.csrfToken) {
 		request.session.csrfToken = request.csrfToken();
+
+		// track session
+		WebStatsModel.findOne({ ip: request.ip })
+			.then((doc) => {
+				if (doc) {
+					console.log(doc);
+					doc.count++;
+					doc.save();
+				} else {
+					const webState = new WebStatsModel({
+						ip: request.ip,
+						header: request.headers['referer'],
+						userAgent: request.headers['user-agent'],
+					});
+					webState
+						.save()
+						.then((doc) => {
+							console.log({ WebStatsModel: doc });
+						})
+						.catch((err) => {
+							console.error({ WebStatsModel: err.message });
+						});
+				}
+			})
+			.catch((err) => {
+				console.error({ WebStatsModel: err.message });
+			});
 	}
-	// console.log('CSRF:', request.session);
+
 	next();
 });
 
+// A simple plugin for Fastify that adds a content type parser for the content type application/x-www-form-urlencoded.
 app.register(formBody);
-
-socketIo.init(app.server);
 
 // add static routes
 app.register(require('fastify-static'), {
@@ -136,8 +137,11 @@ app.register(require('fastify-static'), {
 });
 
 registerHandlebars(app);
+
 app.register(authRoutes, { prefix: '/auth' }); // add auth routes
 app.register(stockRoutes, { prefix: '/stocks' }); // add auth routes
+
+socketIo.init(app.server);
 
 app.listen(PORT, '0.0.0.0', (err) => {
 	if (err) {
