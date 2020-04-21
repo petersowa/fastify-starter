@@ -24,14 +24,13 @@ async function routes(
 			request.session.csrfToken,
 			request.session.appState.modal
 		);
-		// console.log(request.session.appState.getInfo());
 		reply.view('./pages/index', {
 			name: 'home page',
 			article,
 			username: request.session.username,
 			csrfToken,
 			appState: request.session.appState,
-			info: request.session.appState.info.getInfo(),
+			info: request.session.appState.info.getInfo(), // {{debugJSON info}}
 			whichModal: request.session.appState.modal,
 		});
 	});
