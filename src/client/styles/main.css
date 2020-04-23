@@ -465,14 +465,14 @@ body.show-modal {
 		justify-content: space-around;
 		margin-bottom: 1em;
 		padding: 0 5vw;
+		flex: 0;
 	}
 	.side-card {
 		margin: 0;
 		width: 33vw;
 		max-width: 100%;
 		min-width: 10vw;
-		/* height: fit-content; */
-		/* object-fit: cover; */
+		min-height: 0;
 	}
 	.nav-menu {
 		display: none;
@@ -481,15 +481,17 @@ body.show-modal {
 		align-items: flex-start;
 		outline: none;
 		background-color: var(--clr-header);
-		/* width: 100%; */
-		/* margin-right: 0.15em; */
 		padding: 0 0.5em;
 		width: fit-content;
 		right: 0;
 		line-height: 2;
 		font-size: 2rem;
 		z-index: 10;
-		/* left: .5em; */
+	}
+
+	.main-content {
+		width: 90%;
+		flex-grow: 8;
 	}
 
 	#menu-toggle + label {
