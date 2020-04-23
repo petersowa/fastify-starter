@@ -114,7 +114,6 @@ async function getQuote(symbol: string): Promise<StockData | null> {
 			`${iexURL}/stock/${symbol}/quote?token=${apiToken}`
 		);
 		setCache(symbol, quote.data);
-		console.log({ hashTable });
 		return quote.data;
 	} catch (err) {
 		console.error('Fetch Quote Error: ', (err as Error).message);

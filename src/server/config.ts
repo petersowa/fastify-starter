@@ -84,7 +84,7 @@ app.setErrorHandler((err, request, reply) => {
 
 app.addHook('preHandler', (request, reply, next) => {
 	request.session.appState = { ...appState, timeStamp: Date.now() };
-	console.log('preHandler', request.session.appState);
+	// console.log('preHandler', request.session.appState);
 	request.session.flash = flashState;
 	request.session.appState.info.setInfo({
 		ip: request.ip,
@@ -100,7 +100,7 @@ app.addHook('preHandler', (request, reply, next) => {
 		WebStatsModel.findOne({ ip: request.ip })
 			.then((doc) => {
 				if (doc) {
-					console.log(doc);
+					// console.log(doc);
 					doc.count++;
 					doc.save();
 				} else {
