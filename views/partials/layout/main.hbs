@@ -2,16 +2,10 @@
 	<h3 class="content-head">
 		{{ title }}
 	</h3>
-	<div class="cover-container">
-		<img class="cover-image" src="images/silver-ipad-545057.m.jpg" />
-	</div>
-	<p>
-		{{ article }}
-	</p>
 
 	{{#if username}}
 	<div id="app" />
+	{{else}}
+	<div>Please <a href="/login">Login</a> or <a href="/register">Register</a></div>
 	{{/if}}
-
-	<button class="button" id="query-button">stop</button>
 </main>
