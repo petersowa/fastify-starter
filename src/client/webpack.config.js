@@ -28,9 +28,11 @@ module.exports = {
 		rules: [
 			{
 				test: /\.svelte$/,
+				exclude: /node_modules/,
 				use: {
 					loader: 'svelte-loader',
 					options: {
+						preprocess: require('svelte-preprocess')({}),
 						emitCss: true,
 						hotReload: true,
 					},

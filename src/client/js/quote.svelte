@@ -61,17 +61,14 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	.quotes {
 		display: flex;
 		flex-direction: column;
 		width: 100%;
-	}
-
-	figure,
-	img {
-		width: 100%;
-		margin: 0;
+		&__row {
+			background-color: blue;
+		}
 	}
 
 	form {
@@ -91,9 +88,11 @@
 	{#if isLoaded && quote.symbol}
 		<pre>{quote.companyName}</pre>
 		<pre>{quote.primaryExchange}</pre>
-		<pre>Close Price: {quote.latestPrice}</pre>
-		<pre>Percent of 52 Week High: {fracHigh.toFixed(1)}%</pre>
-		<pre>Change: {change}%</pre>
+		<div class="quotes__row">
+			<pre>Close Price: {quote.latestPrice}</pre>
+			<pre>Percent of 52 Week High: {fracHigh.toFixed(1)}%</pre>
+			<pre>Change: {change}%</pre>
+		</div>
 	{:else if quote.symbol && !quote.error}
 		<pre>LOADING</pre>
 	{:else if quote.error}
