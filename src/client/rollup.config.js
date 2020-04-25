@@ -3,6 +3,8 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import autoPreprocess from 'svelte-preprocess';
+import scssPlugin from 'rollup-plugin-scss';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -12,7 +14,7 @@ export default {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: 'public/build/bundle.js',
+		file: '../../public/js/main.js',
 	},
 	plugins: [
 		svelte({
@@ -21,8 +23,9 @@ export default {
 			// we'll extract any component CSS out into
 			// a separate file - better for performance
 			css: (css) => {
-				css.write('public/build/bundle.css');
+				css.write('../../public/css/main-svelte.css');
 			},
+			preprocess: autoPreprocess(),
 		}),
 
 		// If you have external dependencies installed from
@@ -47,6 +50,9 @@ export default {
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
 		production && terser(),
+		scssPlugin({
+			output: '../../public/css/main.css',
+		}),
 	],
 	watch: {
 		clearScreen: false,
