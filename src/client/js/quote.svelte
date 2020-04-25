@@ -61,13 +61,14 @@
 	}
 </script>
 
-<style lang="scss">
+<style type="text/scss">
 	.quotes {
 		display: flex;
 		flex-direction: column;
 		width: 100%;
 		&__row {
-			background-color: blue;
+			display: flex;
+			color: blue;
 		}
 	}
 
