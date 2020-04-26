@@ -7,6 +7,7 @@ module.exports = {
 		browser: true,
 		es6: true,
 		jest: true,
+		node: true,
 	},
 	parserOptions: {
 		ecmaVersion: 2018,
