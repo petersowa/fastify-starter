@@ -59,6 +59,10 @@
 			100
 		).toFixed(2);
 	}
+
+	const formatData = (name, value) => {
+		return `<span>${name}</span><span>${value}</span>`;
+	};
 </script>
 
 <style type="text/scss">
@@ -67,8 +71,16 @@
 		flex-direction: column;
 		width: 100%;
 		&__row {
-			display: flex;
+			display: grid;
+			grid-template-columns: 2fr 1fr;
+			grid-auto-rows: minmax(1.5rem, auto);
 			color: blue;
+			padding: 0.5em;
+			font-variant-numeric: tabular-nums;
+			outline: 1px solid black;
+			&--value {
+				justify-self: right;
+			}
 		}
 	}
 
@@ -78,25 +90,28 @@
 	}
 </style>
 
-<h1>Stock Quote App</h1>
+<template>
+	<h1>Stock Quote App</h1>
 
-<form on:submit|preventDefault={handleSubmit}>
-	<label>Stock Name:</label>
-	<input type="string" bind:value={symbol} />
-</form>
+	<form on:submit|preventDefault={handleSubmit}>
+		<label>Stock Name:</label>
+		<input type="string" bind:value={symbol} />
+	</form>
 
-<div class="quotes">
-	{#if isLoaded && quote.symbol}
-		<pre>{quote.companyName}</pre>
-		<pre>{quote.primaryExchange}</pre>
-		<div class="quotes__row">
-			<pre>Close Price: {quote.latestPrice}</pre>
-			<pre>Percent of 52 Week High: {fracHigh.toFixed(1)}%</pre>
-			<pre>Change: {change}%</pre>
-		</div>
-	{:else if quote.symbol && !quote.error}
-		<pre>LOADING</pre>
-	{:else if quote.error}
-		<pre>{quote.error}</pre>
-	{/if}
-</div>
+	<div class="quotes">
+		{#if isLoaded && quote.symbol}
+			<pre>{quote.companyName}</pre>
+			<pre>{quote.primaryExchange}</pre>
+			<div class="quotes__row">
+				{#each [['Close Price', quote.latestPrice], ['Percent of 52 Week High', fracHigh.toFixed(2)], ['Change', change]] as item}
+					<span>{item[0]}</span>
+					<span class="quotes__row--value">{item[1]}</span>
+				{/each}
+			</div>
+		{:else if quote.symbol && !quote.error}
+			<pre>LOADING</pre>
+		{:else if quote.error}
+			<pre>{quote.error}</pre>
+		{/if}
+	</div>
+</template>
