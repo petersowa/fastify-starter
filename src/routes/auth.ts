@@ -27,16 +27,23 @@ async function routes(
 						request.session.username = username;
 						return reply.redirect('/');
 					} else {
-						console.log('password invalid');
+						request.session.flash.add(
+							'auth',
+							'password or username is not correct'
+						);
 						return reply.redirect('/login');
 					}
 				} else {
-					console.log('user not found');
+					request.session.flash.add(
+						'auth',
+						'password or username is not correct'
+					);
+
 					return reply.redirect('/login');
 				}
 			})
 			.catch((err) => {
-				console.log({ err });
+				request.session.flash.add('auth', err.message);
 				return reply.redirect('/login');
 			});
 	});
@@ -61,11 +68,9 @@ async function routes(
 		newUser
 			.save()
 			.then((result: {}) => {
-				console.log('created user', result);
 				return reply.redirect('/');
 			})
 			.catch((err: Error) => {
-				console.error(err);
 				request.session.flash.add('auth', err.message);
 				return reply.redirect('/register');
 			});
@@ -78,7 +83,6 @@ async function routes(
 				reply.status(500);
 				return reply.send('Internal Server Error: ES1');
 			} else {
-				console.log('session destroyed');
 				return reply.redirect('/');
 			}
 		});

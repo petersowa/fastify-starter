@@ -62,7 +62,6 @@ async function routes(
 		const { csrfToken } = request.session;
 		// const errors = reply.flash('auth');
 		const errors = request.session.flash.get('auth');
-		console.log({ errors });
 		reply.view('./pages/register', {
 			name: 'Create Account',
 			article,
@@ -75,12 +74,15 @@ async function routes(
 
 	fastify.get('/login', (request, reply) => {
 		const { csrfToken } = request.session;
+		const errors = request.session.flash.get('auth');
+		console.log({ errors });
 		reply.view('./pages/login', {
 			name: 'Login',
 			article,
 			username: request.session.username,
 			csrfToken,
 			whichModal: 'loginForm',
+			errors,
 		});
 	});
 
