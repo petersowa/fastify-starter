@@ -14,6 +14,9 @@ import registerHandlebars from './handlebars';
 import registerSessions from './sessions';
 import { WebStatsModel } from '../models/webStats';
 
+import flash from './flash';
+import appState from './app-state';
+
 const fastifyCSRF = require('fastify-csrf');
 
 const PORT: number = parseInt(process.env.PORT || '3000', 10);
@@ -22,32 +25,7 @@ const app: fastify.FastifyInstance<
 	Server,
 	IncomingMessage,
 	ServerResponse
-> = fastify({ logger: false, http2: false });
-
-interface Flash {
-	add: (type: string, message: string) => void;
-	get: (type: string) => string;
-}
-
-const flash = (): Flash => {
-	interface FlashMessagesType {
-		[propName: string]: string[] | undefined;
-	}
-	const messages: FlashMessagesType = {};
-
-	function add(type: string, message: string): void {
-		if (!(type in messages)) messages[type] = [];
-		messages[type]?.push(message);
-		console.log('flash add', { messages });
-	}
-	function get(type: string): string {
-		console.log('flash get', { messages });
-		if (!(type in messages)) return '';
-		const typeMessages = messages[type] || [''];
-		return typeMessages.pop() || '';
-	}
-	return { add, get };
-};
+> = fastify({ logger: false, http2: false, trustProxy: true });
 
 app.register(helmet);
 
@@ -57,22 +35,6 @@ app.register(fastifyCSRF, {
 	key: '_csrf',
 	ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
 });
-
-function sessionInfo(): {} {
-	let info = {};
-	function getInfo(): {} {
-		return info;
-	}
-	function setInfo(data: {}): void {
-		info = data;
-	}
-	return { getInfo, setInfo };
-}
-
-const appState = {
-	modal: 'loginForm',
-	info: sessionInfo(),
-};
 
 const flashState = flash();
 
@@ -84,7 +46,7 @@ app.setErrorHandler((err, request, reply) => {
 
 app.addHook('preHandler', (request, reply, next) => {
 	request.session.appState = { ...appState, timeStamp: Date.now() };
-	// console.log('preHandler', request.session.appState);
+	console.log('preHandler', request.ips);
 	request.session.flash = flashState;
 	request.session.appState.info.setInfo({
 		ip: request.ip,
