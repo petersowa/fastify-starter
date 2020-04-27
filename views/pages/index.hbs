@@ -1,5 +1,17 @@
 <div class="h-flex-container min-shadow">
 	{{> leftSidebar}}
-	{{> main article=article title="Apps"}}
+
+
+	<main class="main-content">
+		<h3 class="content-head">
+			Apps
+		</h3>
+		{{#if username}}
+		<div id="app" />
+		{{else}}
+		<div>Please <a href="/login">Login</a> or <a href="/register">Register</a></div>
+		{{/if}}
+	</main>
+
 	{{> rightSidebar}}
 </div>
