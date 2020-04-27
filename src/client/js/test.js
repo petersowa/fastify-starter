@@ -1,10 +1,13 @@
 import io from 'socket.io-client';
-import App from './quote.svelte';
 import '../styles/main.css';
 
 // setup svelte app
 const app = document.getElementById('app');
-app && new App({ target: app, data: {} });
+if (app) {
+	import('./quote.svelte').then((App) => {
+		new App.default({ target: app, data: {} });
+	});
+}
 
 // setup sockets
 const socket = io();

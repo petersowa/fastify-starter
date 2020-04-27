@@ -12,10 +12,12 @@ export default {
 	input: 'js/test.js',
 	output: {
 		sourcemap: true,
-		format: 'iife',
+		format: 'esm',
 		name: 'app',
-		file: '../../public/js/main.js',
+		dir: '../../public/js',
 	},
+	experimentalCodeSplitting: true,
+	experimentalDynamicImport: true,
 	plugins: [
 		svelte({
 			// enable run-time checks when not in production
