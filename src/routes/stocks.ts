@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import * as fastify from 'fastify';
+import { checkSessionAuth } from '../controllers/protected';
 
 const MINUTES = 60 * 1000;
 const HOURS = 60 * MINUTES;
@@ -82,11 +83,7 @@ async function routes(
 	fastify.get<Query, Params, Body, Headers>(
 		'/quote/:symbol',
 		{
-			async preHandler(request, reply) {
-				if (!request.session.username) {
-					reply.status(401).send({ error: 'not authorized' });
-				}
-			},
+			preHandler: checkSessionAuth,
 		},
 		async (request, reply): Promise<StockData | null> => {
 			console.log(request.params.symbol);
