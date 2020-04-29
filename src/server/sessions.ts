@@ -10,6 +10,8 @@ const fastifySession = require('fastify-session');
 fastifySession.MemoryStore = {}; // MongoStore fails if not added
 const store = MongoStore(fastifySession);
 
+const MAX_SESSION_AGE = 2 * 24 * 60 * 60 * 1000;
+
 const register = (
 	app: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse>
 ): void => {
@@ -21,7 +23,7 @@ const register = (
 		saveUninitialized: false,
 		cookie: {
 			secure: process.env.NODE_ENV === 'production',
-			maxAge: 15 * 60 * 1000,
+			maxAge: MAX_SESSION_AGE,
 		},
 		store: new store({ mongooseConnection: mongoose.connection }),
 	});
