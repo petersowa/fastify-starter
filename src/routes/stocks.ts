@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import * as fastify from 'fastify';
 import { checkSessionAuth } from '../controllers/protected';
+import QuotesModel from '../models/quotesModel';
 
 const MINUTES = 60 * 1000;
 const HOURS = 60 * MINUTES;
@@ -111,11 +112,31 @@ async function getQuote(symbol: string): Promise<StockData | null> {
 			`${iexURL}/stock/${symbol}/quote?token=${apiToken}`
 		);
 		setCache(symbol, quote.data);
+		await updateQuoteDB(symbol, quote.data);
 		return quote.data;
 	} catch (err) {
 		console.error('Fetch Quote Error: ', (err as Error).message);
 		return null;
 	}
+}
+
+function updateQuoteDB(symbol: string, data: {}): Promise<boolean> {
+	return new Promise((resolve, reject) => {
+		const quote = new QuotesModel({
+			symbol,
+			data,
+		});
+		quote
+			.save()
+			.then((doc) => {
+				resolve(true);
+				console.log({ savedQuote: data });
+			})
+			.catch((err) => {
+				resolve(false);
+				console.error({ QuoteModel: err.message });
+			});
+	});
 }
 
 export default routes;
