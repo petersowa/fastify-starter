@@ -1,7 +1,7 @@
 import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import livereload from 'rollup-plugin-livereload';
+// import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import autoPreprocess from 'svelte-preprocess';
 import scssPlugin from 'rollup-plugin-scss';
@@ -12,12 +12,11 @@ export default {
 	input: 'js/test.js',
 	output: {
 		sourcemap: true,
-		format: 'esm',
+		format: 'es',
 		name: 'app',
 		dir: '../../public/js',
+		chunkFileNames: '[name].js',
 	},
-	experimentalCodeSplitting: true,
-	experimentalDynamicImport: true,
 	plugins: [
 		svelte({
 			// enable run-time checks when not in production
@@ -43,11 +42,11 @@ export default {
 
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated
-		!production && serve(),
+		// !production && serve(),
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production
-		!production && livereload('public'),
+		// !production && livereload('public'),
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
