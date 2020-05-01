@@ -100,24 +100,73 @@ textarea {
 	outline: none;
 	padding: 0;
 	cursor: pointer;
-	background: transparent;
+	background-color: rgba(0, 0, 0, 0.1);
+	padding: 0.1em 0.2em;
+}
+
+button {
+	position: relative;
+	box-shadow: 2px 2px 4px 2px var(--clr-shadow-button),
+		-2px -2px 4px 2px white;
+	margin: 0.4em 0;
+}
+
+a {
+	position: relative;
+}
+
+button:active {
+	box-shadow: 2px 2px 4px 2px white,
+		-2px -2px 4px 2px var(--clr-shadow-button);
+	outline: none;
 }
 
 input,
 textarea {
+	position: relative;
 	background-color: var(--clr-content);
 	padding: 0.2rem 0.5rem;
 }
 
+input:focus,
+textarea:focus {
+	outline: 2px solid var(--clr-outline-focus);
+}
+
 .button {
 	text-transform: uppercase;
-	background-color: var(--clr-button-default);
+	/* background-color: var(--clr-button-default); */
+	background: red;
 	padding: 0.2em 0.5em;
 	margin: 0.2em;
 }
 
-*:focus {
-	outline: 2px solid var(--clr-outline-focus);
+button::before,
+a::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 2px;
+	background-color: var(--clr-outline-focus);
+	opacity: 0;
+	transform: scaleX(0);
+	transition: opacity 200ms ease-in-out, transform 300ms ease 100ms;
+}
+
+button:focus::before,
+a:focus::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 2px;
+	background-color: var(--clr-outline-focus);
+	opacity: 1;
+	transform: scaleX(1);
+	transition: opacity 200ms ease-in-out, transform 300ms ease 100ms;
 }
 
 .container {
