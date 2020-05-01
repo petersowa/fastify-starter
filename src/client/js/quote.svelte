@@ -1,10 +1,14 @@
 <script>
 	import { onMount } from 'svelte';
+	import Modal from './modal.svelte';
+	import Box from './box.svelte';
+	import ContactCard from './ContactCard.svelte';
 
 	let quote = {};
 	let symbol = '';
 	let change = '';
 	let isLoaded = false;
+	let showModal = false;
 
 	$: fracHigh = quote && (quote.latestPrice / quote.week52High) * 100;
 
@@ -90,28 +94,72 @@
 	}
 </style>
 
-<template>
-	<h1>Stock Quote App</h1>
+<h1>Stock Quote App</h1>
 
-	<form on:submit|preventDefault={handleSubmit}>
-		<label>Stock Name:</label>
-		<input type="string" bind:value={symbol} />
-	</form>
+<form on:submit|preventDefault={handleSubmit}>
+	<label>Stock Name:</label>
+	<input type="string" bind:value={symbol} />
+</form>
 
-	<div class="quotes">
-		{#if isLoaded && quote.symbol}
-			<pre>{quote.companyName}</pre>
-			<pre>{quote.primaryExchange}</pre>
-			<div class="quotes__row">
-				{#each [['Close Price', quote.latestPrice], ['Percent of 52 Week High', fracHigh.toFixed(2)], ['Change', change]] as item}
-					<span>{item[0]}</span>
-					<span class="quotes__row--value">{item[1]}</span>
-				{/each}
-			</div>
-		{:else if quote.symbol && !quote.error}
-			<pre>LOADING</pre>
-		{:else if quote.error}
-			<pre>{quote.error}</pre>
-		{/if}
-	</div>
-</template>
+<div class="quotes">
+	{#if isLoaded && quote.symbol}
+		<pre>{quote.companyName}</pre>
+		<pre>{quote.primaryExchange}</pre>
+		<div class="quotes__row">
+			{#each [['Close Price', quote.latestPrice], ['Percent of 52 Week High', fracHigh.toFixed(2)], ['Change', change]] as item}
+				<span>{item[0]}</span>
+				<span class="quotes__row--value">{item[1]}</span>
+			{/each}
+		</div>
+	{:else if quote.symbol && !quote.error}
+		<pre>LOADING</pre>
+	{:else if quote.error}
+		<pre>{quote.error}</pre>
+	{/if}
+</div>
+<button on:click={() => (showModal = true)}>Add To Watch List</button>
+<Box>
+	<h2>Hello!</h2>
+	<p>This is a box. It can contain anything.</p>
+</Box>
+
+<ContactCard>
+	<span slot="name">P. Sherman</span>
+
+	<span slot="address">
+		42 Wallaby Way
+		<br />
+		Sydney
+	</span>
+</ContactCard>
+
+{#if showModal}
+	<Modal on:close={() => (showModal = false)}>
+		<h2 slot="header">
+			modal
+			<small>
+				<em>adjective</em>
+				mod·al \ˈmō-dəl\
+			</small>
+		</h2>
+
+		<ol class="definition-list">
+			<li>of or relating to modality in logic</li>
+			<li>
+				containing provisions as to the mode of procedure or the manner
+				of taking effect —used of a contract or legacy
+			</li>
+			<li>of or relating to a musical mode</li>
+			<li>of or relating to structure as opposed to substance</li>
+			<li>
+				of, relating to, or constituting a grammatical form or category
+				characteristically indicating predication
+			</li>
+			<li>of or relating to a statistical mode</li>
+		</ol>
+
+		<a href="https://www.merriam-webster.com/dictionary/modal">
+			merriam-webster.com
+		</a>
+	</Modal>
+{/if}
