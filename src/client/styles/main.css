@@ -135,8 +135,7 @@ textarea:focus {
 
 .button {
 	text-transform: uppercase;
-	/* background-color: var(--clr-button-default); */
-	background: red;
+	background-color: var(--clr-button-default);
 	padding: 0.2em 0.5em;
 	margin: 0.2em;
 }

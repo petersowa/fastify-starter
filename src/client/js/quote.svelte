@@ -7,7 +7,7 @@
 	let quote = {};
 	let symbol = '';
 	let change = '';
-	let isLoaded = false;
+	let isLoaded = true;
 	let showModal = false;
 
 	$: fracHigh = quote && (quote.latestPrice / quote.week52High) * 100;
@@ -117,7 +117,7 @@
 		<pre>{quote.error}</pre>
 	{/if}
 </div>
-<button on:click={() => (showModal = true)}>Add To Watch List</button>
+<button on:click={() => (showModal = true)}>Open Modal</button>
 <Box>
 	<h2>Hello!</h2>
 	<p>This is a box. It can contain anything.</p>
@@ -135,31 +135,21 @@
 
 {#if showModal}
 	<Modal on:close={() => (showModal = false)}>
+		<h2 slot="header">Stock Order</h2>
+		<form>
+			<label>Stock</label>
+			<input type="text" />
+		</form>
+	</Modal>
+{/if}
+{#if !isLoaded}
+	<Modal>
 		<h2 slot="header">
-			modal
+			Loading...
 			<small>
 				<em>adjective</em>
 				mod·al \ˈmō-dəl\
 			</small>
 		</h2>
-
-		<ol class="definition-list">
-			<li>of or relating to modality in logic</li>
-			<li>
-				containing provisions as to the mode of procedure or the manner
-				of taking effect —used of a contract or legacy
-			</li>
-			<li>of or relating to a musical mode</li>
-			<li>of or relating to structure as opposed to substance</li>
-			<li>
-				of, relating to, or constituting a grammatical form or category
-				characteristically indicating predication
-			</li>
-			<li>of or relating to a statistical mode</li>
-		</ol>
-
-		<a href="https://www.merriam-webster.com/dictionary/modal">
-			merriam-webster.com
-		</a>
 	</Modal>
 {/if}
