@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import Modal from './modal.svelte';
+	import Spinner from './spinner.svelte';
 	import Box from './box.svelte';
 	import ContactCard from './ContactCard.svelte';
 
@@ -9,6 +10,7 @@
 	let change = '';
 	let isLoaded = true;
 	let showModal = false;
+	let isMinWait = true;
 
 	$: fracHigh = quote && (quote.latestPrice / quote.week52High) * 100;
 
@@ -34,6 +36,10 @@
 
 	async function handleSubmit() {
 		isLoaded = false;
+		isMinWait = false;
+		setTimeout(() => {
+			isMinWait = true;
+		}, 1000);
 		console.log(symbol);
 		try {
 			const data = await getQuote(symbol);
@@ -110,6 +116,7 @@
 				<span>{item[0]}</span>
 				<span class="quotes__row--value">{item[1]}</span>
 			{/each}
+			<button>Add To Watch List</button>
 		</div>
 	{:else if quote.symbol && !quote.error}
 		<pre>LOADING</pre>
@@ -118,20 +125,6 @@
 	{/if}
 </div>
 <button on:click={() => (showModal = true)}>Open Modal</button>
-<Box>
-	<h2>Hello!</h2>
-	<p>This is a box. It can contain anything.</p>
-</Box>
-
-<ContactCard>
-	<span slot="name">P. Sherman</span>
-
-	<span slot="address">
-		42 Wallaby Way
-		<br />
-		Sydney
-	</span>
-</ContactCard>
 
 {#if showModal}
 	<Modal on:close={() => (showModal = false)}>
@@ -142,14 +135,8 @@
 		</form>
 	</Modal>
 {/if}
-{#if !isLoaded}
-	<Modal>
-		<h2 slot="header">
-			Loading...
-			<small>
-				<em>adjective</em>
-				mod·al \ˈmō-dəl\
-			</small>
-		</h2>
-	</Modal>
+{#if !isLoaded || !isMinWait}
+	<Spinner>
+		<div>spinner</div>
+	</Spinner>
 {/if}
