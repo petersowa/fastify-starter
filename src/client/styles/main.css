@@ -497,6 +497,13 @@ body.show-modal {
 	font-size: 200%;
 }
 
+.watchlist {
+	display: flex;
+	flex-direction: column;
+	outline: 1px solid blue;
+	margin: 0.2em;
+}
+
 @media (max-width: 768px) {
 	.v-flex-container {
 		min-height: calc(100vh - 9em);

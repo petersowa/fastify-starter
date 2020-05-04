@@ -3,7 +3,8 @@
 	import Modal from './modal.svelte';
 	import Spinner from './spinner.svelte';
 	import Box from './box.svelte';
-	import ContactCard from './ContactCard.svelte';
+	import WatchList from './Finance/WatchList.svelte';
+	import { watchList } from './Finance/storeWatchList';
 
 	let quote = {};
 	let symbol = '';
@@ -73,6 +74,13 @@
 	const formatData = (name, value) => {
 		return `<span>${name}</span><span>${value}</span>`;
 	};
+
+	function addToWatchlist() {
+		watchList.update(list => {
+			console.log('list is', list);
+			return [...list, quote];
+		});
+	}
 </script>
 
 <style type="text/scss">
@@ -116,7 +124,7 @@
 				<span>{item[0]}</span>
 				<span class="quotes__row--value">{item[1]}</span>
 			{/each}
-			<button>Add To Watch List</button>
+			<button on:click={addToWatchlist}>Add To Watch List</button>
 		</div>
 	{:else if quote.symbol && !quote.error}
 		<pre>LOADING</pre>
@@ -124,6 +132,7 @@
 		<pre>{quote.error}</pre>
 	{/if}
 </div>
+<WatchList />
 <button on:click={() => (showModal = true)}>Open Modal</button>
 
 {#if showModal}
