@@ -88,52 +88,78 @@
 		display: flex;
 		flex-direction: column;
 		width: 100%;
+		justify-items: center;
+		align-content: center;
+		&__head {
+			text-align: center;
+			font-size: 1.2rem;
+			text-transform: capitalize;
+			letter-spacing: 0.2rem;
+			font-weight: bold;
+		}
+		&__head2 {
+			text-align: center;
+			font-size: 0.8rem;
+			text-transform: uppercase;
+			letter-spacing: 0.1rem;
+			font-style: italic;
+			margin-bottom: 1.5em;
+		}
 		&__row {
 			display: grid;
 			grid-template-columns: 2fr 1fr;
 			grid-auto-rows: minmax(1.5rem, auto);
 			color: blue;
-			padding: 0.5em;
 			font-variant-numeric: tabular-nums;
-			outline: 1px solid black;
+			justify-items: left;
+			margin: 0 0 2em;
 			&--value {
 				justify-self: right;
 			}
 		}
 	}
 
+	.h-center {
+		margin: auto;
+	}
+
 	form {
-		background: silver;
 		padding: 2em;
 	}
 </style>
 
-<h1>Stock Quote App</h1>
+<div class="app-content">
 
-<form on:submit|preventDefault={handleSubmit}>
-	<label>Stock Name:</label>
-	<input type="string" bind:value={symbol} />
-</form>
+	<h1>Stock Quote App</h1>
 
-<div class="quotes">
-	{#if isLoaded && quote.symbol}
-		<pre>{quote.companyName}</pre>
-		<pre>{quote.primaryExchange}</pre>
-		<div class="quotes__row">
-			{#each [['Close Price', quote.latestPrice], ['Percent of 52 Week High', fracHigh.toFixed(2)], ['Change', change]] as item}
-				<span>{item[0]}</span>
-				<span class="quotes__row--value">{item[1]}</span>
-			{/each}
-			<button on:click={addToWatchlist}>Add To Watch List</button>
-		</div>
-	{:else if quote.symbol && !quote.error}
-		<pre>LOADING</pre>
-	{:else if quote.error}
-		<pre>{quote.error}</pre>
-	{/if}
+	<form on:submit|preventDefault={handleSubmit}>
+		<label>Stock Name:</label>
+		<input type="string" bind:value={symbol} />
+	</form>
+
+	<div class="quotes">
+		{#if isLoaded && quote.symbol}
+			<span class="quotes__head">{quote.companyName}</span>
+			<span class="quotes__head2">{quote.primaryExchange}</span>
+			<div class="quotes__row">
+				{#each [['Close Price', quote.latestPrice], ['Percent of 52 Week High', fracHigh.toFixed(2)], ['Change', change]] as item}
+					<span>{item[0]}</span>
+					<span class="quotes__row--value">{item[1]}</span>
+				{/each}
+			</div>
+			<button on:click={addToWatchlist} class="h-center">
+				Add To Watch List
+			</button>
+		{:else if quote.symbol && !quote.error}
+			<pre>LOADING</pre>
+		{:else if quote.error}
+			<pre>{quote.error}</pre>
+		{/if}
+		<WatchList />
+	</div>
+	<button on:click={() => (showModal = true)}>Open Modal</button>
+
 </div>
-<WatchList />
-<button on:click={() => (showModal = true)}>Open Modal</button>
 
 {#if showModal}
 	<Modal on:close={() => (showModal = false)}>
