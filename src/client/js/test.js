@@ -1,5 +1,6 @@
 import io from 'socket.io-client';
 import '../styles/main.css';
+import '../styles/content.scss';
 
 // setup svelte app
 const app = document.getElementById('app');
