@@ -6,7 +6,38 @@
 	const unsubscribe = watchList.subscribe(list => {
 		console.log(list);
 		watchItems = [...list];
+		postWatchlist()
+			.then(res => console.log({ watchlist: res }))
+			.catch(err => console.error({ watchlist: err }));
 	});
+
+	async function getQuote(symbol) {
+		let data = null;
+		try {
+			const res = await fetch(`/stocks/quote/${symbol}`);
+			console.log({ res });
+			data = await res.json();
+		} catch (err) {
+			console.error('unable to fetch or parse', { res });
+		}
+		return data;
+	}
+
+	async function postWatchlist() {
+		const csrf = document
+			.querySelector('meta[name="csrf-token"]')
+			.getAttribute('content');
+		const response = await fetch(`/stocks/watchlist`, {
+			method: 'POST',
+			credentials: 'same-origin',
+			headers: {
+				'Content-Type': 'application/json',
+				'csrf-token': csrf,
+			},
+			body: JSON.stringify(['ibm', 'csco']),
+		});
+		return response.json();
+	}
 </script>
 
 <style type="scss">

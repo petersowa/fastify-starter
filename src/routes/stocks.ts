@@ -2,6 +2,8 @@ import axios, { AxiosResponse } from 'axios';
 import * as fastify from 'fastify';
 import { checkSessionAuth } from '../controllers/protected';
 import QuotesModel from '../models/quotesModel';
+import WatchList from '../models/watchList';
+import { UserModel } from '../models/userModel';
 
 const MINUTES = 60 * 1000;
 const HOURS = 60 * MINUTES;
@@ -92,6 +94,44 @@ async function routes(
 			if (quote === null)
 				reply.status(404).send({ error: 'unable to get data' });
 			return quote;
+		}
+	);
+
+	fastify.get(
+		'/watchlist',
+		{
+			preHandler: checkSessionAuth,
+		},
+		async (request, reply) => {
+			return WatchList.findOne({ user: request.session.username });
+		}
+	);
+
+	fastify.post(
+		'/watchlist',
+		{
+			preHandler: checkSessionAuth,
+		},
+		async (request, reply) => {
+			const { watchList } = request.body;
+			const user = await UserModel.findOne({
+				email: request.session.username,
+			});
+			console.log({ user, email: request.session.username });
+			const newWatchlist = new WatchList({
+				user: user,
+				symbols: watchList,
+			});
+
+			newWatchlist
+				.save()
+				.then((result: {}) => {
+					console.log({ watchList: result });
+					return { status: result };
+				})
+				.catch((err: Error) => {
+					console.error({ watchlist: err });
+				});
 		}
 	);
 }
