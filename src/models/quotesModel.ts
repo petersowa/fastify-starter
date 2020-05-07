@@ -8,7 +8,7 @@ interface QuotesModel extends Document {
 }
 
 const schema: Schema = new Schema({
-	symbol: String,
+	symbol: { type: String, required: true },
 	date: { type: Date, default: Date.now },
 	data: { type: Object },
 });

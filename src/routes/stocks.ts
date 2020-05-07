@@ -161,6 +161,9 @@ async function getQuote(symbol: string): Promise<StockData | null> {
 }
 
 function updateQuoteDB(symbol: string, data: {}): Promise<boolean> {
+	QuotesModel.find({ symbol }).then((quotes) => {
+		console.log('found quotes', quotes);
+	});
 	return new Promise((resolve, reject) => {
 		const quote = new QuotesModel({
 			symbol,
@@ -170,7 +173,7 @@ function updateQuoteDB(symbol: string, data: {}): Promise<boolean> {
 			.save()
 			.then((doc) => {
 				resolve(true);
-				console.log({ savedQuote: data });
+				console.log({ savedQuote: doc });
 			})
 			.catch((err) => {
 				resolve(false);
