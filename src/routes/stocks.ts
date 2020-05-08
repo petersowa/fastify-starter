@@ -1,9 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
 import * as fastify from 'fastify';
 import { checkSessionAuth } from '../controllers/protected';
-import QuotesModel from '../models/quotesModel';
+import QuotesModel, { QuotesInterface } from '../models/quotesModel';
 import WatchList from '../models/watchList';
 import { UserModel } from '../models/userModel';
+import { resolve } from 'dns';
 
 const MINUTES = 60 * 1000;
 const HOURS = 60 * MINUTES;
@@ -160,10 +161,27 @@ async function getQuote(symbol: string): Promise<StockData | null> {
 	}
 }
 
-function updateQuoteDB(symbol: string, data: {}): Promise<boolean> {
-	QuotesModel.find({ symbol }).then((quotes) => {
-		console.log('found quotes', quotes);
+function getLatestSavedQuote(symbol: string): Promise<QuotesInterface | null> {
+	return new Promise((resolve, reject) => {
+		QuotesModel.findOne({ symbol })
+			.sort({ date: -1 })
+			.then((quote) => {
+				resolve(quote);
+			})
+			.catch((err) => {
+				reject(err);
+			});
 	});
+}
+
+async function updateQuoteDB(symbol: string, data: {}): Promise<boolean> {
+	const quote = await getLatestSavedQuote(symbol);
+	if (quote) {
+		if (Date.now() - Date.parse(quote.date) < 1000 * 60 * 60) {
+			console.log('found recent quote');
+			return new Promise((resolve, reject) => resolve(false));
+		}
+	}
 	return new Promise((resolve, reject) => {
 		const quote = new QuotesModel({
 			symbol,
@@ -176,7 +194,7 @@ function updateQuoteDB(symbol: string, data: {}): Promise<boolean> {
 				console.log({ savedQuote: doc });
 			})
 			.catch((err) => {
-				resolve(false);
+				reject(err);
 				console.error({ QuoteModel: err.message });
 			});
 	});

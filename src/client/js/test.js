@@ -1,6 +1,7 @@
 import io from 'socket.io-client';
 import '../styles/main.css';
 import '../styles/content.scss';
+import { Observable } from 'rxjs';
 
 // setup svelte app
 const app = document.getElementById('app');
@@ -9,6 +10,17 @@ if (app) {
 		new App.default({ target: app, data: {} });
 	});
 }
+
+const timeObserver = new Observable((subscriber) => {
+	const intervalId = setInterval(() => {
+		subscriber.next('tick');
+	}, 500);
+	return function usubscribe() {
+		clearInterval(intervalId);
+	};
+});
+
+timeObserver.subscribe((val) => console.log(val));
 
 // setup sockets
 const socket = io();
