@@ -12,16 +12,37 @@
 	let isLoaded = true;
 	let showModal = false;
 	let isMinWait = true;
+	let watchListItems = null;
 
 	$: fracHigh = quote && (quote.latestPrice / quote.week52High) * 100;
 
-	// onMount(async () => {
-	// 	try {
-	// 		quote = await getQuote(symbol);
-	// 	} catch (err) {
-	// 		console.error('unable to get quote on mount');
-	// 	}
-	// });
+	onMount(async () => {
+		try {
+			const clearSpinner = setSpinner();
+			const res = await fetch(`/stocks/watchlist`);
+			console.log({ watchlist: res });
+			watchListItems = await res.json();
+			if (watchListItems) {
+				console.log({ watchListItems });
+				const quotes = await Promise.all(
+					watchListItems
+						.filter(sym => sym !== null)
+						.map(async sym => {
+							return await getQuote(sym);
+						})
+				);
+				watchList.update(list => {
+					console.log(quotes);
+					return [...quotes];
+				});
+				clearSpinner();
+			}
+			console.log({ watchListItems });
+		} catch (err) {
+			console.log({ watchlistError: err });
+		}
+		clearSpinner();
+	});
 
 	async function getQuote(symbol) {
 		let data = null;
@@ -35,12 +56,19 @@
 		return data;
 	}
 
-	async function handleSubmit() {
+	function setSpinner() {
 		isLoaded = false;
 		isMinWait = false;
 		setTimeout(() => {
 			isMinWait = true;
 		}, 1000);
+		return () => {
+			isLoaded = true;
+		};
+	}
+
+	async function handleSubmit() {
+		const clearSpinner = setSpinner();
 		console.log(symbol);
 		try {
 			const data = await getQuote(symbol);
@@ -48,7 +76,7 @@
 				quote = data;
 				console.log({ quote, error: data.error });
 				updateStats();
-				isLoaded = true;
+				clearSpinner();
 			}
 		} catch (err) {
 			console.error({ err });
@@ -71,6 +99,24 @@
 		).toFixed(2);
 	}
 
+	async function postWatchlist(list) {
+		const csrf = document
+			.querySelector('meta[name="csrf-token"]')
+			.getAttribute('content');
+		const response = await fetch(`/stocks/watchlist`, {
+			method: 'POST',
+			credentials: 'same-origin',
+			headers: {
+				'Content-Type': 'application/json',
+				'csrf-token': csrf,
+			},
+			body: JSON.stringify({
+				watchList: list,
+			}),
+		});
+		return response.json();
+	}
+
 	const formatData = (name, value) => {
 		return `<span>${name}</span><span>${value}</span>`;
 	};
@@ -78,6 +124,10 @@
 	function addToWatchlist() {
 		watchList.update(list => {
 			console.log('list is', list);
+			const newList = [...list, quote];
+			postWatchlist(newList.map(item => item.symbol))
+				.then(res => console.log({ watchlist: res }))
+				.catch(err => console.error({ watchlist: err }));
 			return [...list, quote];
 		});
 	}
