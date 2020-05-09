@@ -1,5 +1,5 @@
 import dbInstance from '../utils/db';
-import { Schema, Document } from 'mongoose';
+import { Schema, Document, Types } from 'mongoose';
 
 export interface QuotesInterface extends Document {
 	symbol: string;

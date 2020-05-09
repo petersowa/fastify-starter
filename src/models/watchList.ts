@@ -1,19 +1,19 @@
 import dbInstance from '../utils/db';
-import { Schema, Document } from 'mongoose';
+import { Schema, Document, Types } from 'mongoose';
 
-interface WatchlistModel extends Document {
-	date: string;
-	user: {};
-	symbols: string[];
+export interface WatchlistInterface extends Document {
+	updated: Date;
+	user: Types.ObjectId;
+	symbols: Types.Array<string>;
 }
 
 const schema: Schema = new Schema({
 	updated: { type: Date, default: Date.now },
-	user: { type: Schema.Types.ObjectId, ref: 'Users' },
+	user: { type: Schema.Types.ObjectId, ref: 'Users', unique: true },
 	symbols: [String],
 });
 
-const WatchlistModel = dbInstance.createModel<WatchlistModel>(
+const WatchlistModel = dbInstance.createModel<WatchlistInterface>(
 	'Watchlist',
 	schema
 );
