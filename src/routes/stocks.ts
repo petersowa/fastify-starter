@@ -4,7 +4,6 @@ import { checkSessionAuth } from '../controllers/protected';
 import QuotesModel, { QuotesInterface } from '../models/quotesModel';
 import WatchList from '../models/watchList';
 import { UserModel } from '../models/userModel';
-import { resolve } from 'dns';
 
 const MINUTES = 60 * 1000;
 const HOURS = 60 * MINUTES;
@@ -104,7 +103,15 @@ async function routes(
 			preHandler: checkSessionAuth,
 		},
 		async (request, reply) => {
-			return WatchList.findOne({ user: request.session.username });
+			const user = await UserModel.findOne({
+				email: request.session.username,
+			});
+			console.log('get watchlist:', user && user.id);
+			if (!user) return null;
+			const wl = await WatchList.findOne({ user: user.id });
+			if (!wl) return null;
+			console.log(wl.symbols);
+			return wl.symbols;
 		}
 	);
 
@@ -118,21 +125,35 @@ async function routes(
 			const user = await UserModel.findOne({
 				email: request.session.username,
 			});
-			console.log({ user, email: request.session.username });
-			const newWatchlist = new WatchList({
-				user: user,
-				symbols: watchList,
-			});
+			// console.log({ user, email: request.session.username });
 
-			newWatchlist
-				.save()
-				.then((result: {}) => {
-					console.log({ watchList: result });
-					return { status: result };
-				})
-				.catch((err: Error) => {
-					console.error({ watchlist: err });
-				});
+			user &&
+				WatchList.findOne({ user: user.id })
+					.then((doc) => {
+						if (doc) {
+							console.log('found watch list', doc);
+							doc.symbols = watchList;
+							doc.save().then((result) => {
+								console.log('updated watchlist', result);
+							});
+						} else {
+							const newWatchlist = new WatchList({
+								user: user,
+								symbols: watchList,
+							});
+
+							newWatchlist
+								.save()
+								.then((result: {}) => {
+									console.log({ watchList: result });
+									return { status: result };
+								})
+								.catch((err: Error) => {
+									console.error({ watchlist: err });
+								});
+						}
+					})
+					.catch((err) => console.log({ postWatchlistError: err }));
 		}
 	);
 }
