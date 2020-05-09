@@ -54,7 +54,7 @@ async function routes(
 			username,
 			'password-match': passwordMatch,
 		} = request.body;
-		console.log(username, password, passwordMatch);
+		// console.log(username, password, passwordMatch);
 		if (password !== passwordMatch) {
 			// request.flash('auth', 'Passwords do not match.');
 			request.session.flash.add('auth', 'Passwords do not match');
