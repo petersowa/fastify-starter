@@ -4,11 +4,8 @@
 	let watchItems = [];
 
 	const unsubscribe = watchList.subscribe(list => {
-		console.log(list);
 		watchItems = [...list];
-		postWatchlist()
-			.then(res => console.log({ watchlist: res }))
-			.catch(err => console.error({ watchlist: err }));
+		console.log('watchlist subscribe list:', list);
 	});
 
 	async function getQuote(symbol) {
@@ -22,22 +19,6 @@
 		}
 		return data;
 	}
-
-	async function postWatchlist() {
-		const csrf = document
-			.querySelector('meta[name="csrf-token"]')
-			.getAttribute('content');
-		const response = await fetch(`/stocks/watchlist`, {
-			method: 'POST',
-			credentials: 'same-origin',
-			headers: {
-				'Content-Type': 'application/json',
-				'csrf-token': csrf,
-			},
-			body: JSON.stringify(['ibm', 'csco']),
-		});
-		return response.json();
-	}
 </script>
 
 <style type="scss">
@@ -47,12 +28,15 @@
 		justify-content: left;
 		margin: 0;
 		width: 100%;
-		outline: 1px solid red;
-		padding: 0;
+		padding: 1rem 0;
 		&__row {
 			display: grid;
-			grid-template-columns: 1fr 1fr 1fr 1fr;
+			grid-template-columns: 0.5fr 0.5fr 0.5fr 1fr;
 			grid-auto-rows: 1.2rem;
+			overflow: hidden;
+			gap: 10px 10px;
+			border-bottom: 1px solid silver;
+			padding: 0 2%;
 		}
 	}
 </style>
