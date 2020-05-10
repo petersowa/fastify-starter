@@ -133,9 +133,13 @@ async function routes(
 						if (doc) {
 							console.log('found watch list', doc);
 							doc.symbols = watchList;
-							doc.save().then((result) => {
-								console.log('updated watchlist', result);
-							});
+							doc.save()
+								.then((result) => {
+									console.log('updated watchlist', result);
+								})
+								.catch((err) => {
+									throw new Error(err);
+								});
 						} else {
 							const newWatchlist = new WatchList({
 								user: user,
