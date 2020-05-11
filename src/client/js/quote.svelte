@@ -6,6 +6,7 @@
 	import WatchList from './Finance/WatchList.svelte';
 	import { watchList } from './Finance/storeWatchList';
 	import Quote from './Finance/Quote.svelte';
+	import Accounts from './Finance/Accounts.svelte';
 
 	let quote = {};
 	let symbol = '';
@@ -133,12 +134,14 @@
 
 	function addToWatchlist() {
 		watchList.update(list => {
+			if (list.find(item => item.symbol === quote.symbol)) return list;
 			console.log('list is', list);
+
 			const newList = [...list, quote];
 			postWatchlist(newList.map(item => item.symbol))
 				.then(res => console.log({ watchlist: res }))
 				.catch(err => console.error({ watchlist: err }));
-			return [...list, quote];
+			return newList;
 		});
 	}
 </script>
@@ -184,6 +187,10 @@
 
 	<div class="app">
 		<WatchList />
+	</div>
+
+	<div class="app">
+		<Accounts />
 	</div>
 
 </div>
