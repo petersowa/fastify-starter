@@ -119,7 +119,13 @@ async function routes(
 			preHandler: checkSessionAuth,
 		},
 		async (request, reply) => {
-			const { watchList } = request.body;
+			let { watchList } = request.body;
+			if (!watchList) {
+				reply.code(400);
+				return { status: 'no data' };
+			}
+
+			watchList = [...new Set(watchList)];
 
 			WatchList.findOne({ user: request.session.userId })
 				.then((doc) => {
