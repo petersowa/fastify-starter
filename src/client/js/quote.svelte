@@ -204,6 +204,7 @@
 		</form>
 	</Modal>
 {/if}
+
 {#if !isLoaded || !isMinWait}
 	<Spinner>
 		<div>spinner</div>

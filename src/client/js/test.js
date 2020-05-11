@@ -15,7 +15,7 @@ const timeObserver = new Observable((subscriber) => {
 	const intervalId = setInterval(() => {
 		subscriber.next('tick');
 	}, 500);
-	return function usubscribe() {
+	return function unsubscribe() {
 		clearInterval(intervalId);
 	};
 });
