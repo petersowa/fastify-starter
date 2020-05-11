@@ -24,7 +24,8 @@ async function routes(
 					if (isValidPW) {
 						// console.log({ user, isValidPW, username });
 						request.session.isAuth = true;
-						request.session.username = username;
+						request.session.username = username; // email
+						request.session.userId = user.id;
 						return reply.redirect('/');
 					} else {
 						request.session.flash.add(
