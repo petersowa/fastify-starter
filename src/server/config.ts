@@ -46,7 +46,7 @@ app.setErrorHandler((err, request, reply) => {
 
 app.addHook('preHandler', (request, reply, next) => {
 	request.session.appState = { ...appState, timeStamp: Date.now() };
-	console.log('preHandler', request.ips);
+	console.log('preHandler', request.ips, request.session.userId);
 	request.session.flash = flashState;
 	request.session.appState.info.setInfo({
 		ip: request.ip,
