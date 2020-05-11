@@ -7,7 +7,7 @@ import { UserModel } from '../models/userModel';
 
 const MINUTES = 60 * 1000;
 const HOURS = 60 * MINUTES;
-const QUOTE_AGE = 4 * HOURS;
+const QUOTE_AGE = 0.5 * HOURS;
 
 interface Query {
 	foo?: number;
@@ -58,7 +58,9 @@ const hashStringToInt: (str: string) => number = (str) => {
 
 function getCache(key: string): HashTable<{}> | null {
 	const index = hashStringToInt(key);
+
 	if (index in hashTable) {
+		if (isExpired(hashTable[index].time)) return null;
 		const data = hashTable[index];
 		if (data.key === key) return data;
 		console.log('hash collision');
@@ -193,7 +195,7 @@ function getLatestSavedQuote(symbol: string): Promise<QuotesInterface | null> {
 async function updateQuoteDB(symbol: string, data: {}): Promise<boolean> {
 	const quote = await getLatestSavedQuote(symbol);
 	if (quote) {
-		if (Date.now() - Date.parse(quote.date) < 1000 * 60 * 60) {
+		if (Date.now() - Date.parse(quote.date) < 1000 * 60 * 1) {
 			// console.log('found recent quote');
 			return new Promise((resolve, reject) => resolve(false));
 		}
