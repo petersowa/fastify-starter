@@ -103,14 +103,10 @@ async function routes(
 			preHandler: checkSessionAuth,
 		},
 		async (request, reply) => {
-			const user = await UserModel.findOne({
-				email: request.session.username,
+			const wl = await WatchList.findOne({
+				user: request.session.userId,
 			});
-			console.log('get watchlist:', user && user.id);
-			if (!user) return null;
-			const wl = await WatchList.findOne({ user: user.id });
 			if (!wl) return null;
-			console.log(wl.symbols);
 			return wl.symbols;
 		}
 	);
@@ -122,42 +118,37 @@ async function routes(
 		},
 		async (request, reply) => {
 			const { watchList } = request.body;
-			const user = await UserModel.findOne({
-				email: request.session.username,
-			});
-			// console.log({ user, email: request.session.username });
 
-			user &&
-				WatchList.findOne({ user: user.id })
-					.then((doc) => {
-						if (doc) {
-							console.log('found watch list', doc);
-							doc.symbols = watchList;
-							doc.save()
-								.then((result) => {
-									console.log('updated watchlist', result);
-								})
-								.catch((err) => {
-									throw new Error(err);
-								});
-						} else {
-							const newWatchlist = new WatchList({
-								user: user,
-								symbols: watchList,
+			WatchList.findOne({ user: request.session.userId })
+				.then((doc) => {
+					if (doc) {
+						console.log('found watch list', doc);
+						doc.symbols = watchList;
+						doc.save()
+							.then((result) => {
+								console.log('updated watchlist', result);
+							})
+							.catch((err) => {
+								throw new Error(err);
 							});
+					} else {
+						const newWatchlist = new WatchList({
+							user: request.session.userId,
+							symbols: watchList,
+						});
 
-							newWatchlist
-								.save()
-								.then((result: {}) => {
-									console.log({ watchList: result });
-									return { status: result };
-								})
-								.catch((err: Error) => {
-									console.error({ watchlist: err });
-								});
-						}
-					})
-					.catch((err) => console.log({ postWatchlistError: err }));
+						newWatchlist
+							.save()
+							.then((result: {}) => {
+								console.log({ watchList: result });
+								return { status: result };
+							})
+							.catch((err: Error) => {
+								console.error({ watchlist: err });
+							});
+					}
+				})
+				.catch((err) => console.log({ postWatchlistError: err }));
 		}
 	);
 }
@@ -203,7 +194,7 @@ async function updateQuoteDB(symbol: string, data: {}): Promise<boolean> {
 	const quote = await getLatestSavedQuote(symbol);
 	if (quote) {
 		if (Date.now() - Date.parse(quote.date) < 1000 * 60 * 60) {
-			console.log('found recent quote');
+			// console.log('found recent quote');
 			return new Promise((resolve, reject) => resolve(false));
 		}
 	}
@@ -216,7 +207,7 @@ async function updateQuoteDB(symbol: string, data: {}): Promise<boolean> {
 			.save()
 			.then((doc) => {
 				resolve(true);
-				console.log({ savedQuote: doc });
+				// console.log('saved quote');
 			})
 			.catch((err) => {
 				reject(err);
