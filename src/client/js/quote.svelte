@@ -1,10 +1,11 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import Modal from './modal.svelte';
 	import Spinner from './spinner.svelte';
 	import Box from './box.svelte';
 	import WatchList from './Finance/WatchList.svelte';
 	import { watchList } from './Finance/storeWatchList';
+	import Quote from './Finance/Quote.svelte';
 
 	let quote = {};
 	let symbol = '';
@@ -13,12 +14,23 @@
 	let showModal = false;
 	let isMinWait = true;
 	let watchListItems = null;
+	let refreshInterval = null;
 
 	$: fracHigh = quote && (quote.latestPrice / quote.week52High) * 100;
 
 	onMount(async () => {
+		const clearSpinner = setSpinner();
+		await refreshWatchlist();
+		clearSpinner();
+		refreshInterval = setInterval(() => refreshWatchlist(), 1000 * 60 * 15);
+	});
+
+	onDestroy(() => {
+		clearInterval(refreshInterval);
+	});
+
+	async function refreshWatchlist() {
 		try {
-			const clearSpinner = setSpinner();
 			const res = await fetch(`/stocks/watchlist`);
 			console.log({ watchlist: res });
 			watchListItems = await res.json();
@@ -35,14 +47,12 @@
 					console.log(quotes);
 					return [...quotes];
 				});
-				clearSpinner();
 			}
 			console.log({ watchListItems });
 		} catch (err) {
 			console.log({ watchlistError: err });
 		}
-		clearSpinner();
-	});
+	}
 
 	async function getQuote(symbol) {
 		let data = null;
@@ -134,80 +144,47 @@
 </script>
 
 <style type="text/scss">
-	.quotes {
+	.apps {
 		display: flex;
 		flex-direction: column;
-		width: 100%;
-		justify-items: center;
-		align-content: center;
-		&__head {
-			text-align: center;
-			font-size: 1.2rem;
-			text-transform: capitalize;
-			letter-spacing: 0.2rem;
-			font-weight: bold;
-		}
-		&__head2 {
-			text-align: center;
-			font-size: 0.8rem;
-			text-transform: uppercase;
-			letter-spacing: 0.1rem;
-			font-style: italic;
-			margin-bottom: 1.5em;
-		}
-		&__row {
-			display: grid;
-			grid-template-columns: 2fr 1fr;
-			grid-auto-rows: minmax(1.5rem, auto);
-			color: blue;
-			font-variant-numeric: tabular-nums;
-			justify-items: left;
-			margin: 0 0 2em;
-			&--value {
-				justify-self: right;
-			}
-		}
+		background: white;
+		gap: 1rem;
 	}
-
-	.h-center {
-		margin: auto;
-	}
-
 	form {
 		padding: 2em;
 	}
+
+	.app {
+		background: #eee;
+		margin-bottom: 1em;
+		border-radius: 0.2em;
+		box-shadow: 4px 4px 12px 2px rgba(0, 0, 0, 0.2);
+		border: 1px solid rgba(0, 0, 0, 0.1);
+	}
 </style>
 
-<div class="app-content">
+<div class="apps">
 
-	<h1>Stock Quote App</h1>
+	<h1>Investments</h1>
 
-	<form on:submit|preventDefault={handleSubmit}>
-		<label>Stock Name:</label>
-		<input type="string" bind:value={symbol} />
-	</form>
+	<div class="app">
+		<form on:submit|preventDefault={handleSubmit}>
+			<label>Stock Name:</label>
+			<input type="string" bind:value={symbol} />
+		</form>
+	</div>
 
-	<div class="quotes">
-		{#if isLoaded && quote.symbol}
-			<span class="quotes__head">{quote.companyName}</span>
-			<span class="quotes__head2">{quote.primaryExchange}</span>
-			<div class="quotes__row">
-				{#each [['Close Price', quote.latestPrice], ['Percent of 52 Week High', fracHigh.toFixed(2)], ['Change', change]] as item}
-					<span>{item[0]}</span>
-					<span class="quotes__row--value">{item[1]}</span>
-				{/each}
-			</div>
-			<button on:click={addToWatchlist} class="h-center">
-				Add To Watch List
-			</button>
-		{:else if quote.symbol && !quote.error}
-			<pre>LOADING</pre>
-		{:else if quote.error}
-			<pre>{quote.error}</pre>
-		{/if}
+	{#if quote.symbol}
+		<div class="app">
+			<Quote {quote} {addToWatchlist} />
+		</div>
+	{:else if quote.error}
+		<pre>{quote.error}</pre>
+	{/if}
+
+	<div class="app">
 		<WatchList />
 	</div>
-	<button on:click={() => (showModal = true)}>Open Modal</button>
 
 </div>
 

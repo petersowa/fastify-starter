@@ -27,16 +27,16 @@
 		flex-direction: column;
 		justify-content: left;
 		margin: 0;
+		padding: 1em 1em;
 		width: 100%;
-		padding: 1rem 0;
 		&__row {
 			display: grid;
 			grid-template-columns: 0.5fr 0.5fr 0.5fr 1fr;
 			grid-auto-rows: 1.2rem;
 			overflow: hidden;
 			gap: 10px 10px;
-			border-bottom: 1px solid silver;
-			padding: 0 2%;
+			border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+			padding: 0;
 		}
 	}
 </style>
