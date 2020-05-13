@@ -1,6 +1,7 @@
 <script>
 	import { get } from 'svelte/store';
 	import { watchList } from './storeWatchList';
+	import { postWatchlist } from './handle-ajax';
 	let watchItems = [];
 
 	const unsubscribe = watchList.subscribe(list => {
@@ -8,16 +9,16 @@
 		console.log('watchlist subscribe list:', list);
 	});
 
-	async function getQuote(symbol) {
-		let data = null;
-		try {
-			const res = await fetch(`/stocks/quote/${symbol}`);
-			console.log({ res });
-			data = await res.json();
-		} catch (err) {
-			console.error('unable to fetch or parse', { res });
-		}
-		return data;
+	function removeSymbol(sym) {
+		watchList.update(list => {
+			const newList = list.filter(item => item.symbol !== sym);
+			postWatchlist(newList.map(item => item.symbol))
+				.then(res => {
+					console.log('UPDATED WATCH LIST', res);
+				})
+				.catch(err => console.log('UNABLE TO UPDATE WATCHLIST', err));
+			return newList;
+		});
 	}
 </script>
 
@@ -31,12 +32,18 @@
 		width: 100%;
 		&__row {
 			display: grid;
-			grid-template-columns: 0.5fr 0.5fr 0.5fr 1fr;
-			grid-auto-rows: 1.2rem;
+			grid-template-columns: 0.5fr 0.5fr 0.5fr 1fr 20px;
+			grid-auto-rows: 2rem;
 			overflow: hidden;
 			gap: 10px 10px;
 			border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 			padding: 0;
+			align-items: end;
+		}
+		button {
+			font-size: 16px;
+			box-shadow: none;
+			margin: 0.2em;
 		}
 	}
 </style>
@@ -48,6 +55,9 @@
 			<span>{quote.latestPrice}</span>
 			<span>{quote.peRatio}</span>
 			<span>{new Date(quote.latestUpdate).toLocaleString()}</span>
+			<span>
+				<button on:click={removeSymbol(quote.symbol)}>X</button>
+			</span>
 		</li>
 	{/each}
 </ul>

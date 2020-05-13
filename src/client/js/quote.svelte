@@ -7,6 +7,7 @@
 	import { watchList } from './Finance/storeWatchList';
 	import Quote from './Finance/Quote.svelte';
 	import Accounts from './Finance/Accounts.svelte';
+	import { postWatchlist } from './Finance/handle-ajax';
 
 	let quote = {};
 	let symbol = '';
@@ -108,24 +109,6 @@
 			((latestPrice - previousClose) / previousClose) *
 			100
 		).toFixed(2);
-	}
-
-	async function postWatchlist(list) {
-		const csrf = document
-			.querySelector('meta[name="csrf-token"]')
-			.getAttribute('content');
-		const response = await fetch(`/stocks/watchlist`, {
-			method: 'POST',
-			credentials: 'same-origin',
-			headers: {
-				'Content-Type': 'application/json',
-				'csrf-token': csrf,
-			},
-			body: JSON.stringify({
-				watchList: list,
-			}),
-		});
-		return response.json();
 	}
 
 	const formatData = (name, value) => {
