@@ -36,18 +36,23 @@
 		width: 100%;
 		&__row {
 			display: grid;
-			grid-template-columns: 0.5fr 0.5fr 0.5fr 1fr 20px;
+			grid-template-columns: 1fr 1fr 1fr 1fr 1fr 20px;
 			grid-auto-rows: 2rem;
-			overflow: hidden;
 			gap: 10px 10px;
 			border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 			padding: 0;
-			align-items: end;
+			align-items: center;
+			overflow: hidden;
 		}
 		button {
 			font-size: 16px;
 			box-shadow: none;
-			margin: 0.2em;
+			margin: 0;
+		}
+		.elipsis {
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			max-width: 10%;
 		}
 	}
 </style>
@@ -57,8 +62,13 @@
 		<li class="watchlist__row">
 			<span>{quote.symbol}</span>
 			<span>{quote.latestPrice}</span>
-			<span>{quote.peRatio}</span>
-			<span>{new Date(quote.latestUpdate).toLocaleString()}</span>
+			<span>{(quote.changePercent * 100).toFixed(2)}</span>
+			<span>
+				{((quote.latestPrice / quote.week52High) * 100).toFixed(2)}
+			</span>
+			<span class="elipsis">
+				{new Date(quote.latestUpdate).toLocaleString()}
+			</span>
 			<span>
 				<button on:click={removeSymbol(quote.symbol)}>X</button>
 			</span>
