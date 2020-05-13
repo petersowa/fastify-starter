@@ -128,27 +128,20 @@ async function routes(
 			watchList = [...new Set(watchList)];
 
 			try {
-				const doc = await WatchList.findOne({
+				let doc = await WatchList.findOne({
 					user: request.session.userId,
 				});
 				if (doc) {
-					console.log('found watch list', doc);
 					doc.symbols = watchList;
-					const result = await doc.save();
-
-					console.log('updated watchlist', result);
-					return { status: result };
 				} else {
-					const newWatchlist = new WatchList({
+					doc = new WatchList({
 						user: request.session.userId,
 						symbols: watchList,
 					});
-
-					const result = await newWatchlist.save();
-
-					console.log({ watchList: result });
-					return { status: result };
 				}
+				const result = await doc.save();
+				console.log('updated watchlist', result);
+				return { data: result };
 			} catch (err) {
 				console.log({ postWatchlistError: err });
 				reply.code(500);
