@@ -10,15 +10,19 @@
 	});
 
 	function removeSymbol(sym) {
-		watchList.update(list => {
-			const newList = list.filter(item => item.symbol !== sym);
-			postWatchlist(newList.map(item => item.symbol))
-				.then(res => {
-					console.log('UPDATED WATCH LIST', res);
-				})
-				.catch(err => console.log('UNABLE TO UPDATE WATCHLIST', err));
-			return newList;
-		});
+		postWatchlist(
+			watchItems
+				.filter(item => item.symbol !== sym)
+				.map(item => item.symbol)
+		)
+			.then(res => {
+				watchList.update(list => {
+					const newList = list.filter(item => item.symbol !== sym);
+					return newList;
+				});
+				console.log('UPDATED WATCH LIST', res);
+			})
+			.catch(err => console.log('UNABLE TO UPDATE WATCHLIST', err));
 	}
 </script>
 

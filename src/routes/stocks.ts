@@ -127,36 +127,33 @@ async function routes(
 
 			watchList = [...new Set(watchList)];
 
-			WatchList.findOne({ user: request.session.userId })
-				.then((doc) => {
-					if (doc) {
-						console.log('found watch list', doc);
-						doc.symbols = watchList;
-						doc.save()
-							.then((result) => {
-								console.log('updated watchlist', result);
-							})
-							.catch((err) => {
-								throw new Error(err);
-							});
-					} else {
-						const newWatchlist = new WatchList({
-							user: request.session.userId,
-							symbols: watchList,
-						});
+			try {
+				const doc = await WatchList.findOne({
+					user: request.session.userId,
+				});
+				if (doc) {
+					console.log('found watch list', doc);
+					doc.symbols = watchList;
+					const result = await doc.save();
 
-						newWatchlist
-							.save()
-							.then((result: {}) => {
-								console.log({ watchList: result });
-								return { status: result };
-							})
-							.catch((err: Error) => {
-								console.error({ watchlist: err });
-							});
-					}
-				})
-				.catch((err) => console.log({ postWatchlistError: err }));
+					console.log('updated watchlist', result);
+					return { status: result };
+				} else {
+					const newWatchlist = new WatchList({
+						user: request.session.userId,
+						symbols: watchList,
+					});
+
+					const result = await newWatchlist.save();
+
+					console.log({ watchList: result });
+					return { status: result };
+				}
+			} catch (err) {
+				console.log({ postWatchlistError: err });
+				reply.code(500);
+				return { status: err.message };
+			}
 		}
 	);
 }
