@@ -36,13 +36,15 @@
 		width: 100%;
 		&__row {
 			display: grid;
-			grid-template-columns: 1fr 1fr 1fr 1fr 1fr 20px;
+			overflow: hidden;
+			grid-template-columns:
+				repeat(4, minmax(3rem, 1fr)) minmax(0, 10rem)
+				minmax(20px, 20px);
 			grid-auto-rows: 2rem;
 			gap: 10px 10px;
 			border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 			padding: 0;
 			align-items: center;
-			overflow: hidden;
 		}
 		button {
 			font-size: 16px;
@@ -50,9 +52,11 @@
 			margin: 0;
 		}
 		.elipsis {
+			display: inline-block;
 			text-overflow: ellipsis;
 			white-space: nowrap;
-			max-width: 10%;
+			overflow: hidden;
+			max-width: 100%;
 		}
 	}
 </style>
