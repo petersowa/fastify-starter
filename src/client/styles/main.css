@@ -212,13 +212,6 @@ a:focus::before {
 	background-size: cover;
 }
 
-.h-flex-container {
-	display: flex;
-	flex-direction: row;
-	flex-grow: 1;
-	padding: 1em 0;
-}
-
 .v-flex-container {
 	display: flex;
 	flex-direction: column;
@@ -230,12 +223,22 @@ a:focus::before {
 	min-height: calc(100vh - 11em);
 }
 
+.h-flex-container {
+	max-width: 120rem;
+	min-width: 40rem;
+	width: 80vw;
+	display: flex;
+	flex-direction: row;
+	flex-grow: 1;
+	padding: 1em 0;
+	margin: 0.5em auto;
+	border-radius: 0.4em;
+}
+
 .main-content {
 	flex-grow: 1;
 	flex-basis: 60%;
-	max-width: 50em;
-	margin: 0 auto;
-	padding: 0 5vw;
+	padding: 0 1vw;
 }
 
 .sidebar {
@@ -535,11 +538,6 @@ body.show-modal {
 		line-height: 2;
 		font-size: 2rem;
 		z-index: 10;
-	}
-
-	.main-content {
-		width: 90%;
-		flex-grow: 8;
 	}
 
 	#menu-toggle + label {
