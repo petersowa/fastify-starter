@@ -3,6 +3,7 @@
 	import { watchList } from './storeWatchList';
 	import { postWatchlist } from './handle-ajax';
 	let watchItems = [];
+	$: priceColor = 'white';
 
 	const unsubscribe = watchList.subscribe(list => {
 		watchItems = [...list];
@@ -24,6 +25,11 @@
 			})
 			.catch(err => console.log('UNABLE TO UPDATE WATCHLIST', err));
 	}
+
+	function changeColor(change) {
+		return `rgba(${200 - change * 1000},${200 + change * 1000},${200 -
+			Math.abs(change * 1000)},.4)`;
+	}
 </script>
 
 <style type="scss">
@@ -32,24 +38,32 @@
 		flex-direction: column;
 		justify-content: left;
 		margin: 0;
-		padding: 1em 1em;
+		padding: 0;
 		width: 100%;
 		&__row {
 			display: grid;
 			overflow: hidden;
 			grid-template-columns:
-				repeat(4, minmax(3rem, 1fr)) minmax(0, 10rem)
-				minmax(20px, 20px);
+				repeat(4, minmax(3rem, 1fr)) minmax(0, 12rem)
+				minmax(2em, 2em);
 			grid-auto-rows: 2rem;
 			gap: 10px 10px;
 			border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 			padding: 0;
 			align-items: center;
+			cursor: pointer;
 		}
 		button {
 			font-size: 16px;
 			box-shadow: none;
 			margin: 0;
+			color: red;
+			background: #2222;
+			text-align: center;
+			width: 1.8em;
+			height: 1.8em;
+			padding: 0;
+			border-radius: 0.2em;
 		}
 		.elipsis {
 			display: inline-block;
@@ -58,19 +72,57 @@
 			overflow: hidden;
 			max-width: 100%;
 		}
+		.justify-right {
+			text-align: right;
+			font-variant-numeric: tabular-nums;
+		}
+		li {
+			color: #222;
+			padding: 0.1em 0.4em;
+			margin: 2px;
+			border-radius: 0.2em;
+		}
+		#price-change {
+			position: relative;
+			&:after {
+				position: absolute;
+				content: '';
+				top: -0.3rem;
+				right: -1rem;
+				width: 5rem;
+				bottom: -0.3rem;
+				background: var(--priceColor);
+			}
+		}
+		#price_52week-change {
+			position: relative;
+			&:after {
+				position: absolute;
+				content: '';
+				top: -0.3rem;
+				right: -1rem;
+				width: 5rem;
+				bottom: -0.3rem;
+				background: var(--price52WeekColor);
+			}
+		}
 	}
 </style>
 
 <ul class="watchlist">
 	{#each watchItems as quote}
-		<li class="watchlist__row">
+		<li
+			class="watchlist__row"
+			style="--priceColor:{changeColor(quote.changePercent)};--price52WeekColor:{changeColor(quote.latestPrice / quote.week52High - 0.9)}">
 			<span>{quote.symbol}</span>
-			<span>{quote.latestPrice}</span>
-			<span>{(quote.changePercent * 100).toFixed(2)}</span>
-			<span>
-				{((quote.latestPrice / quote.week52High) * 100).toFixed(2)}
+			<span class="justify-right">{quote.latestPrice.toFixed(2)}</span>
+			<span class="justify-right" id="price-change">
+				{(quote.changePercent * 100).toFixed(1)}
 			</span>
-			<span class="elipsis">
+			<span class="justify-right" id="price_52week-change">
+				{((quote.latestPrice / quote.week52High - 1) * 100).toFixed(1)}
+			</span>
+			<span class="elipsis justify-right">
 				{new Date(quote.latestUpdate).toLocaleString()}
 			</span>
 			<span>
