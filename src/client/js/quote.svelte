@@ -131,10 +131,9 @@
 
 <style type="text/scss">
 	.apps {
+		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
-		background: white;
-		gap: 1rem;
 	}
 	form {
 		padding: 2em;

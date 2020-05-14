@@ -48,7 +48,6 @@
 				minmax(2em, 2em);
 			grid-auto-rows: 2rem;
 			gap: 10px 10px;
-			border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 			padding: 0;
 			align-items: center;
 			cursor: pointer;
@@ -78,6 +77,7 @@
 		}
 		li {
 			color: #222;
+			box-shadow: 0px 0px 8px 2px #3334;
 			padding: 0.1em 0.4em;
 			margin: 2px;
 			border-radius: 0.2em;
