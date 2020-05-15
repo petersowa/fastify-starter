@@ -212,6 +212,12 @@ a:focus::before {
 	background-size: cover;
 }
 
+.body-content {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
 .v-flex-container {
 	display: flex;
 	flex-direction: column;
@@ -219,7 +225,7 @@ a:focus::before {
 	margin: 0.3em;
 	border-radius: 0.3em;
 	overflow: auto;
-	min-height: calc(100vh - 11em);
+	flex-grow: 1;
 }
 
 .h-flex-container {
@@ -227,12 +233,12 @@ a:focus::before {
 	max-width: 120rem;
 	min-width: 40rem;
 	width: 80vw;
-	background-color: var(--clr-content);
+	/* background-color: var(--clr-content); */
 	flex-direction: row;
-	flex-grow: 1;
 	padding: 0;
 	margin: 0 auto;
 	border-radius: 0.4em;
+	flex-grow: 1;
 }
 
 .main-content {
@@ -303,12 +309,15 @@ a:focus::before {
 }
 
 .footer {
+	display: flex;
 	position: sticky;
 	bottom: 0;
-	padding: 2rem 5%;
 	background-color: var(--clr-footer-section);
 	color: var(--clr-footer-text);
 	width: 100%;
+	height: 4rem;
+	align-items: center;
+	justify-content: center;
 }
 
 .nav-menu {
@@ -507,7 +516,6 @@ body.show-modal {
 	.h-flex-container {
 		display: flex;
 		flex-direction: column;
-		flex-grow: 1;
 		padding: 1em 0;
 	}
 	.sidebar {
