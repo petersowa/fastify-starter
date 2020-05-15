@@ -138,6 +138,9 @@
 	}
 	form {
 		padding: 2em;
+		& > button {
+			margin: 10px;
+		}
 	}
 
 	.app {
@@ -164,6 +167,7 @@
 			width: 100%;
 			left: 0;
 			bottom: 0;
+			opacity: 0.5;
 		}
 	}
 </style>
@@ -176,6 +180,7 @@
 		<form on:submit|preventDefault={handleSubmit}>
 			<label>Stock Name:</label>
 			<input type="string" bind:value={symbol} />
+			<button type="submit">Get Quote</button>
 		</form>
 	</div>
 
