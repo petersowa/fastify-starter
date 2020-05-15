@@ -134,6 +134,7 @@
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
+		padding: 0;
 	}
 	form {
 		padding: 2em;
@@ -146,11 +147,30 @@
 		box-shadow: 4px 4px 12px 2px rgba(0, 0, 0, 0.2);
 		border: 1px solid rgba(0, 0, 0, 0.1);
 	}
+
+	.apps-title {
+		position: relative;
+		margin: 0.5rem 0;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		text-align: center;
+		font-weight: 300;
+		width: 100%;
+		&:before {
+			position: absolute;
+			content: '';
+			height: 0.1em;
+			background-color: blue;
+			width: 100%;
+			left: 0;
+			bottom: 0;
+		}
+	}
 </style>
 
 <div class="apps">
 
-	<h1>Investments</h1>
+	<h1 class="apps-title">Investments</h1>
 
 	<div class="app">
 		<form on:submit|preventDefault={handleSubmit}>
