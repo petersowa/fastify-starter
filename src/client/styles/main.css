@@ -231,7 +231,7 @@ a:focus::before {
 .h-flex-container {
 	display: flex;
 	max-width: 120rem;
-	min-width: 40rem;
+	min-width: min-content;
 	width: 80vw;
 	/* background-color: var(--clr-content); */
 	flex-direction: row;
@@ -243,7 +243,6 @@ a:focus::before {
 
 .main-content {
 	flex-grow: 1;
-	flex-basis: 60%;
 	padding: 0 1vw;
 }
 
