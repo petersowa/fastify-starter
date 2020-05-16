@@ -44,10 +44,10 @@
 			display: grid;
 			overflow: hidden;
 			grid-template-columns:
-				repeat(4, minmax(3rem, 1fr)) minmax(0, 12rem)
+				minmax(2em, 2em) repeat(4, minmax(3rem, 1fr)) minmax(0, 12rem)
 				minmax(2em, 2em);
 			grid-auto-rows: 2rem;
-			gap: 10px 10px;
+			gap: 10px 5px;
 			padding: 0;
 			align-items: center;
 			cursor: pointer;
@@ -106,14 +106,25 @@
 				background: var(--price52WeekColor);
 			}
 		}
+		.drag-handle {
+			color: blue;
+			background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDQ4IDQ4IiBoZWlnaHQ9IjQ4cHgiIGlkPSJMYXllcl8xIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCA0OCA0OCIgd2lkdGg9IjQ4cHgiIHhtbDpzcGFjZT0icHJlc2VydmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxnIGlkPSJMYXllcl80Ij48cG9seWdvbiBmaWxsPSIjMjQxRjIwIiBwb2ludHM9IjQ4LDI0IDQwLDE3IDQwLDIyIDI2LDIyIDI2LDggMzAuOTU4LDggMjQsMCAxNyw4IDIyLDggMjIsMjIgOCwyMiA4LDE3IDAsMjQgOCwzMSA4LDI2IDIyLDI2ICAgIDIyLDQwIDE3LjAzMSw0MCAyNCw0OCAzMC45NjksNDAgMjYsNDAgMjYsMjYgNDAsMjYgNDAsMzEgICIvPjwvZz48L3N2Zz4=');
+			margin: 0;
+			height: 1.5em;
+			width: 1.5em;
+			background-size: contain;
+			cursor: grab;
+		}
 	}
 </style>
 
 <ul class="watchlist">
 	{#each watchItems as quote}
 		<li
+			draggable="true"
 			class="watchlist__row"
 			style="--priceColor:{changeColor(quote.changePercent)};--price52WeekColor:{changeColor(quote.latestPrice / quote.week52High - 0.9)}">
+			<div class="drag-handle" />
 			<span>{quote.symbol}</span>
 			<span class="justify-right">{quote.latestPrice.toFixed(2)}</span>
 			<span class="justify-right" id="price-change">
