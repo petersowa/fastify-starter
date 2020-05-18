@@ -30,6 +30,25 @@
 		return `rgba(${200 - change * 1000},${200 + change * 1000},${200 -
 			Math.abs(change * 1000)},.4)`;
 	}
+
+	function dragEnter(e) {
+		e.target.classList.add('drag-over');
+	}
+	function dragStart(e) {}
+	function dragEnd(e) {
+		e.preventDefault();
+	}
+	function dragOver(e) {
+		e.preventDefault();
+		const symbol = e.target.id;
+		console.log('drag over', symbol);
+	}
+	function dragLeave(e) {
+		e.preventDefault();
+	}
+	function drop(e) {
+		e.preventDefault();
+	}
 </script>
 
 <style type="scss">
@@ -116,20 +135,29 @@
 			background-size: contain;
 			cursor: grab;
 		}
+		.drag-over {
+			background: blue;
+		}
 	}
 </style>
 
 <ul class="watchlist">
 	{#each watchItems as quote}
 		<li
+			id={quote.symbol}
 			class="watchlist__row"
 			style="--priceColor:{changeColor(quote.changePercent)};--price52WeekColor:{changeColor(quote.latestPrice / quote.week52High - 0.9)}"
-			on:dragstart={e => console.log('drag start')}
-			on:dragend={e => console.log('drag end')}>
+			on:dragstart={dragStart}
+			on:dragend={dragEnd}
+			on:dragover={dragOver}
+			on:dragenter={dragEnter}
+			on:dragleave={dragLeave}
+			on:drop={drop}>
 			<div
 				class="drag-handle"
 				on:mousedown={e => {
 					e.target.parentNode.setAttribute('draggable', 'true');
+					console.log('drag enable');
 				}}
 				on:mouseup={e => {
 					e.target.parentNode.setAttribute('draggable', 'false');
