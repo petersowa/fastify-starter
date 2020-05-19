@@ -4,6 +4,8 @@
 	import { postWatchlist } from './handle-ajax';
 	let watchItems = [];
 	$: priceColor = 'white';
+	let dragElem = null;
+	let dragOver = null;
 
 	const unsubscribe = watchList.subscribe(list => {
 		watchItems = [...list];
@@ -26,28 +28,72 @@
 			.catch(err => console.log('UNABLE TO UPDATE WATCHLIST', err));
 	}
 
+	async function reorderWatchlist(sym, insAt, isBefore = false) {
+		const insItem = watchItems.find(item => sym === item.symbol);
+		console.log(watchItems);
+
+		const newList = watchItems
+			.filter(item => item.symbol !== sym)
+			.map(item => {
+				if (item.symbol === insAt)
+					return isBefore ? [insItem, item] : [item, insItem];
+				return item;
+			});
+		watchItems = newList.flat();
+		await postWatchlist(watchItems.map(item => item.symbol));
+	}
+
 	function changeColor(change) {
 		return `rgba(${200 - change * 1000},${200 + change * 1000},${200 -
 			Math.abs(change * 1000)},.4)`;
 	}
-
-	function dragEnter(e) {
-		e.target.classList.add('drag-over');
-	}
-	function dragStart(e) {}
-	function dragEnd(e) {
+	function handleDrag(e) {
+		console.log('drag', e.target.dataset.sym);
 		e.preventDefault();
 	}
-	function dragOver(e) {
-		e.preventDefault();
-		const symbol = e.target.id;
-		console.log('drag over', symbol);
+	function handleDragEnter(e, sym) {
+		// console.log('dragEnter', sym, e.target.id);
+		// const enterElement =
+		// 	e.target.dataset.sym || e.target.parentNode.dataset.sym;
+		// if (enterElement) {
+		// 	const el = document.querySelector(`[data-sym="${sym}"]`);
+		// 	el.classList.add('drag-over');
+		// }
 	}
-	function dragLeave(e) {
+	function handleDragLeave(e, sym) {
 		e.preventDefault();
+		// const leaveElement =
+		// 	e.target.dataset.sym || e.target.parentNode.dataset.sym;
+		// if (leaveElement && leaveElement !== dragOver) {
+		// 	const el = document.querySelector(`[data-sym="${sym}"]`);
+		// 	el.classList.remove('drag-over');
+		// }
 	}
-	function drop(e) {
+	function handleDragStart(e) {
+		// e.preventDefault();
+		console.log('dragStart', e.target.dataset.sym);
+		dragElem = e.target;
+	}
+	function handleDragEnd(e) {
+		// e.preventDefault();
+		console.log('dragEnd', e.target.dataset.sym);
+		dragElem = null;
+		dragOver = null;
+	}
+	function handleDragOver(e, sym) {
 		e.preventDefault();
+		dragOver = sym;
+		console.log('drag over', sym, e.target.id);
+	}
+	function handleDrop(e) {
+		e.preventDefault();
+		const droppedOn =
+			e.target.dataset.sym || e.target.parentNode.dataset.sym;
+		const sym = dragElem.dataset.sym;
+		if (sym === droppedOn) return;
+		const rect = e.target.getBoundingClientRect();
+		const isBefore = e.clientY - rect.top < (rect.bottom - rect.top) / 2;
+		reorderWatchlist(dragElem.dataset.sym, droppedOn, isBefore);
 	}
 </script>
 
@@ -136,7 +182,7 @@
 			cursor: grab;
 		}
 		.drag-over {
-			background: blue;
+			outline: 4px solid darkgoldenrod;
 		}
 	}
 </style>
@@ -144,15 +190,18 @@
 <ul class="watchlist">
 	{#each watchItems as quote}
 		<li
-			id={quote.symbol}
-			class="watchlist__row"
+			data-sym={quote.symbol}
+			class={dragOver === quote.symbol ? 'watchlist__row drag-over' : 'watchlist__row '}
 			style="--priceColor:{changeColor(quote.changePercent)};--price52WeekColor:{changeColor(quote.latestPrice / quote.week52High - 0.9)}"
-			on:dragstart={dragStart}
-			on:dragend={dragEnd}
-			on:dragover={dragOver}
-			on:dragenter={dragEnter}
-			on:dragleave={dragLeave}
-			on:drop={drop}>
+			on:dragstart={handleDragStart}
+			on:dragend={handleDragEnd}
+			on:dragover={e => handleDragOver(e, quote.symbol)}
+			on:dragenter={e => handleDragEnter(e, quote.symbol)}
+			on:dragleave={e => handleDragLeave(e, quote.symbol)}
+			on:drop={e => {
+				handleDrop(e, quote.symbol);
+			}}
+			on:drag={handleDrag}>
 			<div
 				class="drag-handle"
 				on:mousedown={e => {
@@ -173,9 +222,9 @@
 			<span class="elipsis justify-right">
 				{new Date(quote.latestUpdate).toLocaleString()}
 			</span>
-			<span>
+			<div>
 				<button on:click={removeSymbol(quote.symbol)}>X</button>
-			</span>
+			</div>
 		</li>
 	{/each}
 </ul>
