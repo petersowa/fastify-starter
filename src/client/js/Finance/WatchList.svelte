@@ -6,10 +6,10 @@
 	$: priceColor = 'white';
 	let dragElem = null;
 	let dragOver = null;
+	let dragPos = { x: 0, y: 0 };
 
 	const unsubscribe = watchList.subscribe(list => {
 		watchItems = [...list];
-		console.log('watchlist subscribe list:', list);
 	});
 
 	function removeSymbol(sym) {
@@ -23,14 +23,12 @@
 					const newList = list.filter(item => item.symbol !== sym);
 					return newList;
 				});
-				console.log('UPDATED WATCH LIST', res);
 			})
 			.catch(err => console.log('UNABLE TO UPDATE WATCHLIST', err));
 	}
 
 	async function reorderWatchlist(sym, insAt, isBefore = false) {
 		const insItem = watchItems.find(item => sym === item.symbol);
-		console.log(watchItems);
 
 		const newList = watchItems
 			.filter(item => item.symbol !== sym)
@@ -47,43 +45,30 @@
 		return `rgba(${200 - change * 1000},${200 + change * 1000},${200 -
 			Math.abs(change * 1000)},.4)`;
 	}
-	function handleDrag(e) {
-		console.log('drag', e.target.dataset.sym);
-		e.preventDefault();
-	}
-	function handleDragEnter(e, sym) {
-		// console.log('dragEnter', sym, e.target.id);
-		// const enterElement =
-		// 	e.target.dataset.sym || e.target.parentNode.dataset.sym;
-		// if (enterElement) {
-		// 	const el = document.querySelector(`[data-sym="${sym}"]`);
-		// 	el.classList.add('drag-over');
-		// }
-	}
-	function handleDragLeave(e, sym) {
-		e.preventDefault();
-		// const leaveElement =
-		// 	e.target.dataset.sym || e.target.parentNode.dataset.sym;
-		// if (leaveElement && leaveElement !== dragOver) {
-		// 	const el = document.querySelector(`[data-sym="${sym}"]`);
-		// 	el.classList.remove('drag-over');
-		// }
-	}
 	function handleDragStart(e) {
 		// e.preventDefault();
-		console.log('dragStart', e.target.dataset.sym);
-		dragElem = e.target;
+		dragElem = e.target.parentNode;
+		dragPos.x = e.clientX;
+		dragPos.y = e.clientY;
+	}
+	function moveDragElement(e, sym) {
+		if (!sym || !dragElem) return;
+		e.preventDefault();
+		const rect = e.target.getBoundingClientRect();
+		const dx = dragPos.x - e.clientX;
+		const dy = dragPos.y - e.clientY;
+		console.log(dragElem.style.top, dy);
+		dragElem.style.top = -dy + 'px';
+		dragElem.style.left = -dx + 'px';
 	}
 	function handleDragEnd(e) {
 		// e.preventDefault();
-		console.log('dragEnd', e.target.dataset.sym);
 		dragElem = null;
 		dragOver = null;
 	}
 	function handleDragOver(e, sym) {
 		e.preventDefault();
-		dragOver = sym;
-		console.log('drag over', sym, e.target.id);
+		if (dragElem) dragOver = sym;
 	}
 	function handleDrop(e) {
 		e.preventDefault();
@@ -107,6 +92,7 @@
 		width: 100%;
 		&__row {
 			display: grid;
+			position: relative;
 			overflow: hidden;
 			grid-template-columns:
 				minmax(2em, 2em) repeat(4, minmax(3rem, 1fr)) minmax(0, 12rem)
@@ -146,6 +132,7 @@
 			padding: 0.1em 0.4em;
 			margin: 2px;
 			border-radius: 0.2em;
+			user-select: none;
 		}
 		#price-change {
 			position: relative;
@@ -193,24 +180,15 @@
 			data-sym={quote.symbol}
 			class={dragOver === quote.symbol ? 'watchlist__row drag-over' : 'watchlist__row '}
 			style="--priceColor:{changeColor(quote.changePercent)};--price52WeekColor:{changeColor(quote.latestPrice / quote.week52High - 0.9)}"
-			on:dragstart={handleDragStart}
-			on:dragend={handleDragEnd}
-			on:dragover={e => handleDragOver(e, quote.symbol)}
-			on:dragenter={e => handleDragEnter(e, quote.symbol)}
-			on:dragleave={e => handleDragLeave(e, quote.symbol)}
-			on:drop={e => {
+			on:pointermove={e => handleDragOver(e, quote.symbol)}
+			on:pointerup={e => {
 				handleDrop(e, quote.symbol);
-			}}
-			on:drag={handleDrag}>
+			}}>
 			<div
 				class="drag-handle"
-				on:mousedown={e => {
-					e.target.parentNode.setAttribute('draggable', 'true');
-					console.log('drag enable');
-				}}
-				on:mouseup={e => {
-					e.target.parentNode.setAttribute('draggable', 'false');
-				}} />
+				on:pointerdown={handleDragStart}
+				on:pointerup={handleDragEnd}
+				on:pointermove={e => moveDragElement(e, quote.symbol)} />
 			<span>{quote.symbol}</span>
 			<span class="justify-right">{quote.latestPrice.toFixed(2)}</span>
 			<span class="justify-right" id="price-change">
