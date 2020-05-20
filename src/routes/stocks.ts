@@ -3,7 +3,7 @@ import * as fastify from 'fastify';
 import { checkSessionAuth } from '../controllers/protected';
 import QuotesModel, { QuotesInterface } from '../models/quotesModel';
 import WatchList from '../models/watchList';
-import { UserModel } from '../models/userModel';
+import { updateWatchlist } from '../controllers/watchlist';
 
 const MINUTES = 60 * 1000;
 const HOURS = 60 * MINUTES;
@@ -118,36 +118,7 @@ async function routes(
 		{
 			preHandler: checkSessionAuth,
 		},
-		async (request, reply) => {
-			let { watchList } = request.body;
-			if (!watchList) {
-				reply.code(400);
-				return { status: 'no data' };
-			}
-
-			watchList = [...new Set(watchList)];
-
-			try {
-				let doc = await WatchList.findOne({
-					user: request.session.userId,
-				});
-				if (doc) {
-					doc.symbols = watchList;
-				} else {
-					doc = new WatchList({
-						user: request.session.userId,
-						symbols: watchList,
-					});
-				}
-				const result = await doc.save();
-				console.log('updated watchlist', result);
-				return { data: result };
-			} catch (err) {
-				console.log({ postWatchlistError: err });
-				reply.code(500);
-				return { status: err.message };
-			}
-		}
+		updateWatchlist
 	);
 }
 
