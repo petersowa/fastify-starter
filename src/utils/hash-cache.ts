@@ -1,17 +1,15 @@
+import { Quote } from '../models/quotesModel';
+
 const MINUTES = 60 * 1000;
 const HOURS = 60 * MINUTES;
 const QUOTE_AGE = 0.5 * HOURS;
 
-export interface StockData {
-	[key: string]: string;
-}
-
-export interface HashTable<T> {
+export interface HashData<T> {
 	key: string;
 	data?: T;
 	time: number;
 }
-const hashTable: HashTable<StockData>[] = new Array(541);
+const hashTable: HashData<Quote>[] = new Array(541);
 
 const ageStamp = (interval: number = QUOTE_AGE): number => {
 	return Math.floor(Date.now() / interval);
@@ -33,7 +31,7 @@ const hashStringToInt: (str: string) => number = (str) => {
 	return hash;
 };
 
-function getCache(key: string): HashTable<{}> | null {
+function getCache(key: string): HashData<Quote> | null {
 	const index = hashStringToInt(key);
 
 	if (index in hashTable) {
@@ -45,7 +43,7 @@ function getCache(key: string): HashTable<{}> | null {
 	return null;
 }
 
-function setCache(key: string, data: {}): boolean {
+function setCache(key: string, data: Quote): boolean {
 	const index = hashStringToInt(key);
 	if (index in hashTable) {
 		if (isExpired(hashTable[index].time)) {
