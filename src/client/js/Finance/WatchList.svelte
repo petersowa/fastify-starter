@@ -1,14 +1,11 @@
 <script>
 	import Sortable from 'sortablejs';
-	import { onMount, beforeUpdate } from 'svelte';
+	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { watchList } from './storeWatchList';
 	import { postWatchlist } from './handle-ajax';
 	let watchItems = [];
 	$: priceColor = 'white';
-	let dragElem = null;
-	let dragOver = null;
-	let dragPos = { x: 0, y: 0 };
 
 	const unsubscribe = watchList.subscribe(list => {
 		console.log('update subscription');
@@ -23,10 +20,6 @@
 				reorderWatchlist(e.oldIndex, e.newIndex);
 			},
 		});
-	});
-
-	beforeUpdate(() => {
-		console.log({ BeforeUpdate: watchItems });
 	});
 
 	function removeSymbol(sym) {
@@ -62,65 +55,55 @@
 		return `rgba(${200 - change * 1000},${200 + change * 1000},${200 -
 			Math.abs(change * 1000)},.4)`;
 	}
-	function handleDragStart(e) {
-		// e.preventDefault();
-		dragElem = e.target.parentNode;
-		dragPos.x = e.clientX;
-		dragPos.y = e.clientY;
-		e.target.setPointerCapture(e.pointerId);
-	}
-	function moveDragElement(e, sym) {
-		if (!sym || !dragElem) return;
-		e.preventDefault();
-		const rect = e.target.getBoundingClientRect();
-		const dx = dragPos.x - e.clientX;
-		const dy = dragPos.y - e.clientY;
-		console.log(dragElem.style.top, dy);
-		dragElem.style.top = -dy + 'px';
-		dragElem.style.left = -dx + 'px';
-	}
-	function handleDragEnd(e) {
-		// e.preventDefault();
-		e.target.releasePointerCapture(e.pointerId);
-		dragElem = null;
-		dragOver = null;
-	}
-	function handleDragOver(e, sym) {
-		e.preventDefault();
-		if (dragElem) dragOver = sym;
-	}
-	function handleDrop(e) {
-		e.preventDefault();
-		const droppedOn =
-			e.target.dataset.sym || e.target.parentNode.dataset.sym;
-		const sym = dragElem.dataset.sym;
-		if (sym === droppedOn) return;
-		const rect = e.target.getBoundingClientRect();
-		const isBefore = e.clientY - rect.top < (rect.bottom - rect.top) / 2;
-		reorderWatchlist(dragElem.dataset.sym, droppedOn, isBefore);
-	}
 </script>
 
 <style type="scss">
 	.watchlist {
-		display: flex;
-		flex-direction: column;
-		justify-content: left;
+		display: grid;
 		margin: 0;
 		padding: 0;
-		width: 100%;
+		grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
 		&__row {
 			display: grid;
 			position: relative;
 			overflow: hidden;
-			grid-template-columns:
-				minmax(2em, 2em) repeat(4, minmax(3rem, 1fr)) minmax(0, 12rem)
-				minmax(2em, 2em);
-			grid-auto-rows: 2rem;
-			gap: 10px 5px;
+			grid-template-columns: minmax(2em, 2em) 5rem 1fr minmax(3em, 3em);
+			grid-auto-rows: auto;
+			grid-template-areas:
+				'handle date date date'
+				'symbol price . control'
+				'. changeDay . control'
+				'. changeYear . control';
+			/* gap: 10px 5px; */
 			padding: 0;
 			align-items: center;
 			cursor: pointer;
+			gap: 0.5rem;
+			background: var(--priceColor);
+		}
+		.grid-handle {
+			grid-area: handle;
+		}
+		.grid-symbol {
+			grid-area: symbol;
+		}
+		.grid-date {
+			width: 100%;
+			grid-area: date;
+		}
+		.grid-price {
+			grid-area: price;
+		}
+		.grid-changeDay {
+			grid-area: changeDay;
+		}
+		.grid-changeYear {
+			grid-area: changeYear;
+		}
+		.grid-control {
+			grid-area: control;
+			justify-self: right;
+			align-self: end;
 		}
 		button {
 			font-size: 16px;
@@ -158,10 +141,10 @@
 			&:after {
 				position: absolute;
 				content: '';
-				top: -0.3rem;
+				top: -0rem;
 				right: -1rem;
 				width: 5rem;
-				bottom: -0.3rem;
+				bottom: -0rem;
 				background: var(--priceColor);
 			}
 		}
@@ -170,10 +153,10 @@
 			&:after {
 				position: absolute;
 				content: '';
-				top: -0.3rem;
+				top: -0rem;
 				right: -1rem;
 				width: 5rem;
-				bottom: -0.3rem;
+				bottom: -0rem;
 				background: var(--price52WeekColor);
 			}
 		}
@@ -187,9 +170,6 @@
 			background-size: contain;
 			cursor: grab;
 		}
-		.drag-over {
-			outline: 4px solid darkgoldenrod;
-		}
 	}
 </style>
 
@@ -197,21 +177,25 @@
 	{#each watchItems as quote (quote.symbol)}
 		<li
 			data-sym={quote.symbol}
-			class={dragOver === quote.symbol ? 'watchlist__row drag-over' : 'watchlist__row '}
+			class="watchlist__row"
 			style="--priceColor:{changeColor(quote.changePercent)};--price52WeekColor:{changeColor(quote.latestPrice / quote.week52High - 0.9)}">
-			<div class="drag-handle" />
-			<span>{quote.symbol}</span>
-			<span class="justify-right">{quote.latestPrice.toFixed(2)}</span>
-			<span class="justify-right" id="price-change">
+			<div class="drag-handle grid-handle" />
+			<span class="grid-symbol">{quote.symbol}</span>
+			<span class="justify-right grid-price">
+				{quote.latestPrice.toFixed(2)}
+			</span>
+			<span class="justify-right grid-changeDay" id="price-change">
 				{(quote.changePercent * 100).toFixed(1)}
 			</span>
-			<span class="justify-right" id="price_52week-change">
+			<span
+				class="justify-right grid-changeYear"
+				id="price_52week-change">
 				{((quote.latestPrice / quote.week52High - 1) * 100).toFixed(1)}
 			</span>
-			<span class="elipsis justify-right">
+			<span class="elipsis justify-right grid-date">
 				{new Date(quote.latestUpdate).toLocaleString()}
 			</span>
-			<div>
+			<div class="grid-control">
 				<button on:click={removeSymbol(quote.symbol)}>X</button>
 			</div>
 		</li>
