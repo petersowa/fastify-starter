@@ -4,12 +4,12 @@ const MINUTES = 60 * 1000;
 const HOURS = 60 * MINUTES;
 const QUOTE_AGE = 0.5 * HOURS;
 
-export interface HashData<T> {
+export interface HashData {
 	key: string;
-	data?: T;
+	data?: Quote;
 	time: number;
 }
-const hashTable: HashData<Quote>[] = new Array(541);
+const hashTable: HashData[] = new Array(541);
 
 const ageStamp = (interval: number = QUOTE_AGE): number => {
 	return Math.floor(Date.now() / interval);
@@ -31,7 +31,7 @@ const hashStringToInt: (str: string) => number = (str) => {
 	return hash;
 };
 
-function getCache(key: string): HashData<Quote> | null {
+function getCache(key: string): HashData | null {
 	const index = hashStringToInt(key);
 
 	if (index in hashTable) {

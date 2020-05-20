@@ -9,7 +9,7 @@ export async function fetchQuote(symbol: string): Promise<Quote | null> {
 	let quote: AxiosResponse<Quote> | null = null;
 
 	try {
-		const cacheData: HashData<Quote> | null = getCache(symbol);
+		const cacheData: HashData | null = getCache(symbol);
 		if (cacheData) {
 			console.log('hit');
 			return cacheData.data || null;

@@ -1,13 +1,13 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { ServerResponse } from 'http';
 
-import { StockData } from '../utils/hash-cache';
+import { Quote } from '../models/quotesModel';
 import { fetchQuote } from './finance';
 
 export async function getQuote(
 	request: FastifyRequest,
 	reply: FastifyReply<ServerResponse>
-): Promise<StockData | null> {
+): Promise<Quote | null> {
 	console.log(request.params.symbol);
 	const quote = await fetchQuote(request.params.symbol);
 	if (quote === null) reply.status(404).send({ error: 'unable to get data' });
