@@ -23,6 +23,7 @@
 		"rollup-plugin-terser": "^5.1.2",
 		"rxjs": "^6.5.5",
 		"socket.io-client": "^2.3.0",
+		"sortablejs": "^1.10.2",
 		"svelte": "^3.22.2",
 		"svelte-preprocess": "^3.7.4",
 		"typescript": "^3.9.2"

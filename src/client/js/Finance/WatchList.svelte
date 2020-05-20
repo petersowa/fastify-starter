@@ -1,4 +1,6 @@
 <script>
+	import Sortable from 'sortablejs';
+	import { onMount, beforeUpdate } from 'svelte';
 	import { get } from 'svelte/store';
 	import { watchList } from './storeWatchList';
 	import { postWatchlist } from './handle-ajax';
@@ -9,7 +11,22 @@
 	let dragPos = { x: 0, y: 0 };
 
 	const unsubscribe = watchList.subscribe(list => {
+		console.log('update subscription');
 		watchItems = [...list];
+	});
+
+	onMount(() => {
+		Sortable.create(document.getElementById('watchlist'), {
+			handle: '.drag-handle',
+			animation: 150,
+			onSort: e => {
+				reorderWatchlist(e.oldIndex, e.newIndex);
+			},
+		});
+	});
+
+	beforeUpdate(() => {
+		console.log({ BeforeUpdate: watchItems });
 	});
 
 	function removeSymbol(sym) {
@@ -27,18 +44,18 @@
 			.catch(err => console.log('UNABLE TO UPDATE WATCHLIST', err));
 	}
 
-	async function reorderWatchlist(sym, insAt, isBefore = false) {
-		const insItem = watchItems.find(item => sym === item.symbol);
+	async function reorderWatchlist(fromIndex, toIndex) {
+		if (fromIndex === toIndex) return;
+		const moveItem = watchItems[fromIndex];
+		const newList = watchItems.filter(
+			item => item.symbol !== moveItem.symbol
+		);
+		newList.splice(toIndex, 0, moveItem);
 
-		const newList = watchItems
-			.filter(item => item.symbol !== sym)
-			.map(item => {
-				if (item.symbol === insAt)
-					return isBefore ? [insItem, item] : [item, insItem];
-				return item;
-			});
-		watchItems = newList.flat();
-		await postWatchlist(watchItems.map(item => item.symbol));
+		const orderedList = newList.map(item => item.symbol);
+
+		await postWatchlist(orderedList);
+		watchList.update(list => newList);
 	}
 
 	function changeColor(change) {
@@ -50,6 +67,7 @@
 		dragElem = e.target.parentNode;
 		dragPos.x = e.clientX;
 		dragPos.y = e.clientY;
+		e.target.setPointerCapture(e.pointerId);
 	}
 	function moveDragElement(e, sym) {
 		if (!sym || !dragElem) return;
@@ -63,6 +81,7 @@
 	}
 	function handleDragEnd(e) {
 		// e.preventDefault();
+		e.target.releasePointerCapture(e.pointerId);
 		dragElem = null;
 		dragOver = null;
 	}
@@ -174,21 +193,13 @@
 	}
 </style>
 
-<ul class="watchlist">
-	{#each watchItems as quote}
+<ul class="watchlist" id="watchlist">
+	{#each watchItems as quote (quote.symbol)}
 		<li
 			data-sym={quote.symbol}
 			class={dragOver === quote.symbol ? 'watchlist__row drag-over' : 'watchlist__row '}
-			style="--priceColor:{changeColor(quote.changePercent)};--price52WeekColor:{changeColor(quote.latestPrice / quote.week52High - 0.9)}"
-			on:pointermove={e => handleDragOver(e, quote.symbol)}
-			on:pointerup={e => {
-				handleDrop(e, quote.symbol);
-			}}>
-			<div
-				class="drag-handle"
-				on:pointerdown={handleDragStart}
-				on:pointerup={handleDragEnd}
-				on:pointermove={e => moveDragElement(e, quote.symbol)} />
+			style="--priceColor:{changeColor(quote.changePercent)};--price52WeekColor:{changeColor(quote.latestPrice / quote.week52High - 0.9)}">
+			<div class="drag-handle" />
 			<span>{quote.symbol}</span>
 			<span class="justify-right">{quote.latestPrice.toFixed(2)}</span>
 			<span class="justify-right" id="price-change">
