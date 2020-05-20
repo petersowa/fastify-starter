@@ -1,5 +1,17 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
+import { ServerResponse } from 'http';
 import WatchList from '../models/watchList';
+
+async function getWatchlist(
+	request: FastifyRequest,
+	reply: FastifyReply<ServerResponse>
+): Promise<string[] | null> {
+	const wl = await WatchList.findOne({
+		user: request.session.userId,
+	});
+	if (!wl) return null;
+	return wl.symbols;
+}
 
 async function updateWatchlist(
 	request: FastifyRequest,
@@ -35,4 +47,4 @@ async function updateWatchlist(
 	}
 }
 
-export { updateWatchlist };
+export { updateWatchlist, getWatchlist };
