@@ -71,7 +71,7 @@
 			grid-auto-rows: auto;
 			grid-template-areas:
 				'handle date date date'
-				'symbol price . control'
+				'symbol price pe control'
 				'. changeDay . control'
 				'. changeYear . control';
 			/* gap: 10px 5px; */
@@ -99,6 +99,9 @@
 		}
 		.grid-changeYear {
 			grid-area: changeYear;
+		}
+		.grid-pe {
+			grid-area: pe;
 		}
 		.grid-control {
 			grid-area: control;
@@ -186,6 +189,9 @@
 			</span>
 			<span class="justify-right grid-changeDay" id="price-change">
 				{(quote.changePercent * 100).toFixed(1)}
+			</span>
+			<span class="justify-right grid-pe">
+				{quote.peRatio ? quote.peRatio.toFixed(1) : ''}
 			</span>
 			<span
 				class="justify-right grid-changeYear"
