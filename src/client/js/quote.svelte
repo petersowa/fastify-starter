@@ -4,7 +4,7 @@
 	import Spinner from './spinner.svelte';
 	import Box from './box.svelte';
 	import WatchList from './Finance/WatchList.svelte';
-	import { watchList } from './Finance/storeWatchList';
+	import { watchList } from './Finance/stores';
 	import Quote from './Finance/Quote.svelte';
 	import Accounts from './Finance/Accounts.svelte';
 	import { postWatchlist } from './Finance/handle-ajax';
