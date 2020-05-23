@@ -2,7 +2,7 @@
 	import Sortable from 'sortablejs';
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
-	import { watchList } from './storeWatchList';
+	import { watchList } from './stores';
 	import { postWatchlist } from './handle-ajax';
 	let watchItems = [];
 	$: priceColor = 'white';
