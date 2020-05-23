@@ -1,34 +1,19 @@
 <script>
 	import Modal from '../modal.svelte';
 	import { get } from 'svelte/store';
-	let accounts = [
-		{ name: 'main account' },
-		{ name: 'joint account' },
-		{ name: 'private account' },
-	];
-	let positions = [
-		{
-			symbol: 'ibm',
-			date: '12/01/1990',
-			quantity: 100,
-			cost: 500.12,
-			gain: 3.42,
-			dollarGain: 2432.21,
-		},
-		{
-			symbol: 'csco',
-			date: '12/01/1990',
-			quantity: 1400,
-			cost: 5200.12,
-			gain: 123.42,
-			dollarGain: 24332.21,
-		},
-	];
+	import { accounts } from './stores';
+	import BuyModal from '../modals/Buy.svelte';
+
 	let showAccountModal = false;
+	let accountList = [];
 
 	function toggleAccountModal() {
 		showAccountModal = !showAccountModal;
 	}
+
+	const unsubscribe = accounts.subscribe(list => {
+		accountList = list;
+	});
 </script>
 
 <style type="scss">
@@ -73,7 +58,7 @@
 </style>
 
 <ul class="data">
-	{#each accounts as account}
+	{#each accountList as account}
 		<li class="data__row">
 			<span>{account.name}</span>
 			<div class="control">
@@ -93,7 +78,7 @@
 			<span class="right-justify">Gain %</span>
 			<span class="right-justify">$ Gain</span>
 		</li>
-		{#each positions as position}
+		<!-- {#each positions as position}
 			<li class="position">
 				<span>{position.symbol.toUpperCase()}</span>
 				<span>{position.date}</span>
@@ -102,7 +87,7 @@
 				<span class="right-justify">{position.gain * 100}</span>
 				<span class="right-justify">{position.dollarGain}</span>
 			</li>
-		{/each}
+		{/each} -->
 	{/each}
 	<div class="control">
 		<button>New Account</button>
@@ -110,11 +95,5 @@
 </ul>
 
 {#if showAccountModal}
-	<Modal on:close={toggleAccountModal}>
-		<h2 slot="header">Account Info</h2>
-		<form>
-			<label>Account</label>
-			<input type="text" />
-		</form>
-	</Modal>
+	<BuyModal {toggleAccountModal} />
 {/if}
