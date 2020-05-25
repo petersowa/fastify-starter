@@ -100,7 +100,6 @@ textarea {
 	outline: none;
 	padding: 0;
 	cursor: pointer;
-	background-color: rgba(0, 0, 0, 0.1);
 	padding: 0.1em 0.2em;
 }
 
@@ -219,13 +218,16 @@ a:focus::before {
 }
 
 .v-flex-container {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	/* min-height: calc(100vh - 0.6em); */
-	margin: 0.3em;
+	margin: 0;
 	border-radius: 0.3em;
 	overflow: auto;
 	flex-grow: 1;
+	z-index: 1;
+	background-color: var(--clr-body);
 }
 
 .h-flex-container {
@@ -322,11 +324,13 @@ a:focus::before {
 .nav-menu {
 	display: flex;
 	justify-content: space-evenly;
-	justify-content: space-between;
+	justify-content: space-around;
 	align-items: stretch;
 	align-items: flex-start;
 	/* outline: 1px solid red; */
 	padding: 0 5em;
+	max-width: 50rem;
+	margin: auto;
 }
 
 header {
