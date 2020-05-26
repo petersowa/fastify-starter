@@ -78,16 +78,19 @@
 			<span class="right-justify">Gain %</span>
 			<span class="right-justify">$ Gain</span>
 		</li>
-		<!-- {#each positions as position}
+		{#each account.positions as position}
 			<li class="position">
-				<span>{position.symbol.toUpperCase()}</span>
-				<span>{position.date}</span>
-				<span class="right-justify">{position.quantity}</span>
-				<span class="right-justify">{position.cost}</span>
-				<span class="right-justify">{position.gain * 100}</span>
-				<span class="right-justify">{position.dollarGain}</span>
+				{#if position}
+					<!-- {JSON.stringify(position)} -->
+					<span>{position.symbol.toUpperCase()}</span>
+					<!-- <span>{position.date}</span>
+					<span class="right-justify">{position.quantity}</span>
+					<span class="right-justify">{position.cost}</span>
+					<span class="right-justify">{position.gain * 100}</span>
+					<span class="right-justify">{position.dollarGain}</span> -->
+				{/if}
 			</li>
-		{/each} -->
+		{/each}
 	{/each}
 	<div class="control">
 		<button>New Account</button>
