@@ -3,6 +3,7 @@
 	import { get } from 'svelte/store';
 	import { accounts } from './stores';
 	import BuyModal from '../modals/Buy.svelte';
+	import { getQuote } from './handle-ajax';
 
 	let showAccountModal = false;
 	let accountList = [];
@@ -13,6 +14,19 @@
 
 	const unsubscribe = accounts.subscribe(list => {
 		accountList = list;
+		accountList.forEach(async account => {
+			account.positions.forEach(async position => {
+				position.quote = await getQuote(position.symbol);
+			});
+			try {
+				await Promise.allSettled(
+					account.positions.map(pos => pos.quote)
+				);
+				console.log(JSON.stringify(account.positions[0], null, 2));
+			} catch (err) {
+				console.log(err);
+			}
+		});
 	});
 </script>
 
@@ -83,11 +97,11 @@
 				{#if position}
 					<!-- {JSON.stringify(position)} -->
 					<span>{position.symbol.toUpperCase()}</span>
-					<!-- <span>{position.date}</span>
+					<span>{position.date}</span>
 					<span class="right-justify">{position.quantity}</span>
 					<span class="right-justify">{position.cost}</span>
 					<span class="right-justify">{position.gain * 100}</span>
-					<span class="right-justify">{position.dollarGain}</span> -->
+					<span class="right-justify">{position.dollarGain}</span>
 				{/if}
 			</li>
 		{/each}
