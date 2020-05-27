@@ -179,7 +179,7 @@ a:focus::before {
 	background-color: var(--clr-header);
 	color: var(--clr-header-text);
 	margin: 0;
-	padding: 0 0.5em;
+	padding: 0;
 }
 
 .min-shadow {
@@ -394,6 +394,10 @@ header {
 	align-items: center;
 	padding: 0;
 	margin: 0;
+}
+
+.header-nav {
+	background: rgba(0, 0, 0, 0.1);
 }
 
 #menu-toggle + label {
