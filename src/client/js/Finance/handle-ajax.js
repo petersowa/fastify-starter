@@ -23,4 +23,21 @@ async function postWatchlist(list) {
 	}
 }
 
-export { postWatchlist };
+async function getQuote(symbol) {
+	let data = null;
+	try {
+		const res = await fetch(`/stocks/quote/${symbol}`);
+		data = await res.json();
+	} catch (err) {
+		console.error('unable to fetch or parse', { err });
+	}
+	return data;
+}
+
+async function getWatchlist() {
+	const res = await fetch(`/stocks/watchlist`);
+	console.log({ watchlist: res });
+	return res.json();
+}
+
+export { postWatchlist, getQuote, getWatchlist };

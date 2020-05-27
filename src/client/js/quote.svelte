@@ -7,7 +7,11 @@
 	import { watchList } from './Finance/stores';
 	import Quote from './Finance/Quote.svelte';
 	import Accounts from './Finance/Accounts.svelte';
-	import { postWatchlist } from './Finance/handle-ajax';
+	import {
+		postWatchlist,
+		getQuote,
+		getWatchlist,
+	} from './Finance/handle-ajax';
 
 	let quote = {};
 	let symbol = '';
@@ -33,9 +37,7 @@
 
 	async function refreshWatchlist() {
 		try {
-			const res = await fetch(`/stocks/watchlist`);
-			console.log({ watchlist: res });
-			watchListItems = await res.json();
+			const watchListItems = await getWatchlist();
 			if (watchListItems) {
 				console.log({ watchListItems });
 				const quotes = await Promise.all(
@@ -54,18 +56,6 @@
 		} catch (err) {
 			console.log({ watchlistError: err });
 		}
-	}
-
-	async function getQuote(symbol) {
-		let data = null;
-		try {
-			const res = await fetch(`/stocks/quote/${symbol}`);
-			console.log({ res });
-			data = await res.json();
-		} catch (err) {
-			console.error('unable to fetch or parse', { res });
-		}
-		return data;
 	}
 
 	function setSpinner() {
