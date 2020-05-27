@@ -26,6 +26,14 @@ export const accounts = writable([
 				gain: 0.1,
 				dollarGain: 100,
 			},
+			{
+				symbol: 'atvi',
+				date: '7/3/2015',
+				quantity: 12,
+				cost: 3000,
+				gain: 0.1,
+				dollarGain: 100,
+			},
 		],
 	},
 	{
