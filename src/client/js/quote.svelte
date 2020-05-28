@@ -4,7 +4,7 @@
 	import Spinner from './spinner.svelte';
 	import Box from './box.svelte';
 	import WatchList from './Finance/WatchList.svelte';
-	import { watchList } from './Finance/stores';
+	import { watchList, appStore, setSpinner } from './Finance/stores';
 	import Quote from './Finance/Quote.svelte';
 	import Accounts from './Finance/Accounts.svelte';
 	import {
@@ -16,13 +16,17 @@
 	let quote = {};
 	let symbol = '';
 	let change = '';
-	let isLoaded = true;
 	let showModal = false;
-	let isMinWait = true;
 	let watchListItems = null;
 	let refreshInterval = null;
+	let isLoaded = false;
+	let isMinWait = false;
 
 	$: fracHigh = quote && (quote.latestPrice / quote.week52High) * 100;
+
+	appStore.subscribe(value => {
+		(isLoaded = value.isLoaded), (isMinWait = value.isMinWait);
+	});
 
 	onMount(async () => {
 		const clearSpinner = setSpinner();
@@ -56,17 +60,6 @@
 		} catch (err) {
 			console.log({ watchlistError: err });
 		}
-	}
-
-	function setSpinner() {
-		isLoaded = false;
-		isMinWait = false;
-		setTimeout(() => {
-			isMinWait = true;
-		}, 1000);
-		return () => {
-			isLoaded = true;
-		};
 	}
 
 	async function handleSubmit() {
@@ -203,7 +196,5 @@
 {/if}
 
 {#if !isLoaded || !isMinWait}
-	<Spinner>
-		<div>spinner</div>
-	</Spinner>
+	<Spinner />
 {/if}
