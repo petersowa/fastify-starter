@@ -16,18 +16,22 @@
 	const unsubscribe = accountStore.subscribe(async list => {
 		const quotes = {};
 		const clearSpinner = setSpinner();
-
-		accountList = list;
-		accountList.forEach(account => {
-			account.positions.forEach(position => {
-				if (position.symbol in quotes) return;
-				quotes[position.symbol] = getQuote(position.symbol);
+		try {
+			accountList = list;
+			accountList.forEach(account => {
+				account.positions.forEach(position => {
+					if (position.symbol in quotes) return;
+					quotes[position.symbol] = getQuote(position.symbol);
+				});
 			});
-		});
 
-		const res = await Promise.all(Object.values(quotes));
-		res.forEach(quote => (stockQuotes[quote.symbol] = quote));
-		clearSpinner();
+			const res = await Promise.all(Object.values(quotes));
+			res.forEach(quote => (stockQuotes[quote.symbol] = quote));
+			clearSpinner();
+		} catch (err) {
+			clearSpinner();
+			console.error(err);
+		}
 	});
 </script>
 
