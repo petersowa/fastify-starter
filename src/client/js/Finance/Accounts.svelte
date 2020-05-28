@@ -1,32 +1,33 @@
 <script>
 	import Modal from '../modal.svelte';
 	import { get } from 'svelte/store';
-	import { accounts } from './stores';
+	import { accountStore, setSpinner } from './stores';
 	import BuyModal from '../modals/Buy.svelte';
 	import { getQuote } from './handle-ajax';
 
 	let showAccountModal = false;
 	let accountList = [];
+	let stockQuotes = {};
 
 	function toggleAccountModal() {
 		showAccountModal = !showAccountModal;
 	}
 
-	const unsubscribe = accounts.subscribe(list => {
+	const unsubscribe = accountStore.subscribe(async list => {
+		const quotes = {};
+		const clearSpinner = setSpinner();
+
 		accountList = list;
-		accountList.forEach(async account => {
-			account.positions.forEach(async position => {
-				position.quote = await getQuote(position.symbol);
+		accountList.forEach(account => {
+			account.positions.forEach(position => {
+				if (position.symbol in quotes) return;
+				quotes[position.symbol] = getQuote(position.symbol);
 			});
-			try {
-				await Promise.allSettled(
-					account.positions.map(pos => pos.quote)
-				);
-				console.log(JSON.stringify(account.positions[0], null, 2));
-			} catch (err) {
-				console.log(err);
-			}
 		});
+
+		const res = await Promise.all(Object.values(quotes));
+		res.forEach(quote => (stockQuotes[quote.symbol] = quote));
+		clearSpinner();
 	});
 </script>
 
@@ -96,10 +97,13 @@
 			<li class="position">
 				{#if position}
 					<!-- {JSON.stringify(position)} -->
+					<!-- {JSON.stringify(stockQuotes, null, 2)} -->
 					<span>{position.symbol.toUpperCase()}</span>
 					<span>{position.date}</span>
 					<span class="right-justify">{position.quantity}</span>
-					<span class="right-justify">{position.cost}</span>
+					<span class="right-justify">
+						{position.symbol in stockQuotes ? (position.quantity * stockQuotes[position.symbol].latestPrice).toFixed(2) : 'loading...'}
+					</span>
 					<span class="right-justify">{position.gain * 100}</span>
 					<span class="right-justify">{position.dollarGain}</span>
 				{/if}
