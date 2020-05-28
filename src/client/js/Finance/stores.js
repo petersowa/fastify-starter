@@ -1,12 +1,41 @@
 import { writable } from 'svelte/store';
 
+export function setSpinner() {
+	let isLoaded = false;
+	let isMinWait = false;
+	appStore.update((v) => ({ isLoaded, isMinWait, count: v.count + 1 }));
+
+	setTimeout(() => {
+		isMinWait = true;
+		appStore.update((v) => ({ ...v, isMinWait }));
+	}, 1000);
+	return () => {
+		appStore.update((v) => ({
+			...v,
+			isLoaded: v.count === 1 ? true : false,
+			count: v.count - 1 || 0,
+		}));
+	};
+}
+
+export const appStore = writable({
+	isMinWait: true,
+	isLoaded: true,
+	count: 0,
+});
+
 export const watchList = writable([]);
-export const accounts = writable([
+
+export const accountStore = writable([], (set) => {
+	set(accountData);
+});
+
+const accountData = [
 	{
 		name: 'main account',
 		positions: [
 			{
-				symbol: 'ibm',
+				symbol: 'IBM',
 				date: '12/3/2005',
 				quantity: 12,
 				cost: 3000,
@@ -19,7 +48,7 @@ export const accounts = writable([
 		name: 'joint account',
 		positions: [
 			{
-				symbol: 'ibm',
+				symbol: 'IBM',
 				date: '12/3/2005',
 				quantity: 12,
 				cost: 3000,
@@ -27,7 +56,7 @@ export const accounts = writable([
 				dollarGain: 100,
 			},
 			{
-				symbol: 'atvi',
+				symbol: 'ATVI',
 				date: '7/3/2015',
 				quantity: 12,
 				cost: 3000,
@@ -40,7 +69,7 @@ export const accounts = writable([
 		name: 'private account',
 		positions: [
 			{
-				symbol: 'ibm',
+				symbol: 'AMZN',
 				date: '12/3/2005',
 				quantity: 12,
 				cost: 3000,
@@ -49,4 +78,4 @@ export const accounts = writable([
 			},
 		],
 	},
-]);
+];
