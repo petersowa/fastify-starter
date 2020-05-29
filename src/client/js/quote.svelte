@@ -12,6 +12,9 @@
 		getQuote,
 		getWatchlist,
 	} from './Finance/handle-ajax';
+	import Fa from 'svelte-fa';
+
+	import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 	let quote = {};
 	let symbol = '';
@@ -163,7 +166,9 @@
 		<form on:submit|preventDefault={handleSubmit}>
 			<label>Stock Name:</label>
 			<input type="string" bind:value={symbol} />
-			<button type="submit">Get Quote</button>
+			<button type="submit">
+				<Fa icon={faSearch} />
+			</button>
 		</form>
 	</div>
 
