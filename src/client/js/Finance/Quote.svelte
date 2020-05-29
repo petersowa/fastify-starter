@@ -1,5 +1,10 @@
 <script>
 	import { beforeUpdate } from 'svelte';
+	import Fa from 'svelte-fa';
+	import {
+		faPlusCircle,
+		faArrowAltCircleDown,
+	} from '@fortawesome/free-solid-svg-icons';
 
 	export let quote = {};
 	export let addToWatchlist;
@@ -85,6 +90,6 @@
 		{/each}
 	</div>
 	<button on:click={addToWatchlist} class="h-center">
-		Add To Watch List
+		<Fa icon={faArrowAltCircleDown} color="green" size="2x" />
 	</button>
 </div>

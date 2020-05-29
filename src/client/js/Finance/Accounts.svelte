@@ -4,6 +4,14 @@
 	import { accountStore, setSpinner } from './stores';
 	import BuyModal from '../modals/Buy.svelte';
 	import { getQuote } from './handle-ajax';
+	import Fa from 'svelte-fa';
+	import {
+		faEdit,
+		faBinoculars,
+		faMinusCircle,
+		faPlusCircle,
+		faPlus,
+	} from '@fortawesome/free-solid-svg-icons';
 
 	let showAccountModal = false;
 	let accountList = [];
@@ -63,16 +71,42 @@
 	.control {
 		display: flex;
 		margin-top: 0;
+		align-items: center;
+		justify-content: space-evenly;
+		padding: 0.2em 0;
 		& > :not(:last-child) {
 			margin-right: 8px;
 		}
 	}
 	.position {
 		display: grid;
-		grid-template-columns: 0.5fr 1fr 0.5fr 0.5fr 0.5fr 1fr;
+		grid-template-columns: 0.5fr 1fr 0.5fr 0.8fr 0.5fr 1fr 8em;
+		grid-auto-rows: 1.8em;
+		align-items: center;
+		justify-items: right;
 	}
 	.right-justify {
 		justify-self: right;
+	}
+
+	.item-control {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 1.5em;
+		height: 1.5em;
+		margin: 0 0.1em;
+		border: none;
+		box-shadow: 0 0 0 0.2em transparent, 0 0 0.2em 0 var(--clr-dark);
+		border-radius: 0.2em;
+		padding: 0;
+		color: var(--clr-dark);
+		&:active {
+			box-shadow: 0 0 0 0.2em var(--clr-white);
+		}
+	}
+	.round {
+		border-radius: 50%;
 	}
 </style>
 
@@ -80,10 +114,20 @@
 	{#each accountList as account}
 		<li class="data__row">
 			<span>{account.name}</span>
+			<i class="fas fa-camera" />
 			<div class="control">
-				<button on:click={toggleAccountModal}>View</button>
-				<button>Edit</button>
-				<button>Delete</button>
+				<button
+					on:click={toggleAccountModal}
+					class="item-control"
+					aria-label="view">
+					<Fa icon={faBinoculars} color="gray" />
+				</button>
+				<button class="item-control" aria-label="edit">
+					<Fa icon={faEdit} color="gray" />
+				</button>
+				<button class="item-control" aria-label="delete">
+					<Fa icon={faMinusCircle} color="red" />
+				</button>
 			</div>
 		</li>
 		<li>
@@ -94,7 +138,7 @@
 			<span>Date</span>
 			<span class="right-justify">Quantity</span>
 			<span class="right-justify">Cost</span>
-			<span class="right-justify">Gain %</span>
+			<span class="right-justify">Value</span>
 			<span class="right-justify">$ Gain</span>
 		</li>
 		{#each account.positions as position}
@@ -110,12 +154,22 @@
 					</span>
 					<span class="right-justify">{position.gain * 100}</span>
 					<span class="right-justify">{position.dollarGain}</span>
+					<div class="control">
+						<button class="item-control" aria-label="edit">
+							<Fa icon={faEdit} color="blue" />
+						</button>
+						<button class="item-control" aria-label="delete">
+							<Fa icon={faMinusCircle} color="red" />
+						</button>
+					</div>
 				{/if}
 			</li>
 		{/each}
 	{/each}
 	<div class="control">
-		<button>New Account</button>
+		<button class="round" aria-label="add account">
+			<Fa icon={faPlus} size="2x" color="green" />
+		</button>
 	</div>
 </ul>
 

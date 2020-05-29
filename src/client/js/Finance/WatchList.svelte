@@ -4,6 +4,15 @@
 	import { get } from 'svelte/store';
 	import { watchList } from './stores';
 	import { postWatchlist } from './handle-ajax';
+	import Fa from 'svelte-fa';
+	import {
+		faEdit,
+		faBinoculars,
+		faMinusCircle,
+		faPlusCircle,
+		faArrowsAlt,
+	} from '@fortawesome/free-solid-svg-icons';
+
 	let watchItems = [];
 	$: priceColor = 'white';
 
@@ -112,7 +121,6 @@
 			font-size: 16px;
 			box-shadow: none;
 			margin: 0;
-			color: red;
 			background: #2222;
 			text-align: center;
 			width: 1.8em;
@@ -164,14 +172,24 @@
 			}
 		}
 		.drag-handle {
-			color: blue;
-			background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDQ4IDQ4IiBoZWlnaHQ9IjQ4cHgiIGlkPSJMYXllcl8xIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCA0OCA0OCIgd2lkdGg9IjQ4cHgiIHhtbDpzcGFjZT0icHJlc2VydmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxnIGlkPSJMYXllcl80Ij48cG9seWdvbiBmaWxsPSIjMjQxRjIwIiBwb2ludHM9IjQ4LDI0IDQwLDE3IDQwLDIyIDI2LDIyIDI2LDggMzAuOTU4LDggMjQsMCAxNyw4IDIyLDggMjIsMjIgOCwyMiA4LDE3IDAsMjQgOCwzMSA4LDI2IDIyLDI2ICAgIDIyLDQwIDE3LjAzMSw0MCAyNCw0OCAzMC45NjksNDAgMjYsNDAgMjYsMjYgNDAsMjYgNDAsMzEgICIvPjwvZz48L3N2Zz4='),
-				#2222;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 			margin: 0;
-			height: 1.5em;
-			width: 1.5em;
-			background-size: contain;
+			height: 1.2em;
+			width: 1.2em;
 			cursor: grab;
+			font-size: 1.8rem;
+			opacity: 0.8;
+			background: rgba(0, 0, 0, 0.1);
+			border-radius: 0.2em;
+		}
+		.btn-control {
+			background: transparent;
+			width: 1.5em;
+			height: 1.5em;
+			padding: 0;
+			margin: 0.2em;
 		}
 	}
 </style>
@@ -182,7 +200,9 @@
 			data-sym={quote.symbol}
 			class="watchlist__row"
 			style="--priceColor:{changeColor(quote.changePercent)};--price52WeekColor:{changeColor(quote.latestPrice / quote.week52High - 0.9)}">
-			<div class="drag-handle grid-handle" />
+			<div class="grid-handle drag-handle">
+				<Fa icon={faArrowsAlt} />
+			</div>
 			<span class="grid-symbol">{quote.symbol}</span>
 			<span class="justify-right grid-price">
 				{quote.latestPrice.toFixed(2)}
@@ -202,7 +222,11 @@
 				{new Date(quote.latestUpdate).toLocaleString()}
 			</span>
 			<div class="grid-control">
-				<button on:click={removeSymbol(quote.symbol)}>X</button>
+				<button
+					class="btn-control"
+					on:click={removeSymbol(quote.symbol)}>
+					<Fa icon={faMinusCircle} color="red" />
+				</button>
 			</div>
 		</li>
 	{/each}
