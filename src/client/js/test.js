@@ -1,5 +1,6 @@
 import io from 'socket.io-client';
 import '../styles/main.css';
+import '../styles/icons.css';
 import '../styles/content.scss';
 import { Observable } from 'rxjs';
 
