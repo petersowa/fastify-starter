@@ -94,7 +94,8 @@ a,
 button,
 input,
 textarea {
-	font-family: inherit;
+	font-family: 'Merriweather', 'Abril Fatface', 'Noto Serif',
+		'Alegreya Sans SC', 'Vollkorn', 'Times New Roman', Times, serif;
 	font-size: inherit;
 	border: 0;
 	outline: none;
