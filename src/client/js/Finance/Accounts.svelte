@@ -17,8 +17,10 @@
 	let accountList = [];
 	let stockQuotes = {};
 
-	function toggleAccountModal() {
-		showAccountModal = !showAccountModal;
+	function toggleAccountModal(account) {
+		if (account.name) {
+			showAccountModal = !showAccountModal;
+		}
 	}
 
 	const unsubscribe = accountStore.subscribe(async list => {
@@ -41,6 +43,12 @@
 			console.error(err);
 		}
 	});
+
+	function handleBuyForm(e, formData) {
+		e.preventDefault();
+		toggleAccountModal();
+		console.log(e);
+	}
 </script>
 
 <style type="scss">
@@ -116,10 +124,7 @@
 			<span>{account.name}</span>
 			<i class="fas fa-camera" />
 			<div class="control">
-				<button
-					on:click={toggleAccountModal}
-					class="item-control"
-					aria-label="view">
+				<button class="item-control" aria-label="view">
 					<Fa icon={faBinoculars} color="gray" />
 				</button>
 				<button class="item-control" aria-label="edit">
@@ -165,6 +170,12 @@
 				{/if}
 			</li>
 		{/each}
+		<button
+			class="item-control"
+			aria-label="add position"
+			on:click={() => toggleAccountModal(account)}>
+			<Fa icon={faPlusCircle} color="blue" />
+		</button>
 	{/each}
 	<div class="control">
 		<button class="round" aria-label="add account">
@@ -174,5 +185,5 @@
 </ul>
 
 {#if showAccountModal}
-	<BuyModal {toggleAccountModal} />
+	<BuyModal {toggleAccountModal} {handleBuyForm} />
 {/if}

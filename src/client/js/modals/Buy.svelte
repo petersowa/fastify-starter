@@ -1,6 +1,15 @@
 <script>
 	export let toggleAccountModal;
+	export let handleBuyForm;
 	import Modal from '../modal.svelte';
+	let formData = {};
+
+	function handleSubmit(e) {
+		console.log({ formData });
+		// validate
+		// if valid date then send to handle buy form
+		handleBuyForm(e, formData);
+	}
 </script>
 
 <style>
@@ -21,12 +30,37 @@
 
 <Modal on:close={toggleAccountModal}>
 	<h2 class="buy-title" slot="header">Account Info</h2>
-	<form class="buy-form">
+	<form class="buy-form" on:submit={handleSubmit}>
 		<label>Symbol</label>
-		<input class="form-input" type="text" placeholder="Symbol" />
+		<input
+			class="form-input"
+			type="text"
+			placeholder="Symbol"
+			bind:value={formData.symbol} />
 		<label>Date</label>
-		<input class="form-input" type="date" placeholder="Date" />
+		<input
+			class="form-input"
+			type="date"
+			placeholder="Date"
+			bind:value={formData.date} />
 		<label>Shares</label>
-		<input class="form-input" type="number" placeholder="Shares" />
+		<input
+			class="form-input"
+			type="text"
+			placeholder="Shares"
+			bind:value={formData.shares} />
+		<label>Price</label>
+		<input
+			class="form-input"
+			type="text"
+			placeholder="Price"
+			bind:value={formData.price} />
+		<label>Fees</label>
+		<input
+			class="form-input"
+			type="text"
+			placeholder="Fees"
+			bind:value={formData.fee} />
+		<button type="submit">Submit</button>
 	</form>
 </Modal>

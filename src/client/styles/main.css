@@ -52,10 +52,10 @@ html {
 h1,
 h2,
 h3 {
-	font-family: 'PT Serif', 'Source sans Pro', 'Merriweather', 'Abril Fatface',
-		'Noto Serif', 'Alegreya Sans SC', 'Vollkorn', 'Times New Roman', Times,
-		serif;
-	font-weight: 600;
+	font-family: 'Noto Serif', 'Roboto', 'Times New Roman', 'PT Serif',
+		'Source sans Pro', 'Vollkorn', 'Merriweather', 'Abril Fatface',
+		'Alegreya Sans SC', Times, serif;
+	/* font-weight: 600; */
 	letter-spacing: 0.05em;
 	/* text-transform: capitalize; */
 	padding: 0.1rem 0.3rem;
