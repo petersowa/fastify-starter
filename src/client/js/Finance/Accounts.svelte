@@ -17,10 +17,8 @@
 	let accountList = [];
 	let stockQuotes = {};
 
-	function toggleAccountModal(account) {
-		if (account.name) {
-			showAccountModal = !showAccountModal;
-		}
+	function toggleAccountModal() {
+		showAccountModal = !showAccountModal;
 	}
 
 	const unsubscribe = accountStore.subscribe(async list => {
@@ -44,10 +42,10 @@
 		}
 	});
 
-	function handleBuyForm(e, formData) {
+	function handleBuyForm(e, { formData, account }) {
 		e.preventDefault();
 		toggleAccountModal();
-		console.log(e);
+		console.log(e, formData, account);
 	}
 </script>
 
@@ -176,6 +174,9 @@
 			on:click={() => toggleAccountModal(account)}>
 			<Fa icon={faPlusCircle} color="blue" />
 		</button>
+		{#if showAccountModal}
+			<BuyModal {toggleAccountModal} {handleBuyForm} {account} />
+		{/if}
 	{/each}
 	<div class="control">
 		<button class="round" aria-label="add account">
@@ -183,7 +184,3 @@
 		</button>
 	</div>
 </ul>
-
-{#if showAccountModal}
-	<BuyModal {toggleAccountModal} {handleBuyForm} />
-{/if}

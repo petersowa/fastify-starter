@@ -1,6 +1,7 @@
 <script>
 	export let toggleAccountModal;
 	export let handleBuyForm;
+	export let account;
 	import Modal from '../modal.svelte';
 	let formData = {};
 
@@ -8,7 +9,7 @@
 		console.log({ formData });
 		// validate
 		// if valid date then send to handle buy form
-		handleBuyForm(e, formData);
+		handleBuyForm(e, { formData, account });
 	}
 </script>
 
