@@ -22,6 +22,7 @@
 			// trap focus
 			const nodes = modal.querySelectorAll('*');
 			const tabbable = Array.from(nodes).filter(n => n.tabIndex >= 0);
+			console.log(tabbable);
 
 			let index = tabbable.indexOf(document.activeElement);
 			if (index === -1 && e.shiftKey) index = 0;
@@ -67,35 +68,46 @@
 	}
 </style>
 
-<Modal on:close={toggleAccountModal}>
+<svelte:window on:keydown={handle_keydown} />
+
+<Modal
+	on:close={toggleAccountModal}
+	role="dialog"
+	aria-modal="true"
+	bind:this={modal}>
 	<h2 class="buy-title" slot="header">Account Info</h2>
 	<form class="buy-form" on:submit={handleSubmit}>
 		<label>Symbol</label>
 		<input
+			tabindex="0"
 			class="form-input"
 			type="text"
 			placeholder="Symbol"
 			bind:value={formData.symbol} />
 		<label>Date</label>
 		<input
+			tabindex="0"
 			class="form-input"
 			type="date"
 			placeholder="Date"
 			bind:value={formData.date} />
 		<label>Shares</label>
 		<input
+			tabindex="0"
 			class="form-input"
 			type="text"
 			placeholder="Shares"
 			bind:value={formData.shares} />
 		<label>Price</label>
 		<input
+			tabindex="0"
 			class="form-input"
 			type="text"
 			placeholder="Price"
 			bind:value={formData.price} />
 		<label>Fees</label>
 		<input
+			tabindex="0"
 			class="form-input"
 			type="text"
 			placeholder="Fees"
