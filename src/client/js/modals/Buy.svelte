@@ -7,43 +7,6 @@
 
 	let formData = {};
 
-	const dispatch = createEventDispatcher();
-	const close = () => dispatch('close');
-
-	let modal;
-
-	const handle_keydown = e => {
-		if (e.key === 'Escape') {
-			close();
-			return;
-		}
-
-		if (e.key === 'Tab') {
-			// trap focus
-			const nodes = modal.querySelectorAll('*');
-			const tabbable = Array.from(nodes).filter(n => n.tabIndex >= 0);
-			console.log(tabbable);
-
-			let index = tabbable.indexOf(document.activeElement);
-			if (index === -1 && e.shiftKey) index = 0;
-
-			index += tabbable.length + (e.shiftKey ? -1 : 1);
-			index %= tabbable.length;
-
-			tabbable[index].focus();
-			e.preventDefault();
-		}
-	};
-
-	const previously_focused =
-		typeof document !== 'undefined' && document.activeElement;
-
-	if (previously_focused) {
-		onDestroy(() => {
-			previously_focused.focus();
-		});
-	}
-
 	function handleSubmit(e) {
 		console.log({ formData });
 		// validate
@@ -68,13 +31,7 @@
 	}
 </style>
 
-<svelte:window on:keydown={handle_keydown} />
-
-<Modal
-	on:close={toggleAccountModal}
-	role="dialog"
-	aria-modal="true"
-	bind:this={modal}>
+<Modal on:close={toggleAccountModal}>
 	<h2 class="buy-title" slot="header">Account Info</h2>
 	<form class="buy-form" on:submit={handleSubmit}>
 		<label>Symbol</label>

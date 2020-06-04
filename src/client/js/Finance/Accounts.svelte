@@ -13,12 +13,12 @@
 		faPlus,
 	} from '@fortawesome/free-solid-svg-icons';
 
-	let showAccountModal = false;
+	let showAccount = null;
 	let accountList = [];
 	let stockQuotes = {};
 
-	function toggleAccountModal() {
-		showAccountModal = !showAccountModal;
+	function toggleAccountModal(account = null) {
+		showAccount = account ? account.name : null;
 	}
 
 	const unsubscribe = accountStore.subscribe(async list => {
@@ -174,7 +174,7 @@
 			on:click={() => toggleAccountModal(account)}>
 			<Fa icon={faPlusCircle} color="blue" />
 		</button>
-		{#if showAccountModal}
+		{#if showAccount === account.name}
 			<BuyModal {toggleAccountModal} {handleBuyForm} {account} />
 		{/if}
 	{/each}

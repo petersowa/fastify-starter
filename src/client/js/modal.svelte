@@ -15,7 +15,7 @@
 		if (e.key === 'Tab') {
 			// trap focus
 			const nodes = modal.querySelectorAll('*');
-			const tabbable = Array.from(nodes).filter(n => n.tabIndex >= 0);
+			const tabbable = [...nodes].filter(n => n.tabIndex >= 0);
 
 			let index = tabbable.indexOf(document.activeElement);
 			if (index === -1 && e.shiftKey) index = 0;
@@ -61,15 +61,11 @@
 		border-radius: 0.2em;
 		background: white;
 	}
-
-	button {
-		display: block;
-	}
 </style>
 
 <svelte:window on:keydown={handle_keydown} />
 
-<div class="modal-background" on:click={close}>test</div>
+<div class="modal-background" on:click={close} />
 
 <div class="modal-svelte" role="dialog" aria-modal="true" bind:this={modal}>
 	<slot name="header" />
