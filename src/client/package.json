@@ -25,10 +25,10 @@
 		"rxjs": "^6.5.5",
 		"socket.io-client": "^2.3.0",
 		"sortablejs": "^1.10.2",
-		"svelte": "^3.22.3",
+		"svelte": "^3.23.0",
 		"svelte-fa": "^2.1.1",
-		"svelte-preprocess": "^3.7.4",
-		"typescript": "^3.9.3"
+		"svelte-preprocess": "^3.9.6",
+		"typescript": "^3.9.5"
 	},
 	"devDependencies": {}
 }
