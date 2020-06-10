@@ -3,6 +3,7 @@
 	import { get } from 'svelte/store';
 	import { accountStore, setSpinner } from './stores';
 	import BuyModal from '../modals/Buy.svelte';
+	import Position from './Position.svelte';
 	import { getQuote } from './handle-ajax';
 	import Fa from 'svelte-fa';
 	import {
@@ -46,6 +47,21 @@
 		e.preventDefault();
 		toggleAccountModal();
 		console.log(e, formData, account);
+		const newPosition = {
+			symbol: formData.symbol,
+			date: new Date(formData.date).toLocaleDateString(),
+			quantity: formData.shares,
+			cost: +formData.price * +formData.shares + +formData.fee,
+			gain: 0,
+			dollarGain: 0,
+		};
+		console.log(newPosition);
+		accountStore.update(storeData => {
+			storeData
+				.find(item => item.name === account.name)
+				.positions.push(newPosition);
+			return storeData;
+		});
 	}
 </script>
 
@@ -147,24 +163,7 @@
 		{#each account.positions as position}
 			<li class="position">
 				{#if position}
-					<!-- {JSON.stringify(position)} -->
-					<!-- {JSON.stringify(stockQuotes, null, 2)} -->
-					<span>{position.symbol.toUpperCase()}</span>
-					<span>{position.date}</span>
-					<span class="right-justify">{position.quantity}</span>
-					<span class="right-justify">
-						{position.symbol in stockQuotes ? (position.quantity * stockQuotes[position.symbol].latestPrice).toFixed(2) : 'loading...'}
-					</span>
-					<span class="right-justify">{position.gain * 100}</span>
-					<span class="right-justify">{position.dollarGain}</span>
-					<div class="control">
-						<button class="item-control" aria-label="edit">
-							<Fa icon={faEdit} color="blue" />
-						</button>
-						<button class="item-control" aria-label="delete">
-							<Fa icon={faMinusCircle} color="red" />
-						</button>
-					</div>
+					<Position {position} {stockQuotes} />
 				{/if}
 			</li>
 		{/each}
