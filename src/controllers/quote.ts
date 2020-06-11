@@ -13,3 +13,14 @@ export async function getQuote(
 	if (quote === null) reply.status(404).send({ error: 'unable to get data' });
 	return quote;
 }
+
+export async function getHistoricalQuote(
+	request: FastifyRequest,
+	reply: FastifyReply<ServerResponse>
+): Promise<Quote | null> {
+	console.log(request.params.symbol);
+	const { symbol, date } = request.params;
+	const quote = await fetchQuote(symbol, date);
+	if (quote === null) reply.status(404).send({ error: 'unable to get data' });
+	return quote;
+}

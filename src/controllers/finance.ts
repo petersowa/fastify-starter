@@ -5,7 +5,10 @@ import { getCache, setCache, HashData } from '../utils/hash-cache';
 const apiToken = process.env.IEX_TOKEN;
 const iexURL = process.env.IEX_URL;
 
-export async function fetchQuote(symbol: string): Promise<Quote | null> {
+export async function fetchQuote(
+	symbol: string,
+	date?: string
+): Promise<Quote | null> {
 	let quote: AxiosResponse<Quote> | null = null;
 
 	try {
