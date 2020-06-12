@@ -79,3 +79,5 @@ const accountData = [
 		],
 	},
 ];
+
+accountStore.subscribe((data) => console.log({ data }));
