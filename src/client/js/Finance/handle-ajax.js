@@ -40,4 +40,33 @@ async function getWatchlist() {
 	return res.json();
 }
 
-export { postWatchlist, getQuote, getWatchlist };
+async function getAccounts() {
+	const res = await fetch(`/stocks/accounts`);
+	return res.json();
+}
+
+async function patchPosition({ account, position }) {
+	const csrf = document
+		.querySelector('meta[name="csrf-token"]')
+		.getAttribute('content');
+	try {
+		const response = await fetch(`/stocks/account`, {
+			method: 'PATCH',
+			credentials: 'same-origin',
+			headers: {
+				'Content-Type': 'application/json',
+				'csrf-token': csrf,
+			},
+			body: JSON.stringify({
+				account,
+				position,
+			}),
+		});
+		const data = await response.json();
+		return data;
+	} catch (err) {
+		console.log({ accountPatch: err });
+	}
+}
+
+export { postWatchlist, getQuote, getWatchlist, getAccounts, patchPosition };
