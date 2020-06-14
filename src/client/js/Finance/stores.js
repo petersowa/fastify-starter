@@ -81,3 +81,12 @@ const accountData = [
 ];
 
 accountStore.subscribe((data) => console.log({ data }));
+accountStore.addPosition = (newPosition, accountName) => {
+	console.log(newPosition);
+	accountStore.update((storeData) => {
+		storeData
+			.find((item) => item.name === accountName)
+			.positions.push(newPosition);
+		return storeData;
+	});
+};

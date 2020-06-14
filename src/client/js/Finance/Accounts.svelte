@@ -46,7 +46,6 @@
 	function handleBuyForm(e, { formData, account }) {
 		e.preventDefault();
 		toggleAccountModal();
-		console.log(e, formData, account);
 		const newPosition = {
 			symbol: formData.symbol,
 			date: new Date(formData.date).toLocaleDateString(),
@@ -55,13 +54,7 @@
 			gain: 0,
 			dollarGain: 0,
 		};
-		console.log(newPosition);
-		accountStore.update(storeData => {
-			storeData
-				.find(item => item.name === account.name)
-				.positions.push(newPosition);
-			return storeData;
-		});
+		accountStore.addPosition(newPosition, account.name);
 	}
 </script>
 
