@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import { getAccounts, patchPosition } from './handle-ajax';
 
 export function setSpinner() {
 	let isLoaded = false;
@@ -29,6 +30,8 @@ export const watchList = writable([]);
 export const accountStore = writable([], (set) => {
 	set(accountData);
 });
+
+getAccounts();
 
 const accountData = [
 	{

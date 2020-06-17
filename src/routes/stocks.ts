@@ -2,6 +2,7 @@ import * as fastify from 'fastify';
 import { checkSessionAuth } from '../controllers/protected';
 import { updateWatchlist, getWatchlist } from '../controllers/watchlist';
 import { getQuote, getHistoricalQuote } from '../controllers/quote';
+import { getAccounts, updateAccount } from '../controllers/accounts';
 
 const options = { preHandler: checkSessionAuth };
 
@@ -13,6 +14,8 @@ async function routes(
 	fastify.get('/quote/:symbol/:date', options, getHistoricalQuote);
 	fastify.get('/watchlist', options, getWatchlist);
 	fastify.post('/watchlist', options, updateWatchlist);
+	fastify.get('/accounts', options, getAccounts);
+	fastify.patch('/account', options, updateAccount);
 }
 
 export default routes;
