@@ -41,6 +41,7 @@ async function getWatchlist() {
 }
 
 async function getAccounts() {
+	console.log('GETTING ACCOUNTS');
 	const res = await fetch(`/stocks/accounts`);
 	return res.json();
 }
