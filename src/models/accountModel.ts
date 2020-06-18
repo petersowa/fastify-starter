@@ -17,7 +17,7 @@ const account: Schema = new Schema({
 		unique: true,
 		required: true,
 	},
-	secondaryUser: { type: Schema.Types.ObjectId, ref: 'Users', unique: true },
+	secondaryUser: { type: Schema.Types.ObjectId, ref: 'Users' },
 	holdings: { type: Schema.Types.ObjectId, ref: 'Holdings', unique: true },
 	transactions: {
 		type: Schema.Types.ObjectId,
