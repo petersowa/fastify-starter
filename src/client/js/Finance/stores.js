@@ -84,7 +84,12 @@ const accountData = [
 ];
 
 accountStore.subscribe((data) => console.log({ data }));
-accountStore.addPosition = (newPosition, accountName) => {
+accountStore.addPosition = async (newPosition, accountName) => {
+	const patchRes = await patchPosition({
+		account: accountName,
+		position: newPosition,
+	});
+	console.log({ patchRes });
 	console.log(newPosition);
 	accountStore.update((storeData) => {
 		storeData
