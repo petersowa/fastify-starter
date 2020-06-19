@@ -31,9 +31,10 @@ async function updateAccount(
 			holdings: [
 				{
 					date: new Date(),
+					symbol: position.symbol,
 					type: 'stock',
-					quantity: 12,
-					cost: 9.99,
+					quantity: position.quantity,
+					cost: position.cost,
 					fees: 9.99,
 				},
 			],
