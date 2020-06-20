@@ -17,11 +17,15 @@ export interface HoldingsInterface extends Document {
 
 const holding: Schema = new Schema({
 	date: { type: Date, default: Date.now },
+	purchaseDate: { type: Date, required: true },
 	symbol: String,
 	type: String,
 	quantity: Number,
 	cost: Number,
 	fees: Number,
+	purchasePrice: Number,
+	adjustment: { type: Number, default: 1 },
+	dividend: Number,
 });
 
 const holdings: Schema = new Schema({

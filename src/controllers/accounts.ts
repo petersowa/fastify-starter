@@ -27,15 +27,27 @@ async function updateAccount(
 		await userAccount.populate('holdings');
 		console.log({ found: userAccount });
 	} else {
+		const {
+			date,
+			symbol,
+			type,
+			quantity,
+			cost,
+			fees,
+			purchasePrice,
+			purchaseDate,
+		} = position;
 		const newHoldings = new HoldingsModel({
 			holdings: [
 				{
 					date: new Date(),
-					symbol: position.symbol,
-					type: 'stock',
-					quantity: position.quantity,
-					cost: position.cost,
-					fees: 9.99,
+					symbol,
+					type,
+					quantity,
+					cost,
+					fees,
+					purchasePrice,
+					purchaseDate,
 				},
 			],
 		});

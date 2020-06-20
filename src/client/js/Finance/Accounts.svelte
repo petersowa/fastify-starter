@@ -49,10 +49,14 @@
 		const newPosition = {
 			symbol: formData.symbol,
 			date: new Date(formData.date).toLocaleDateString(),
+			purchaseDate: new Date(formData.date),
 			quantity: formData.shares,
 			cost: +formData.price * +formData.shares + +formData.fee,
+			purchasePrice: +formData.price,
 			gain: 0,
 			dollarGain: 0,
+			type: 'stock',
+			fees: +formData.fee,
 		};
 		accountStore.addPosition(newPosition, account.name);
 	}
