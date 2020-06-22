@@ -1,13 +1,17 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { ServerResponse } from 'http';
 import AccountModel, { AccountInterface } from '../models/accountModel';
-import HoldingsModel, { HoldingsInterface } from '../models/holdingsModel';
+import {
+	HoldingsModel,
+	HoldingModel,
+	HoldingsInterface,
+} from '../models/holdingsModel';
 
 async function getAccounts(
 	request: FastifyRequest,
 	reply: FastifyReply<ServerResponse>
 ): Promise<AccountInterface | null> {
-	const accounts = await Account.findOne({
+	const accounts = await AccountModel.findOne({
 		user: request.session.userId,
 	});
 	if (!accounts) return null;
@@ -37,19 +41,18 @@ async function updateAccount(
 			purchasePrice,
 			purchaseDate,
 		} = position;
+		const newHolding = new HoldingModel({
+			date: new Date(),
+			symbol,
+			type,
+			quantity,
+			cost,
+			fees,
+			purchasePrice,
+			purchaseDate,
+		});
 		const newHoldings = new HoldingsModel({
-			holdings: [
-				{
-					date: new Date(),
-					symbol,
-					type,
-					quantity,
-					cost,
-					fees,
-					purchasePrice,
-					purchaseDate,
-				},
-			],
+			holdings: [newHolding],
 		});
 		userAccount = new AccountModel({
 			user: request.session.userId,
@@ -57,8 +60,9 @@ async function updateAccount(
 		});
 		try {
 			const doc = await userAccount.save();
-			const holdingDoc = await newHoldings.save();
-			console.log('created account', doc, holdingDoc);
+			const holdingsDoc = await newHoldings.save();
+			const holdingDoc = await newHolding.save();
+			console.log('created account', doc, holdingsDoc);
 		} catch (err) {
 			console.log({ createNewAccountError: err });
 		}

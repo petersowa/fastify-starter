@@ -3,11 +3,15 @@ import { Schema, Document, Types } from 'mongoose';
 
 export interface HoldingInterface extends Document {
 	date: Date;
+	purchaseDate: Date;
 	symbol: string;
 	type: string;
 	quantity: number;
 	cost: number;
 	fees: number;
+	purchasePrice: number;
+	adjustment: number;
+	dividend: number;
 }
 
 export interface HoldingsInterface extends Document {
@@ -31,10 +35,16 @@ const holding: Schema = new Schema({
 const holdings: Schema = new Schema({
 	updated: { type: Date, default: Date.now },
 	holdings: [holding],
+	// holdings: { type: Schema.Types.ObjectId, ref: 'Holding', unique: true },
 });
+
+const HoldingModel = dbInstance.createModel<HoldingInterface>(
+	'Holding',
+	holding
+);
 
 const HoldingsModel = dbInstance.createModel<HoldingsInterface>(
 	'Holdings',
 	holdings
 );
-export default HoldingsModel;
+export { HoldingsModel, HoldingModel };
