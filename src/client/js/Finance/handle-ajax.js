@@ -43,7 +43,8 @@ async function getWatchlist() {
 async function getAccounts() {
 	console.log('GETTING ACCOUNTS');
 	const res = await fetch(`/stocks/accounts`);
-	return res.json();
+	const data = await res.json();
+	console.log({ accountData: data });
 }
 
 async function patchPosition({ account, position }) {

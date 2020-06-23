@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { ServerResponse } from 'http';
 import AccountModel, { AccountInterface } from '../models/accountModel';
+import { Document } from 'mongoose';
 import {
 	HoldingsModel,
 	HoldingModel,
@@ -13,9 +14,15 @@ async function getAccounts(
 ): Promise<AccountInterface | null> {
 	const accounts = await AccountModel.findOne({
 		user: request.session.userId,
-	});
-	if (!accounts) return null;
+	}).populate('holdings');
 	console.log({ accounts });
+	// if (accounts) {
+	// 	accounts
+	// 		.populate('holdings')
+	// 		.exec((err, item) => console.log({ err, item }));
+	// 	return accounts;
+	// }
+	if (!accounts) return null;
 	return accounts;
 }
 
