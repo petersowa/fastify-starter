@@ -44,7 +44,8 @@ async function getAccounts() {
 	console.log('GETTING ACCOUNTS');
 	const res = await fetch(`/stocks/accounts`);
 	const data = await res.json();
-	console.log({ accountData: data });
+	// return data;
+	console.log({ accountData: data }, data.holdings[0].positions);
 }
 
 async function patchPosition({ account, position }) {

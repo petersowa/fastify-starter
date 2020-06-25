@@ -5,7 +5,7 @@ export interface AccountInterface extends Document {
 	updated: Date;
 	user: Types.ObjectId;
 	secondaryUser: Types.ObjectId;
-	holdings: Types.ObjectId;
+	holdings: [Types.ObjectId];
 	transactions: Types.ObjectId;
 }
 
@@ -18,7 +18,7 @@ const account: Schema = new Schema({
 		required: true,
 	},
 	secondaryUser: { type: Schema.Types.ObjectId, ref: 'Users' },
-	holdings: { type: Schema.Types.ObjectId, ref: 'Holdings', unique: true },
+	holdings: [{ type: Schema.Types.ObjectId, ref: 'Holdings', unique: true }],
 	transactions: {
 		type: Schema.Types.ObjectId,
 		ref: 'Transactions',
