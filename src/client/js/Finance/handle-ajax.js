@@ -36,16 +36,12 @@ async function getQuote(symbol) {
 
 async function getWatchlist() {
 	const res = await fetch(`/stocks/watchlist`);
-	console.log({ watchlist: res });
 	return res.json();
 }
 
 async function getAccounts() {
-	console.log('GETTING ACCOUNTS');
 	const res = await fetch(`/stocks/accounts`);
-	const data = await res.json();
-	// return data;
-	console.log({ accountData: data }, data.holdings[0].positions);
+	return await res.json();
 }
 
 async function patchPosition({ account, position }) {

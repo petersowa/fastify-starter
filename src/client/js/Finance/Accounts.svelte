@@ -15,6 +15,7 @@
 	} from '@fortawesome/free-solid-svg-icons';
 
 	let showAccount = null;
+	let showAddAccount = false;
 	let accountList = [];
 	let stockQuotes = {};
 
@@ -22,13 +23,18 @@
 		showAccount = account ? account.name : null;
 	}
 
+	const toggleModalAddAccount = () => (showAddAccount = !showAddAccount);
+
 	const unsubscribe = accountStore.subscribe(async list => {
 		const quotes = {};
+		if (list.length === 0) return;
 		const clearSpinner = setSpinner();
 		try {
 			accountList = list;
-			accountList.forEach(account => {
-				account.positions.forEach(position => {
+			console.log({ list });
+			if (!accountList.holdings) throw new Error('no holdings');
+			accountList.holdings.forEach(holding => {
+				holding.positions.forEach(position => {
 					if (position.symbol in quotes) return;
 					quotes[position.symbol] = getQuote(position.symbol);
 				});
@@ -36,6 +42,7 @@
 
 			const res = await Promise.all(Object.values(quotes));
 			res.forEach(quote => (stockQuotes[quote.symbol] = quote));
+			console.log({ accountList });
 			clearSpinner();
 		} catch (err) {
 			clearSpinner();
@@ -58,7 +65,7 @@
 			type: 'stock',
 			fees: +formData.fee,
 		};
-		accountStore.addPosition(newPosition, account.name);
+		accountStore.addPosition(newPosition, account ? account.name : 'alpha');
 	}
 </script>
 
@@ -130,53 +137,61 @@
 </style>
 
 <ul class="data">
-	{#each accountList as account}
-		<li class="data__row">
-			<span>{account.name}</span>
-			<i class="fas fa-camera" />
-			<div class="control">
-				<button class="item-control" aria-label="view">
-					<Fa icon={faBinoculars} color="gray" />
-				</button>
-				<button class="item-control" aria-label="edit">
-					<Fa icon={faEdit} color="gray" />
-				</button>
-				<button class="item-control" aria-label="delete">
-					<Fa icon={faMinusCircle} color="red" />
-				</button>
-			</div>
-		</li>
-		<li>
-			<span>Positions</span>
-		</li>
-		<li class="position">
-			<span>Symbol</span>
-			<span>Date</span>
-			<span class="right-justify">Quantity</span>
-			<span class="right-justify">Cost</span>
-			<span class="right-justify">Value</span>
-			<span class="right-justify">$ Gain</span>
-		</li>
-		{#each account.positions as position}
-			<li class="position">
-				{#if position}
-					<Position {position} {stockQuotes} />
-				{/if}
+	{#if accountList.holdings && accountList.holdings.length !== 0}
+		{#each accountList.holdings as holding}
+			<li class="data__row">
+				<span>{holding.name || 'account name'}</span>
+				<i class="fas fa-camera" />
+				<div class="control">
+					<button class="item-control" aria-label="view">
+						<Fa icon={faBinoculars} color="gray" />
+					</button>
+					<button class="item-control" aria-label="edit">
+						<Fa icon={faEdit} color="gray" />
+					</button>
+					<button class="item-control" aria-label="delete">
+						<Fa icon={faMinusCircle} color="red" />
+					</button>
+				</div>
 			</li>
+			<li>
+				<span>Positions</span>
+			</li>
+			<li class="position">
+				<span>Symbol</span>
+				<span>Date</span>
+				<span class="right-justify">Quantity</span>
+				<span class="right-justify">Cost</span>
+				<span class="right-justify">Value</span>
+				<span class="right-justify">$ Gain</span>
+			</li>
+			{#each holding.positions as position}
+				<li class="position">
+					{#if position}
+						<Position {position} {stockQuotes} />
+					{/if}
+				</li>
+			{/each}
+			<button
+				class="item-control"
+				aria-label="add position"
+				on:click={() => toggleAccountModal(holding)}>
+				<Fa icon={faPlusCircle} color="blue" />
+			</button>
+			{#if showAccount === holding.name}
+				<BuyModal {toggleAccountModal} {handleBuyForm} {holding} />
+			{/if}
 		{/each}
-		<button
-			class="item-control"
-			aria-label="add position"
-			on:click={() => toggleAccountModal(account)}>
-			<Fa icon={faPlusCircle} color="blue" />
-		</button>
-		{#if showAccount === account.name}
-			<BuyModal {toggleAccountModal} {handleBuyForm} {account} />
-		{/if}
-	{/each}
+	{/if}
 	<div class="control">
-		<button class="round" aria-label="add account">
+		<button
+			class="round"
+			aria-label="add account"
+			on:click={toggleModalAddAccount}>
 			<Fa icon={faPlus} size="2x" color="green" />
 		</button>
+		{#if showAddAccount}
+			<BuyModal {toggleModalAddAccount} {handleBuyForm} />
+		{/if}
 	</div>
 </ul>

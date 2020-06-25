@@ -7,6 +7,7 @@
 		faPlusCircle,
 		faPlus,
 	} from '@fortawesome/free-solid-svg-icons';
+	import { format } from 'date-fns';
 
 	export let position = null;
 	export let stockQuotes = null;
@@ -68,7 +69,7 @@
 </style>
 
 <span>{position.symbol.toUpperCase()}</span>
-<span>{position.date}</span>
+<span>{format(new Date(position.date), 'MM/dd/yyy')}</span>
 <span class="right-justify">{position.quantity}</span>
 <span class="right-justify">{position.cost.toFixed(2)}</span>
 <span class="right-justify">{value}</span>

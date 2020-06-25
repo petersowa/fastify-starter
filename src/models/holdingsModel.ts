@@ -16,6 +16,7 @@ export interface PositionInterface extends Document {
 
 export interface HoldingsInterface extends Document {
 	updated: Date;
+	name: string;
 	positions: PositionInterface[];
 }
 
@@ -34,6 +35,7 @@ const position: Schema = new Schema({
 
 const holdings: Schema = new Schema({
 	updated: { type: Date, default: Date.now },
+	name: { type: String, default: 'alpha' },
 	positions: [position],
 	// holdings: { type: Schema.Types.ObjectId, ref: 'Holding', unique: true },
 });

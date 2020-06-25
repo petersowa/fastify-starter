@@ -28,60 +28,11 @@ export const appStore = writable({
 export const watchList = writable([]);
 
 export const accountStore = writable([], (set) => {
-	set(accountData);
+	getAccounts().then((accountData) => {
+		set(accountData);
+		console.log({ accountData });
+	});
 });
-
-getAccounts();
-
-const accountData = [
-	{
-		name: 'main account',
-		positions: [
-			{
-				symbol: 'IBM',
-				date: '12/3/2005',
-				quantity: 12,
-				cost: 3000,
-				gain: 0.1,
-				dollarGain: 100,
-			},
-		],
-	},
-	{
-		name: 'joint account',
-		positions: [
-			{
-				symbol: 'IBM',
-				date: '12/3/2005',
-				quantity: 12,
-				cost: 3000,
-				gain: 0.1,
-				dollarGain: 100,
-			},
-			{
-				symbol: 'ATVI',
-				date: '7/3/2015',
-				quantity: 12,
-				cost: 3000,
-				gain: 0.1,
-				dollarGain: 100,
-			},
-		],
-	},
-	{
-		name: 'private account',
-		positions: [
-			{
-				symbol: 'AMZN',
-				date: '12/3/2005',
-				quantity: 12,
-				cost: 3000,
-				gain: 0.1,
-				dollarGain: 100,
-			},
-		],
-	},
-];
 
 accountStore.subscribe((data) => console.log({ data }));
 accountStore.addPosition = async (newPosition, accountName) => {
@@ -92,7 +43,8 @@ accountStore.addPosition = async (newPosition, accountName) => {
 	console.log({ patchRes });
 	console.log(newPosition);
 	accountStore.update((storeData) => {
-		storeData
+		console.log({ storeData });
+		storeData.holdings
 			.find((item) => item.name === accountName)
 			.positions.push(newPosition);
 		return storeData;
