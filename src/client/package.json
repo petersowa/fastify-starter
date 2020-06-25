@@ -27,7 +27,7 @@
 		"sortablejs": "^1.10.2",
 		"svelte": "^3.23.2",
 		"svelte-fa": "^2.1.1",
-		"svelte-preprocess": "^3.9.8",
+		"svelte-preprocess": "^3.9.10",
 		"typescript": "^3.9.5"
 	},
 	"devDependencies": {}

@@ -45,7 +45,7 @@
 		"fastify-session": "^3.3.0",
 		"fastify-static": "^2.7.0",
 		"handlebars": "^4.7.6",
-		"mongoose": "^5.9.19",
+		"mongoose": "^5.9.20",
 		"point-of-view": "^3.8.0",
 		"socket.io": "^2.3.0"
 	},
@@ -63,7 +63,7 @@
 		"babel-eslint": "^10.1.0",
 		"concurrently": "^5.2.0",
 		"eslint": "^6.8.0",
-		"eslint-plugin-eslint-plugin": "^2.2.2",
+		"eslint-plugin-eslint-plugin": "^2.3.0",
 		"eslint-plugin-prettier": "^3.1.4",
 		"mocha": "^7.2.0",
 		"node-sass": "^4.14.1",
