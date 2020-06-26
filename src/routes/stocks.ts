@@ -18,7 +18,7 @@ async function routes(
 	fastify.get('/quote/:symbol/:date', options, getHistoricalQuote);
 	fastify.get('/watchlist', options, getWatchlist);
 	fastify.post('/watchlist', options, updateWatchlist);
-	fastify.get('/accounts', options, getAccounts);
+	fastify.get('/account', options, getAccounts);
 	fastify.patch('/account', options, patchHoldings);
 	fastify.delete('/account', options, deletePosition);
 }
