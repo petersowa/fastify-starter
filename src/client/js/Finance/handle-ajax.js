@@ -4,7 +4,38 @@ const QUOTE_ROUTE = '/stocks/quote';
 const POST = 'POST';
 const PATCH = 'PATCH';
 const DELETE = 'DELETE';
-const GET = 'GET';
+
+async function postWatchlist(list) {
+	return secureFetch(WATCHLIST_ROUTE, POST, {
+		watchList: list,
+	});
+}
+
+async function getQuote(symbol) {
+	return await getFetch(`${QUOTE_ROUTE}/${symbol}`);
+}
+
+async function getWatchlist() {
+	return await getFetch(WATCHLIST_ROUTE);
+}
+
+async function getAccounts() {
+	return getFetch(ACCOUNT_ROUTE);
+}
+
+async function patchPosition({ account, position }) {
+	return secureFetch(ACCOUNT_ROUTE, PATCH, {
+		account,
+		position,
+	});
+}
+
+export async function deletePosition({ holdingId, positionId }) {
+	return secureFetch(ACCOUNT_ROUTE, DELETE, {
+		holdingId,
+		positionId,
+	});
+}
 
 function getTokenCSRF() {
 	return document
@@ -12,78 +43,31 @@ function getTokenCSRF() {
 		.getAttribute('content');
 }
 
-function secureFetch(route, method, body) {
-	return fetch(route, {
-		method,
-		credentials: 'same-origin',
-		headers: {
-			'Content-Type': 'application/json',
-			'csrf-token': getTokenCSRF(),
-		},
-		body: JSON.stringify(body),
-	});
-}
-
-async function postWatchlist(list) {
-	console.log('POSTWATCHLIST');
+async function secureFetch(route, method, body) {
 	try {
-		const response = await secureFetch(WATCHLIST_ROUTE, POST, {
-			watchList: list,
+		const res = await fetch(route, {
+			method,
+			credentials: 'same-origin',
+			headers: {
+				'Content-Type': 'application/json',
+				'csrf-token': getTokenCSRF(),
+			},
+			body: JSON.stringify(body),
 		});
-		const data = await response.json();
-		console.log('SUCCESS::POSTWATCHLIST', data);
-		return data;
+		return res.json();
 	} catch (err) {
-		console.log({ watchlist: err });
+		console.log({ ajaxERROR: err.message });
+		return { error: err.message };
 	}
 }
 
-async function getQuote(symbol) {
-	let data = null;
+async function getFetch(route) {
 	try {
-		const res = await fetch(`${QUOTE_ROUTE}/${symbol}`);
-		data = await res.json();
+		const res = await fetch(route);
+		return res.json();
 	} catch (err) {
-		console.error('unable to fetch or parse', { err });
-	}
-	return data;
-}
-
-async function getWatchlist() {
-	const res = await fetch(WATCHLIST_ROUTE);
-	return res.json();
-}
-
-async function getAccounts() {
-	const res = await fetch(ACCOUNT_ROUTE);
-	return await res.json();
-}
-
-async function patchPosition({ account, position }) {
-	try {
-		const response = await secureFetch(ACCOUNT_ROUTE, PATCH, {
-			account,
-			position,
-		});
-
-		const data = await response.json();
-		return data;
-	} catch (err) {
-		console.log({ accountPatch: err });
-	}
-}
-
-export async function deletePosition({ holdingId, positionId }) {
-	try {
-		const response = await secureFetch(ACCOUNT_ROUTE, DELETE, {
-			holdingId,
-			positionId,
-		});
-
-		const data = await response.json();
-		return data;
-	} catch (err) {
-		console.log({ deletePosition: err });
+		console.log({ ajaxERROR: err.message });
+		return { error: err.message };
 	}
 }
 
