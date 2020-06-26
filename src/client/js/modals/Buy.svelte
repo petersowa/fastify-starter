@@ -12,7 +12,7 @@
 		// validate
 		// if valid date then send to handle buy form
 		formData.symbol = formData.symbol.toUpperCase();
-		handleBuyForm(e, { formData, account });
+		handleBuyForm(e, { formData, account, toggleAccountModal });
 	}
 </script>
 
