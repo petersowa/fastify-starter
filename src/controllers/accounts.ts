@@ -1,11 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { ServerResponse } from 'http';
 import AccountModel, { AccountInterface } from '../models/accountModel';
-import {
-	HoldingsModel,
-	PositionModel,
-	HoldingsInterface,
-} from '../models/holdingsModel';
+import { HoldingsModel, PositionModel } from '../models/holdingsModel';
 
 async function getAccounts(
 	request: FastifyRequest,
@@ -15,12 +11,7 @@ async function getAccounts(
 		user: request.session.userId,
 	}).populate('holdings');
 	console.log({ accounts });
-	// if (accounts) {
-	// 	accounts
-	// 		.populate('holdings')
-	// 		.exec((err, item) => console.log({ err, item }));
-	// 	return accounts;
-	// }
+
 	if (!accounts) return null;
 	return accounts;
 }
@@ -81,7 +72,6 @@ const patchHoldings: UpdateFunction<{}> = async function (request, reply) {
 		});
 
 		if (userAccount) {
-			// await userAccount.populate('holdings').execPopulate();
 			const holdingsDoc = await HoldingsModel.findById(
 				userAccount.holdings[0]
 			);
@@ -98,7 +88,6 @@ const patchHoldings: UpdateFunction<{}> = async function (request, reply) {
 			});
 			const doc = await userAccount.save();
 			const holdingsDoc = await newHoldings.save();
-			// await newPosition.save();
 			console.log('created account', doc, holdingsDoc);
 		}
 	} catch (err) {
