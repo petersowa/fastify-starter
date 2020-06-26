@@ -28,10 +28,19 @@ export const appStore = writable({
 export const watchList = writable([]);
 
 export const accountStore = writable([], (set) => {
-	getAccounts().then((accountData) => {
-		set(accountData);
-		console.log({ accountData });
-	});
+	getAccounts()
+		.then((accountData) => {
+			if (accountData) {
+				set(accountData);
+			} else {
+				set({});
+				console.error({ error: 'no account holdings data found' });
+			}
+			console.log({ accountData });
+		})
+		.catch((err) => {
+			console.error({ error: err.message });
+		});
 });
 
 accountStore.subscribe((data) => console.log({ data }));
@@ -44,10 +53,16 @@ accountStore.addPosition = async (newPosition, accountName) => {
 	console.log(newPosition);
 	accountStore.update((storeData) => {
 		console.log({ storeData });
-		storeData.holdings
-			.find((item) => item.name === accountName)
-			.positions.push(newPosition);
-		return storeData;
+		if (!storeData.holdings) {
+			getAccounts().then((accounts) => {
+				accountStore.update(() => accounts);
+			});
+		} else {
+			storeData.holdings
+				.find((item) => item.name === accountName)
+				.positions.push(patchRes.newPosition);
+			return storeData;
+		}
 	});
 };
 accountStore.deletePosition = async (positionId, holdingId) => {

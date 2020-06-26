@@ -4,7 +4,7 @@ import { Schema, Document, Types } from 'mongoose';
 export interface AccountInterface extends Document {
 	updated: Date;
 	user: Types.ObjectId;
-	secondaryUser: Types.ObjectId;
+	secondaryUser?: Types.ObjectId;
 	holdings: [Types.ObjectId];
 	transactions: Types.ObjectId;
 }
@@ -22,7 +22,7 @@ const account: Schema = new Schema({
 	transactions: {
 		type: Schema.Types.ObjectId,
 		ref: 'Transactions',
-		unique: true,
+		// unique: true,
 	},
 });
 

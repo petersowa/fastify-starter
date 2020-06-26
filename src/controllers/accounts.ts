@@ -44,31 +44,31 @@ const patchHoldings: UpdateFunction<{}> = async function (request, reply) {
 		return { status: 'bad request' };
 	}
 
+	const {
+		date,
+		symbol,
+		type,
+		quantity,
+		cost,
+		fees,
+		purchasePrice,
+		purchaseDate,
+	} = position;
+
+	const newPosition = new PositionModel({
+		date: date || new Date(),
+		symbol,
+		type,
+		quantity,
+		cost,
+		fees,
+		purchasePrice,
+		purchaseDate,
+	});
+
 	try {
 		let userAccount = await AccountModel.findOne({
 			user: request.session.userId,
-		});
-
-		const {
-			date,
-			symbol,
-			type,
-			quantity,
-			cost,
-			fees,
-			purchasePrice,
-			purchaseDate,
-		} = position;
-
-		const newPosition = new PositionModel({
-			date: date || new Date(),
-			symbol,
-			type,
-			quantity,
-			cost,
-			fees,
-			purchasePrice,
-			purchaseDate,
 		});
 
 		if (userAccount) {
@@ -96,7 +96,7 @@ const patchHoldings: UpdateFunction<{}> = async function (request, reply) {
 		return { status: (err as Error).message };
 	}
 
-	return { position };
+	return { newPosition };
 };
 
 export { patchHoldings, getAccounts, deletePosition };
