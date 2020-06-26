@@ -168,7 +168,13 @@
 			{#each holding.positions as position}
 				<li class="position">
 					{#if position}
-						<Position {position} {stockQuotes} />
+						<Position
+							{position}
+							{stockQuotes}
+							handleDelete={() => {
+								console.log('handle delete');
+								accountStore.deletePosition(position._id, holding._id);
+							}} />
 					{/if}
 				</li>
 			{/each}

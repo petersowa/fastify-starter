@@ -8,9 +8,11 @@
 		faPlus,
 	} from '@fortawesome/free-solid-svg-icons';
 	import { format } from 'date-fns';
+	import { deletePosition } from './handle-ajax';
 
 	export let position = null;
 	export let stockQuotes = null;
+	export let handleDelete;
 
 	$: value =
 		position.symbol in stockQuotes
@@ -78,7 +80,7 @@
 	<button class="item-control" aria-label="edit">
 		<Fa icon={faEdit} color="blue" />
 	</button>
-	<button class="item-control" aria-label="delete">
+	<button class="item-control" aria-label="delete" on:click={handleDelete}>
 		<Fa icon={faMinusCircle} color="red" />
 	</button>
 </div>

@@ -1,7 +1,10 @@
-async function postWatchlist(list) {
-	const csrf = document
+function getTokenCSRF() {
+	return document
 		.querySelector('meta[name="csrf-token"]')
 		.getAttribute('content');
+}
+
+async function postWatchlist(list) {
 	console.log('POSTWATCHLIST');
 	try {
 		const response = await fetch(`/stocks/watchlist`, {
@@ -9,7 +12,7 @@ async function postWatchlist(list) {
 			credentials: 'same-origin',
 			headers: {
 				'Content-Type': 'application/json',
-				'csrf-token': csrf,
+				'csrf-token': getTokenCSRF(),
 			},
 			body: JSON.stringify({
 				watchList: list,
@@ -45,16 +48,13 @@ async function getAccounts() {
 }
 
 async function patchPosition({ account, position }) {
-	const csrf = document
-		.querySelector('meta[name="csrf-token"]')
-		.getAttribute('content');
 	try {
 		const response = await fetch(`/stocks/account`, {
 			method: 'PATCH',
 			credentials: 'same-origin',
 			headers: {
 				'Content-Type': 'application/json',
-				'csrf-token': csrf,
+				'csrf-token': getTokenCSRF(),
 			},
 			body: JSON.stringify({
 				account,
@@ -65,6 +65,27 @@ async function patchPosition({ account, position }) {
 		return data;
 	} catch (err) {
 		console.log({ accountPatch: err });
+	}
+}
+
+export async function deletePosition({ holdingId, positionId }) {
+	try {
+		const response = await fetch(`/stocks/account`, {
+			method: 'DELETE',
+			credentials: 'same-origin',
+			headers: {
+				'Content-Type': 'application/json',
+				'csrf-token': getTokenCSRF(),
+			},
+			body: JSON.stringify({
+				holdingId,
+				positionId,
+			}),
+		});
+		const data = await response.json();
+		return data;
+	} catch (err) {
+		console.log({ deletePosition: err });
 	}
 }
 

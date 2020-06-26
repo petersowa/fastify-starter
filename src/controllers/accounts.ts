@@ -25,10 +25,28 @@ async function getAccounts(
 	return accounts;
 }
 
-async function updateAccount(
-	request: FastifyRequest,
-	reply: FastifyReply<{}>
-): Promise<{}> {
+interface UpdateFunction<T> {
+	(request: FastifyRequest, reply: FastifyReply<{}>): Promise<T>;
+}
+const deletePosition: UpdateFunction<{}> = async function (request, reply) {
+	const { holdingId, positionId } = request.body;
+	if (!holdingId || !positionId) {
+		reply.code(400);
+		return { status: 'bad request' };
+	}
+
+	try {
+		const holdingsDoc = await HoldingsModel.findById(holdingId);
+		const res = holdingsDoc?.positions.remove(positionId);
+		await holdingsDoc?.save();
+		return { positionId } || {};
+	} catch (err) {
+		reply.code(500);
+		return { status: (err as Error).message };
+	}
+};
+
+const patchHoldings: UpdateFunction<{}> = async function (request, reply) {
 	const { account, position } = request.body;
 	if (!account || !position) {
 		reply.code(400);
@@ -90,6 +108,6 @@ async function updateAccount(
 	}
 
 	return { position };
-}
+};
 
-export { updateAccount, getAccounts };
+export { patchHoldings, getAccounts, deletePosition };

@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { getAccounts, patchPosition } from './handle-ajax';
+import { getAccounts, patchPosition, deletePosition } from './handle-ajax';
 
 export function setSpinner() {
 	let isLoaded = false;
@@ -49,4 +49,26 @@ accountStore.addPosition = async (newPosition, accountName) => {
 			.positions.push(newPosition);
 		return storeData;
 	});
+};
+accountStore.deletePosition = async (positionId, holdingId) => {
+	const res = await deletePosition({
+		positionId,
+		holdingId,
+	});
+	if (res && res.positionId) {
+		accountStore.update((storeData) => {
+			const holding = storeData.holdings.find(
+				(holding) => holding._id === holdingId
+			);
+			const positions = holding.positions.filter(
+				(position) => position._id !== positionId
+			);
+			holding.positions = positions;
+			console.log({ storeData });
+			return storeData;
+		});
+		console.log('delete position', { res });
+	} else {
+		console.log({ res });
+	}
 };

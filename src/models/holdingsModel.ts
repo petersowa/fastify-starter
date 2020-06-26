@@ -1,5 +1,5 @@
 import dbInstance from '../utils/db';
-import { Schema, Document } from 'mongoose';
+import { Schema, Document, Types } from 'mongoose';
 
 export interface PositionInterface extends Document {
 	date: Date;
@@ -17,7 +17,7 @@ export interface PositionInterface extends Document {
 export interface HoldingsInterface extends Document {
 	updated: Date;
 	name: string;
-	positions: PositionInterface[];
+	positions: Types.Array<PositionInterface>;
 }
 
 const position: Schema = new Schema({
