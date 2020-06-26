@@ -23,7 +23,10 @@
 		showAccount = account ? account.name : null;
 	}
 
-	const toggleModalAddAccount = () => (showAddAccount = !showAddAccount);
+	const toggleModalAddAccount = () => {
+		console.log({ showAddAccount });
+		showAddAccount = !showAddAccount;
+	};
 
 	const unsubscribe = accountStore.subscribe(async list => {
 		const quotes = {};
@@ -50,7 +53,7 @@
 		}
 	});
 
-	function handleBuyForm(e, { formData, account }) {
+	function handleBuyForm(e, { formData, account, toggleAccountModal }) {
 		e.preventDefault();
 		toggleAccountModal();
 		const newPosition = {
@@ -197,7 +200,9 @@
 			<Fa icon={faPlus} size="2x" color="green" />
 		</button>
 		{#if showAddAccount}
-			<BuyModal {toggleModalAddAccount} {handleBuyForm} />
+			<BuyModal
+				toggleAccountModal={toggleModalAddAccount}
+				{handleBuyForm} />
 		{/if}
 	</div>
 </ul>
