@@ -50,10 +50,10 @@ const idTable = {
 			submit: (event) => {
 				// event.preventDefault();
 				// const csrf = /_csrf=(\S*);/.exec(document.cookie)[1];
-				const csrf = document
-					.querySelector('meta[name="csrf-token"]')
-					.getAttribute('content');
-				event.target._csrf.value = csrf;
+				// const csrf = document
+				// 	.querySelector('meta[name="csrf-token"]')
+				// 	.getAttribute('content');
+				// event.target._csrf.value = csrf;
 				console.log('submit');
 			},
 		},
