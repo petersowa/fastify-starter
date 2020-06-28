@@ -30,21 +30,27 @@ const app: fastify.FastifyInstance<
 app.register(helmet);
 
 registerSessions(app);
+// A simple plugin for Fastify that adds a content type parser for the content type application/x-www-form-urlencoded.
+app.register(formBody);
 
 app.addHook('preHandler', (request, reply, next) => {
-	request.session.appState = { ...appState, timeStamp: Date.now() };
-	console.log('preHandler', {
+	console.log('PREHANDLER', {
 		ips: request.ips,
 		userId: request.session.userId,
 		body: request.body,
 	});
+	next();
+});
+
+app.register(fastifyCSRF, {
+	key: '_csrf',
+	ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
+});
+
+app.addHook('preHandler', (request, reply, next) => {
+	request.session.appState = { ...appState, timeStamp: Date.now() };
+	console.log('preHandler2');
 	request.session.flash = flashState;
-	request.session.appState.info.setInfo({
-		ip: request.ip,
-		hostname: request.hostname,
-		header: request.headers['user-agent'],
-		referer: request.headers['referer'],
-	});
 
 	if (!request.session.csrfToken) {
 		request.session.csrfToken = request.csrfToken();
@@ -79,10 +85,6 @@ app.addHook('preHandler', (request, reply, next) => {
 
 	next();
 });
-app.register(fastifyCSRF, {
-	key: '_csrf',
-	ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
-});
 
 const flashState = flash();
 
@@ -91,9 +93,6 @@ app.setErrorHandler((err, request, reply) => {
 	reply.status(500).send({ error: err.message });
 	return;
 });
-
-// A simple plugin for Fastify that adds a content type parser for the content type application/x-www-form-urlencoded.
-app.register(formBody);
 
 // add static routes
 app.register(require('fastify-static'), {
