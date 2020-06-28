@@ -31,19 +31,6 @@ app.register(helmet);
 
 registerSessions(app);
 
-app.register(fastifyCSRF, {
-	key: '_csrf',
-	ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
-});
-
-const flashState = flash();
-
-app.setErrorHandler((err, request, reply) => {
-	console.error({ ServerError: err });
-	reply.status(500).send({ error: err.message });
-	return;
-});
-
 app.addHook('preHandler', (request, reply, next) => {
 	request.session.appState = { ...appState, timeStamp: Date.now() };
 	console.log('preHandler', {
@@ -91,6 +78,18 @@ app.addHook('preHandler', (request, reply, next) => {
 	}
 
 	next();
+});
+app.register(fastifyCSRF, {
+	key: '_csrf',
+	ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
+});
+
+const flashState = flash();
+
+app.setErrorHandler((err, request, reply) => {
+	console.error({ ServerError: err });
+	reply.status(500).send({ error: err.message });
+	return;
 });
 
 // A simple plugin for Fastify that adds a content type parser for the content type application/x-www-form-urlencoded.
