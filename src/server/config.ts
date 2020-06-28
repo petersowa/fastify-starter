@@ -19,7 +19,7 @@ import appState from './app-state';
 
 const fastifyCSRF = require('fastify-csrf');
 
-const PORT: number = parseInt(process.env.PORT || '3000', 10);
+const PORT: number = parseInt(process.env.PORT || '3999', 10);
 
 const app: fastify.FastifyInstance<
 	Server,
@@ -46,7 +46,11 @@ app.setErrorHandler((err, request, reply) => {
 
 app.addHook('preHandler', (request, reply, next) => {
 	request.session.appState = { ...appState, timeStamp: Date.now() };
-	console.log('preHandler', request.ips, request.session.userId);
+	console.log('preHandler', {
+		ips: request.ips,
+		userId: request.session.userId,
+		body: request.body,
+	});
 	request.session.flash = flashState;
 	request.session.appState.info.setInfo({
 		ip: request.ip,
