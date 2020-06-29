@@ -46,6 +46,7 @@ app.addHook('preHandler', (request, reply, next) => {
 });
 
 app.register(fastifyCSRF, {
+	cookie: true,
 	key: '_csrf',
 	ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
 });
@@ -55,8 +56,8 @@ app.addHook('preHandler', (request, reply, next) => {
 	console.log('preHandler2');
 	request.session.flash = flashState;
 
-	if (!request.session.csrfToken) {
-		request.session.csrfToken = request.csrfToken();
+	if (!request.session.isInitialLoad) {
+		request.session.isInitialLoad = true;
 
 		// track session
 		WebStatsModel.findOne({ ip: request.ip })

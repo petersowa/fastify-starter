@@ -18,7 +18,6 @@ async function routes(
 	options: {}
 ): Promise<void> {
 	fastify.get('/', (request, reply) => {
-		const { csrfToken } = request.session;
 		console.log(
 			'>>>> HOME',
 			request.session.csrfToken,
@@ -28,7 +27,7 @@ async function routes(
 			name: 'home page',
 			article,
 			username: request.session.username,
-			csrfToken,
+			csrfToken: request.csrfToken(),
 			appState: request.session.appState,
 			info: request.session.appState.info.getInfo(), // {{debugJSON info}}
 			whichModal: request.session.appState.modal,
@@ -36,51 +35,44 @@ async function routes(
 	});
 
 	fastify.get('/about', (request, reply) => {
-		const { csrfToken } = request.session;
 		reply.view('./pages/about', {
 			name: 'about page',
 			article,
 			images,
 			username: request.session.username,
-			csrfToken,
 			whichModal: request.session.appState.modal,
 		});
 	});
 
 	fastify.get('/blog', (request, reply) => {
-		const { csrfToken } = request.session;
 		reply.view('./pages/blog', {
 			name: 'blog page',
 			article,
 			username: request.session.username,
-			csrfToken,
 			whichModal: request.session.appState.modal,
 		});
 	});
 
 	fastify.get('/register', (request, reply) => {
-		const { csrfToken } = request.session;
-		// const errors = reply.flash('auth');
 		const errors = request.session.flash.get('auth');
 		reply.view('./pages/register', {
 			name: 'Create Account',
 			article,
 			username: request.session.username,
-			csrfToken,
+			csrfToken: request.csrfToken(),
 			whichModal: 'registerForm',
 			errors,
 		});
 	});
 
 	fastify.get('/login', (request, reply) => {
-		const { csrfToken } = request.session;
 		const errors = request.session.flash.get('auth');
 		console.log({ errors });
 		reply.view('./pages/login', {
 			name: 'Login',
 			article,
 			username: request.session.username,
-			csrfToken,
+			csrfToken: request.csrfToken(),
 			whichModal: 'loginForm',
 			errors,
 		});
@@ -90,7 +82,6 @@ async function routes(
 		'/test-auth',
 		{
 			async preHandler(request, reply) {
-				// console.log('prehandler', request.session);
 				if (!request.session.username) reply.redirect('/login');
 				else reply.status(200).send('authorized');
 				return reply;
