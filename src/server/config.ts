@@ -1,4 +1,6 @@
 import fastify from 'fastify';
+import fastifyCookie from 'fastify-cookie';
+
 import path from 'path';
 
 import { Server, IncomingMessage, ServerResponse } from 'http';
@@ -29,9 +31,10 @@ const app: fastify.FastifyInstance<
 
 app.register(helmet);
 
+app.register(fastifyCookie);
+app.register(formBody);
 registerSessions(app);
 // A simple plugin for Fastify that adds a content type parser for the content type application/x-www-form-urlencoded.
-app.register(formBody);
 
 app.addHook('preHandler', (request, reply, next) => {
 	console.log('PREHANDLER', {

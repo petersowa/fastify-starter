@@ -1,5 +1,4 @@
 import fastify from 'fastify';
-import fastifyCookie from 'fastify-cookie';
 import { Server, IncomingMessage, ServerResponse } from 'http';
 import 'fastify-session'; // session types
 
@@ -15,13 +14,13 @@ const MAX_SESSION_AGE = 2 * 24 * 60 * 60 * 1000;
 const register = (
 	app: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse>
 ): void => {
-	app.register(fastifyCookie);
 	app.register(fastifySession, {
-		// cookieName: 'qqSessionId',
+		cookieName: 'qqSessionId',
 		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: false,
 		cookie: {
+			path: '/',
 			secure: process.env.NODE_ENV === 'production',
 			maxAge: MAX_SESSION_AGE,
 		},
