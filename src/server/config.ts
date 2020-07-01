@@ -46,7 +46,6 @@ app.addHook('preHandler', (request, reply, next) => {
 });
 
 app.register(fastifyCSRF, {
-	cookie: true,
 	key: '_csrf',
 	ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
 });
