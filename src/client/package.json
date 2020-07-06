@@ -23,13 +23,13 @@
 		"rollup-plugin-scss": "^2.5.0",
 		"rollup-plugin-svelte": "^5.2.3",
 		"rollup-plugin-terser": "^5.1.2",
-		"rxjs": "^6.5.5",
+		"rxjs": "^6.6.0",
 		"socket.io-client": "^2.3.0",
 		"sortablejs": "^1.10.2",
 		"svelte": "^3.23.2",
 		"svelte-fa": "^2.1.1",
-		"svelte-preprocess": "^3.9.10",
-		"typescript": "^3.9.5"
+		"svelte-preprocess": "^3.9.12",
+		"typescript": "^3.9.6"
 	},
 	"devDependencies": {}
 }
