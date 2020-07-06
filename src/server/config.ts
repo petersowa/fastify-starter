@@ -39,8 +39,8 @@ registerSessions(app);
 app.addHook('preHandler', (request, reply, next) => {
 	console.log('PREHANDLER', {
 		ips: request.ips,
-		userId: request.session.userId,
-		body: request.body,
+		// userId: request.session.userId,
+		// body: request.body,
 	});
 	next();
 });
