@@ -4,6 +4,7 @@ const QUOTE_ROUTE = '/stocks/quote';
 const POST = 'POST';
 const PATCH = 'PATCH';
 const DELETE = 'DELETE';
+const PUT = 'PUT';
 
 async function postWatchlist(list) {
 	return secureFetch(WATCHLIST_ROUTE, POST, {
