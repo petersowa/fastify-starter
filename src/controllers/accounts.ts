@@ -99,4 +99,69 @@ const patchHoldings: UpdateFunction<{}> = async function (request, reply) {
 	return { newPosition };
 };
 
+const updateHoldingPosition: UpdateFunction<{}> = async function (
+	request,
+	reply
+) {
+	const { account, position, holding } = request.body;
+	if (!account || !position || !holding) {
+		reply.code(400);
+		return { status: 'bad request' };
+	}
+
+	const {
+		date,
+		symbol,
+		type,
+		quantity,
+		cost,
+		fees,
+		purchasePrice,
+		purchaseDate,
+	} = position;
+
+	const newPosition = new PositionModel({
+		date: date || new Date(),
+		symbol,
+		type,
+		quantity,
+		cost,
+		fees,
+		purchasePrice,
+		purchaseDate,
+	});
+
+	try {
+		let userAccount = await AccountModel.findOne({
+			user: request.session.userId,
+		});
+
+		if (userAccount) {
+			const holdingsDoc = await HoldingsModel.findById(
+				userAccount.holdings[0]
+			);
+			if (holdingsDoc) {
+				holdingsDoc.positions.push(newPosition);
+				await holdingsDoc.save();
+			}
+		} else {
+			const newHoldings = new HoldingsModel({});
+			newHoldings.positions.push(newPosition);
+			userAccount = new AccountModel({
+				user: request.session.userId,
+				holdings: [newHoldings.id],
+			});
+			const doc = await userAccount.save();
+			const holdingsDoc = await newHoldings.save();
+			console.log('created account', doc, holdingsDoc);
+		}
+	} catch (err) {
+		console.log({ createNewAccountError: err });
+		reply.code(500);
+		return { status: (err as Error).message };
+	}
+
+	return { newPosition };
+};
+
 export { patchHoldings, getAccounts, deletePosition };
