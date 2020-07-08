@@ -24,8 +24,8 @@ async function getAccounts() {
 	return getFetch(ACCOUNT_ROUTE);
 }
 
-async function patchPosition({ account, position }) {
-	return secureFetch(ACCOUNT_ROUTE, PATCH, {
+export async function addPosition({ account, position }) {
+	return secureFetch(ACCOUNT_ROUTE, PUT, {
 		account,
 		position,
 	});
@@ -35,6 +35,13 @@ export async function deletePosition({ holdingId, positionId }) {
 	return secureFetch(ACCOUNT_ROUTE, DELETE, {
 		holdingId,
 		positionId,
+	});
+}
+
+export async function updatePosition({ position, holdingId }) {
+	return secureFetch(ACCOUNT_ROUTE, PATCH, {
+		position,
+		holdingId,
 	});
 }
 
@@ -72,4 +79,4 @@ async function getFetch(route) {
 	}
 }
 
-export { postWatchlist, getQuote, getWatchlist, getAccounts, patchPosition };
+export { postWatchlist, getQuote, getWatchlist, getAccounts };

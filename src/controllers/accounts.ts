@@ -37,7 +37,7 @@ const deletePosition: UpdateFunction<{}> = async function (request, reply) {
 	}
 };
 
-const patchHoldings: UpdateFunction<{}> = async function (request, reply) {
+const addHoldingPosition: UpdateFunction<{}> = async function (request, reply) {
 	const { account, position } = request.body;
 	if (!account || !position) {
 		reply.code(400);
@@ -103,11 +103,13 @@ const updateHoldingPosition: UpdateFunction<{}> = async function (
 	request,
 	reply
 ) {
-	const { account, position, holding } = request.body;
-	if (!account || !position || !holding) {
+	const { position, holdingId } = request.body;
+	if (!position || !holdingId) {
 		reply.code(400);
 		return { status: 'bad request' };
 	}
+
+	return { status: 'ok request - pending implementation' };
 
 	const {
 		date,
@@ -164,4 +166,9 @@ const updateHoldingPosition: UpdateFunction<{}> = async function (
 	return { newPosition };
 };
 
-export { patchHoldings, getAccounts, deletePosition };
+export {
+	addHoldingPosition,
+	getAccounts,
+	deletePosition,
+	updateHoldingPosition,
+};

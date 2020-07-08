@@ -18,6 +18,7 @@
 	let showAddAccount = false;
 	let accountList = [];
 	let stockQuotes = {};
+	let modal = { component: null, data: null };
 
 	function toggleAccountModal(account = null) {
 		showAccount = account ? account.name : null;
@@ -177,6 +178,15 @@
 							handleDelete={() => {
 								console.log('handle delete');
 								accountStore.deletePosition(position._id, holding._id);
+							}}
+							handleUpdate={() => {
+								modal.component = BuyModal;
+								modal.data = { handleBuyForm: (e, { position, formData, holding }) => {
+										e.preventDefault();
+										accountStore.updatePosition(position, holding._id);
+										modal.component = null;
+									}, position, holding, toggleAccountModal: () => (modal.component = null) };
+								console.log(modal);
 							}} />
 					{/if}
 				</li>
@@ -205,4 +215,5 @@
 				{handleBuyForm} />
 		{/if}
 	</div>
+	<svelte:component this={modal.component} {...modal.data} />
 </ul>
