@@ -2,17 +2,38 @@
 	export let toggleAccountModal;
 	export let handleBuyForm;
 	export let account;
+	export let holding;
+	export let position;
 	import Modal from '../modal.svelte';
-	import { createEventDispatcher, onDestroy } from 'svelte';
+	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 
-	let formData = {};
+	let formData = { ...position };
+
+	onMount(() => {
+		if (!position) position = {};
+		formData = {
+			symbol: position.symbol || '',
+			date: new Date(position.date || new Date().toISOString())
+				.toISOString()
+				.substring(0, 10),
+			shares: position.quantity || '',
+			price: position.purchasePrice || '',
+			fee: position.fees,
+		};
+	});
 
 	function handleSubmit(e) {
 		console.log({ formData });
 		// validate
 		// if valid date then send to handle buy form
 		formData.symbol = formData.symbol.toUpperCase();
-		handleBuyForm(e, { formData, account, toggleAccountModal });
+		handleBuyForm(e, {
+			formData,
+			account,
+			toggleAccountModal,
+			position,
+			holding,
+		});
 	}
 </script>
 
