@@ -109,7 +109,7 @@ const updateHoldingPosition: UpdateFunction<{}> = async function (
 		return { status: 'bad request' };
 	}
 
-	return { status: 'ok request - pending implementation' };
+	// return { status: 'ok request - pending implementation' };
 
 	const {
 		date,
@@ -134,36 +134,17 @@ const updateHoldingPosition: UpdateFunction<{}> = async function (
 	});
 
 	try {
-		let userAccount = await AccountModel.findOne({
-			user: request.session.userId,
-		});
+		const posDoc = await HoldingsModel.findById(holdingId);
 
-		if (userAccount) {
-			const holdingsDoc = await HoldingsModel.findById(
-				userAccount.holdings[0]
-			);
-			if (holdingsDoc) {
-				holdingsDoc.positions.push(newPosition);
-				await holdingsDoc.save();
-			}
-		} else {
-			const newHoldings = new HoldingsModel({});
-			newHoldings.positions.push(newPosition);
-			userAccount = new AccountModel({
-				user: request.session.userId,
-				holdings: [newHoldings.id],
-			});
-			const doc = await userAccount.save();
-			const holdingsDoc = await newHoldings.save();
-			console.log('created account', doc, holdingsDoc);
-		}
+		console.log({ posDoc, position, holdingId });
+		console.log(JSON.stringify(posDoc, null, 2));
 	} catch (err) {
-		console.log({ createNewAccountError: err });
+		console.log({ positionUpdateError: err });
 		reply.code(500);
 		return { status: (err as Error).message };
 	}
 
-	return { newPosition };
+	return { status: 'position update request' };
 };
 
 export {
