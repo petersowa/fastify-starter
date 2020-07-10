@@ -34,16 +34,15 @@ app.register(helmet);
 app.register(fastifyCookie);
 app.register(formBody);
 registerSessions(app);
-// A simple plugin for Fastify that adds a content type parser for the content type application/x-www-form-urlencoded.
 
-app.addHook('preHandler', (request, reply, next) => {
-	console.log('PREHANDLER', {
-		ips: request.ips,
-		// userId: request.session.userId,
-		// body: request.body,
-	});
-	next();
-});
+// app.addHook('preHandler', (request, reply, next) => {
+// 	console.log('PREHANDLER', {
+// 		ips: request.ips,
+// 		// userId: request.session.userId,
+// 		// body: request.body,
+// 	});
+// 	next();
+// });
 
 app.register(fastifyCSRF, {
 	key: '_csrf',
@@ -52,7 +51,6 @@ app.register(fastifyCSRF, {
 
 app.addHook('preHandler', (request, reply, next) => {
 	request.session.appState = { ...appState, timeStamp: Date.now() };
-	console.log('preHandler2');
 	request.session.flash = flashState;
 
 	if (!request.session.isInitialLoad) {

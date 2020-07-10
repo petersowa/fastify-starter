@@ -97,4 +97,26 @@ accountStore.updatePosition = async (position, holdingId) => {
 		position,
 		holdingId,
 	});
+
+	if (res.id) {
+		accountStore.update((storeData) => {
+			const holding = storeData.holdings.find(
+				(holding) => holding._id === holdingId
+			);
+
+			holding.positions.every((e, i, positions) => {
+				if (e._id == position._id) {
+					console.log('found');
+					positions[i] = position;
+					return false;
+				}
+				return true;
+			});
+
+			console.log({ storeData });
+			return storeData;
+		});
+	} else {
+		console.error({ res });
+	}
 };

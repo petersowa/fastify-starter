@@ -136,23 +136,15 @@ const updateHoldingPosition: UpdateFunction<{}> = async function (
 	try {
 		const holdingsDoc = await HoldingsModel.findById(holdingId);
 		if (holdingsDoc) {
-			holdingsDoc.positions.forEach((pos) => {
-				console.log(pos._id);
+			holdingsDoc.positions.forEach((pos, i, positions) => {
 				if (pos._id == position._id) {
-					console.log('FOUND');
-					console.log({ pos });
-					pos = { ...position };
-					console.log({ pos });
-					pos.save();
+					positions[i] = position;
 				}
 			});
 			await holdingsDoc.save();
+			return { id: holdingsDoc.id };
 		}
-
-		console.log({ holdingsDoc, position, holdingId });
-		console.log(JSON.stringify(holdingsDoc, null, 2));
 	} catch (err) {
-		console.log({ positionUpdateError: err });
 		reply.code(500);
 		return { status: (err as Error).message };
 	}
