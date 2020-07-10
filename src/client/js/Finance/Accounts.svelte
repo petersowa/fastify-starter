@@ -183,6 +183,12 @@
 								modal.component = BuyModal;
 								modal.data = { handleBuyForm: (e, { position, formData, holding }) => {
 										e.preventDefault();
+										position.symbol = formData.symbol;
+										position.purchaseDate = new Date(formData.date);
+										position.quantity = formData.shares;
+										position.cost = +formData.price * +formData.shares + +formData.fee;
+										position.purchasePrice = +formData.price;
+										position.fees = +formData.fee;
 										accountStore.updatePosition(position, holding._id);
 										modal.component = null;
 									}, position, holding, toggleAccountModal: () => (modal.component = null) };
