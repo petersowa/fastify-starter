@@ -97,7 +97,7 @@ accountStore.updatePosition = async (position, holdingId) => {
 		position,
 		holdingId,
 	});
-
+	console.log({ res });
 	if (res.id) {
 		accountStore.update((storeData) => {
 			const holding = storeData.holdings.find(
