@@ -109,37 +109,15 @@ const updateHoldingPosition: UpdateFunction<{}> = async function (
 		return { status: 'bad request' };
 	}
 
-	// return { status: 'ok request - pending implementation' };
-
-	const {
-		date,
-		symbol,
-		type,
-		quantity,
-		cost,
-		fees,
-		purchasePrice,
-		purchaseDate,
-	} = position;
-
-	const newPosition = new PositionModel({
-		date: date || new Date(),
-		symbol,
-		type,
-		quantity,
-		cost,
-		fees,
-		purchasePrice,
-		purchaseDate,
-	});
-
 	try {
 		const holdingsDoc = await HoldingsModel.findById(holdingId);
 		if (holdingsDoc) {
-			holdingsDoc.positions.forEach((pos, i, positions) => {
+			holdingsDoc.positions.every((pos, i, positions) => {
 				if (pos._id == position._id) {
 					positions[i] = position;
+					return false;
 				}
+				return true;
 			});
 			await holdingsDoc.save();
 			return { id: holdingsDoc.id };
