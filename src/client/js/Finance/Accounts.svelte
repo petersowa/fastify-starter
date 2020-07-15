@@ -55,7 +55,6 @@
 	});
 
 	function handleBuyForm(e, { formData, account, toggleAccountModal }) {
-		e.preventDefault();
 		toggleAccountModal();
 		const newPosition = {
 			symbol: formData.symbol,
@@ -182,7 +181,6 @@
 							handleUpdate={() => {
 								modal.component = BuyModal;
 								modal.data = { handleBuyForm: (e, { position, formData, holding }) => {
-										e.preventDefault();
 										position.symbol = formData.symbol;
 										position.purchaseDate = new Date(formData.date);
 										position.quantity = formData.shares;

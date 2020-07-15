@@ -55,7 +55,7 @@
 
 <Modal on:close={toggleAccountModal}>
 	<h2 class="buy-title" slot="header">Account Info</h2>
-	<form class="buy-form" on:submit={handleSubmit}>
+	<form class="buy-form" on:submit|preventDefault={handleSubmit}>
 		<label>Symbol</label>
 		<input
 			tabindex="0"
