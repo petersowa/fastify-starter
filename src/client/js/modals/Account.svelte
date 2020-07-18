@@ -56,41 +56,12 @@
 <Modal on:close={toggleAccountModal}>
 	<h2 class="buy-title" slot="header">Account Info</h2>
 	<form class="buy-form" on:submit|preventDefault={handleSubmit}>
-		<label>Symbol</label>
+		<label>Account Name</label>
 		<input
 			tabindex="0"
 			class="form-input"
 			type="text"
-			placeholder="Symbol"
+			placeholder="Account Name"
 			bind:value={formData.symbol} />
-		<label>Date</label>
-		<input
-			tabindex="0"
-			class="form-input"
-			type="date"
-			placeholder="Date"
-			bind:value={formData.date} />
-		<label>Shares</label>
-		<input
-			tabindex="0"
-			class="form-input"
-			type="text"
-			placeholder="Shares"
-			bind:value={formData.shares} />
-		<label>Price</label>
-		<input
-			tabindex="0"
-			class="form-input"
-			type="text"
-			placeholder="Price"
-			bind:value={formData.price} />
-		<label>Fees</label>
-		<input
-			tabindex="0"
-			class="form-input"
-			type="text"
-			placeholder="Fees"
-			bind:value={formData.fee} />
-		<button type="submit">Submit</button>
 	</form>
 </Modal>
