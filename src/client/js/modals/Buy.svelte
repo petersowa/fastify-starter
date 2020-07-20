@@ -1,6 +1,6 @@
 <script>
-	export let toggleAccountModal;
-	export let handleBuyForm;
+	export let toggleModal;
+	export let handleData;
 	export let account;
 	export let holding;
 	export let position;
@@ -27,10 +27,10 @@
 		// validate
 		// if valid date then send to handle buy form
 		formData.symbol = formData.symbol.toUpperCase();
-		handleBuyForm(e, {
+		handleData(e, {
 			formData,
 			account,
-			toggleAccountModal,
+			toggleModal,
 			position,
 			holding,
 		});
@@ -53,7 +53,7 @@
 	}
 </style>
 
-<Modal on:close={toggleAccountModal}>
+<Modal on:close={toggleModal}>
 	<h2 class="buy-title" slot="header">Account Info</h2>
 	<form class="buy-form" on:submit|preventDefault={handleSubmit}>
 		<label>Symbol</label>
