@@ -3,6 +3,7 @@
 	import { get } from 'svelte/store';
 	import { accountStore, setSpinner } from './stores';
 	import BuyModal from '../modals/Buy.svelte';
+	import AccountModal from '../modals/Account.svelte';
 	import Position from './Position.svelte';
 	import { getQuote } from './handle-ajax';
 	import Fa from 'svelte-fa';
@@ -54,8 +55,8 @@
 		}
 	});
 
-	function handleBuyForm(e, { formData, account, toggleAccountModal }) {
-		toggleAccountModal();
+	function handleBuyForm(e, { formData, account, toggleModal }) {
+		toggleModal();
 		const newPosition = {
 			symbol: formData.symbol,
 			date: new Date(formData.date).toLocaleDateString(),
@@ -149,7 +150,15 @@
 					<button class="item-control" aria-label="view">
 						<Fa icon={faBinoculars} color="gray" />
 					</button>
-					<button class="item-control" aria-label="edit">
+					<button
+						class="item-control"
+						aria-label="edit"
+						on:click={() => {
+							modal.component = AccountModal;
+							modal.data = { toggleModal: () => (modal.component = null), handleData: (e, { position, formData, holding }) => {
+									modal.component = null;
+								} };
+						}}>
 						<Fa icon={faEdit} color="gray" />
 					</button>
 					<button class="item-control" aria-label="delete">
@@ -180,7 +189,7 @@
 							}}
 							handleUpdate={() => {
 								modal.component = BuyModal;
-								modal.data = { handleBuyForm: (e, { position, formData, holding }) => {
+								modal.data = { handleData: (e, { position, formData, holding }) => {
 										position.symbol = formData.symbol;
 										position.purchaseDate = new Date(formData.date);
 										position.quantity = formData.shares;
@@ -189,7 +198,7 @@
 										position.fees = +formData.fee;
 										accountStore.updatePosition(position, holding._id);
 										modal.component = null;
-									}, position, holding, toggleAccountModal: () => (modal.component = null) };
+									}, position, holding, toggleModal: () => (modal.component = null) };
 								console.log(modal);
 							}} />
 					{/if}
@@ -202,7 +211,10 @@
 				<Fa icon={faPlusCircle} color="blue" />
 			</button>
 			{#if showAccount === holding.name}
-				<BuyModal {toggleAccountModal} {handleBuyForm} {holding} />
+				<BuyModal
+					toggleModal={toggleAccountModal}
+					handleData={handleBuyForm}
+					{holding} />
 			{/if}
 		{/each}
 	{/if}
@@ -215,8 +227,8 @@
 		</button>
 		{#if showAddAccount}
 			<BuyModal
-				toggleAccountModal={toggleModalAddAccount}
-				{handleBuyForm} />
+				toggleModal={toggleModalAddAccount}
+				handleData={handleBuyForm} />
 		{/if}
 	</div>
 	<svelte:component this={modal.component} {...modal.data} />
