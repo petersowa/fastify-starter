@@ -1,7 +1,6 @@
 <script>
 	export let toggleModal;
 	export let handleData;
-	export let account;
 	export let holding;
 	export let position;
 	import Modal from '../modal.svelte';
@@ -29,7 +28,6 @@
 		formData.symbol = formData.symbol.toUpperCase();
 		handleData(e, {
 			formData,
-			account,
 			toggleModal,
 			position,
 			holding,
