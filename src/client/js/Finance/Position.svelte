@@ -12,8 +12,8 @@
 
 	export let position = null;
 	export let stockQuotes = null;
-	export let handleDelete;
-	export let handleUpdate;
+	export let onDelete;
+	export let onUpdate;
 
 	$: value =
 		position.symbol in stockQuotes
@@ -78,10 +78,10 @@
 <span class="right-justify">{value}</span>
 <span class="right-justify">{dollarGain}</span>
 <div class="control">
-	<button class="item-control" aria-label="edit" on:click={handleUpdate}>
+	<button class="item-control" aria-label="edit" on:click={onUpdate}>
 		<Fa icon={faEdit} color="blue" />
 	</button>
-	<button class="item-control" aria-label="delete" on:click={handleDelete}>
+	<button class="item-control" aria-label="delete" on:click={onDelete}>
 		<Fa icon={faMinusCircle} color="red" />
 	</button>
 </div>
