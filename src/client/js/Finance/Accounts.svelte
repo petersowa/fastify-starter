@@ -71,6 +71,47 @@
 		};
 		accountStore.addPosition(newPosition, account ? account.name : 'alpha');
 	}
+
+	function handlePositionDelete() {
+		return e => {
+			console.log('handle delete');
+			accountStore.deletePosition(position._id, holding._id);
+		};
+	}
+
+	function handlePositionUpdate(position, holding) {
+		return e => {
+			console.log({ position, holding });
+			modal.component = BuyModal;
+			modal.data = {
+				handleData: (e, { position, formData, holding }) => {
+					position.symbol = formData.symbol;
+					position.purchaseDate = new Date(formData.date);
+					position.quantity = formData.shares;
+					position.cost =
+						+formData.price * +formData.shares + +formData.fee;
+					position.purchasePrice = +formData.price;
+					position.fees = +formData.fee;
+					accountStore.updatePosition(position, holding._id);
+					modal.component = null;
+				},
+				position,
+				holding,
+				toggleModal: () => (modal.component = null),
+			};
+			console.log(modal);
+		};
+	}
+
+	function handleEditAccount() {
+		modal.component = AccountModal;
+		modal.data = {
+			toggleModal: () => (modal.component = null),
+			handleData: (e, { position, formData, holding }) => {
+				modal.component = null;
+			},
+		};
+	}
 </script>
 
 <style type="scss">
@@ -153,12 +194,7 @@
 					<button
 						class="item-control"
 						aria-label="edit"
-						on:click={() => {
-							modal.component = AccountModal;
-							modal.data = { toggleModal: () => (modal.component = null), handleData: (e, { position, formData, holding }) => {
-									modal.component = null;
-								} };
-						}}>
+						on:click={handleEditAccount}>
 						<Fa icon={faEdit} color="gray" />
 					</button>
 					<button class="item-control" aria-label="delete">
@@ -183,24 +219,8 @@
 						<Position
 							{position}
 							{stockQuotes}
-							handleDelete={() => {
-								console.log('handle delete');
-								accountStore.deletePosition(position._id, holding._id);
-							}}
-							handleUpdate={() => {
-								modal.component = BuyModal;
-								modal.data = { handleData: (e, { position, formData, holding }) => {
-										position.symbol = formData.symbol;
-										position.purchaseDate = new Date(formData.date);
-										position.quantity = formData.shares;
-										position.cost = +formData.price * +formData.shares + +formData.fee;
-										position.purchasePrice = +formData.price;
-										position.fees = +formData.fee;
-										accountStore.updatePosition(position, holding._id);
-										modal.component = null;
-									}, position, holding, toggleModal: () => (modal.component = null) };
-								console.log(modal);
-							}} />
+							onDelete={handlePositionDelete(position, holding)}
+							onUpdate={handlePositionUpdate(position, holding)} />
 					{/if}
 				</li>
 			{/each}
