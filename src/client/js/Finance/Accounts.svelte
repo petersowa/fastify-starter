@@ -72,16 +72,14 @@
 		accountStore.addPosition(newPosition, account ? account.name : 'alpha');
 	}
 
-	function handlePositionDelete() {
+	function handlePositionDelete(position, holding) {
 		return e => {
-			console.log('handle delete');
 			accountStore.deletePosition(position._id, holding._id);
 		};
 	}
 
 	function handlePositionUpdate(position, holding) {
 		return e => {
-			console.log({ position, holding });
 			modal.component = BuyModal;
 			modal.data = {
 				handleData: (e, { position, formData, holding }) => {
@@ -99,7 +97,6 @@
 				holding,
 				toggleModal: () => (modal.component = null),
 			};
-			console.log(modal);
 		};
 	}
 
