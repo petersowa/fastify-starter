@@ -8,7 +8,7 @@
 		faPlus,
 	} from '@fortawesome/free-solid-svg-icons';
 	import { format } from 'date-fns';
-	import { deletePosition } from './handle-ajax';
+	import { deletePosition } from '../handle-ajax';
 
 	export let position = null;
 	export let stockQuotes = null;

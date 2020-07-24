@@ -1,8 +1,9 @@
 <script>
+	import Modal from '../../components/modal.svelte';
+	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
+
 	export let toggleModal;
 	export let handleData;
-	import Modal from '../modal.svelte';
-	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 
 	let formData = { accountName: '' };
 

@@ -3,7 +3,7 @@
 	export let handleData;
 	export let holding;
 	export let position;
-	import Modal from '../modal.svelte';
+	import Modal from '../../components/modal.svelte';
 	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 
 	let formData = { ...position };

@@ -1,11 +1,11 @@
 <script>
-	import Modal from '../modal.svelte';
+	import Modal from '../../components/modal.svelte';
 	import { get } from 'svelte/store';
-	import { accountStore, setSpinner } from './stores';
+	import { accountStore, setSpinner } from '../stores';
 	import BuyModal from '../modals/Buy.svelte';
 	import AccountModal from '../modals/Account.svelte';
 	import Position from './Position.svelte';
-	import { getQuote } from './handle-ajax';
+	import { getQuote } from '../handle-ajax';
 	import Fa from 'svelte-fa';
 	import {
 		faEdit,
