@@ -4,7 +4,7 @@
 	import Modal from '../modal.svelte';
 	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 
-	let formData = {};
+	let formData = { accountName: '' };
 
 	function handleSubmit(e) {
 		handleData(e, {
@@ -15,31 +15,31 @@
 </script>
 
 <style>
-	.buy-title {
+	.title {
 		font-size: 1.2rem;
 	}
-	.buy-form {
+	.form {
 		display: grid;
 		padding: 0.5em;
 		grid-template-columns: 5rem 1fr;
 		grid-template-rows: auto;
 		grid-row-gap: 0.2em;
 	}
-	.form-input {
+	.input {
 		background: #ccc;
 	}
 </style>
 
 <Modal on:close={toggleModal}>
-	<h2 class="buy-title" slot="header">Account Info</h2>
-	<form class="buy-form" on:submit|preventDefault={handleSubmit}>
+	<h2 class="title" slot="header">Account Info</h2>
+	<form class="form" on:submit|preventDefault={handleSubmit}>
 		<label>Account Name</label>
 		<input
 			tabindex="0"
-			class="form-input"
+			class="input"
 			type="text"
 			placeholder="Account Name"
-			bind:value={formData.symbol} />
+			bind:value={formData.accountName} />
 		<button type="submit">Submit</button>
 	</form>
 </Modal>
