@@ -104,7 +104,8 @@
 		modal.component = AccountModal;
 		modal.data = {
 			toggleModal: () => (modal.component = null),
-			handleData: (e, { position, formData, holding }) => {
+			handleData: (e, { formData: { accountName } }) => {
+				console.log(accountName);
 				modal.component = null;
 			},
 		};
