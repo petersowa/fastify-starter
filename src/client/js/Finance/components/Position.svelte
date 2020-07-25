@@ -11,24 +11,16 @@
 	import { deletePosition } from '../handle-ajax';
 
 	export let position = null;
-	export let stockQuotes = null;
 	export let onDelete;
 	export let onUpdate;
+	export let quote;
 
-	$: value =
-		position.symbol in stockQuotes
-			? (
-					position.quantity * stockQuotes[position.symbol].latestPrice
-			  ).toFixed(2)
-			: 'loading...';
-	$: dollarGain =
-		position.symbol in stockQuotes
-			? (
-					position.quantity *
-						stockQuotes[position.symbol].latestPrice -
-					position.cost
-			  ).toFixed(2)
-			: 'loading...';
+	$: value = quote
+		? (position.quantity * quote.latestPrice).toFixed(2)
+		: 'loading...';
+	$: dollarGain = quote
+		? (position.quantity * quote.latestPrice - position.cost).toFixed(2)
+		: 'loading...';
 </script>
 
 <style type="scss">
