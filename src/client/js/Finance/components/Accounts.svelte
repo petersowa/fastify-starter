@@ -50,8 +50,8 @@
 			console.log({ accountList });
 			clearSpinner();
 		} catch (err) {
-			clearSpinner();
 			console.error(err);
+			clearSpinner();
 		}
 	});
 
@@ -216,7 +216,7 @@
 					{#if position}
 						<Position
 							{position}
-							{stockQuotes}
+							quote={stockQuotes[position.symbol]}
 							onDelete={handlePositionDelete(position, holding)}
 							onUpdate={handlePositionUpdate(position, holding)} />
 					{/if}
