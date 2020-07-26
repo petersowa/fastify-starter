@@ -10,7 +10,7 @@ async function getAccounts(
 	const accounts = await AccountModel.findOne({
 		user: request.session.userId,
 	}).populate('holdings');
-	console.log({ accounts });
+	console.log(JSON.stringify(accounts, null, 2));
 
 	if (!accounts) return null;
 	return accounts;
@@ -38,11 +38,13 @@ const deletePosition: UpdateFunction<{}> = async function (request, reply) {
 };
 
 const addHoldingPosition: UpdateFunction<{}> = async function (request, reply) {
-	const { account, position } = request.body;
-	if (!account || !position) {
+	const { holdingsId, position } = request.body;
+	if (!holdingsId || !position) {
 		reply.code(400);
 		return { status: 'bad request' };
 	}
+
+	console.log({ holdingsId });
 
 	const {
 		date,
@@ -67,28 +69,27 @@ const addHoldingPosition: UpdateFunction<{}> = async function (request, reply) {
 	});
 
 	try {
-		let userAccount = await AccountModel.findOne({
+		const userAccount = await AccountModel.findOne({
 			user: request.session.userId,
 		});
 
 		if (userAccount) {
-			const holdingsDoc = await HoldingsModel.findById(
-				userAccount.holdings[0]
-			);
+			const holdingsDoc = await HoldingsModel.findById(holdingsId);
 			if (holdingsDoc) {
 				holdingsDoc.positions.push(newPosition);
 				await holdingsDoc.save();
 			}
 		} else {
-			const newHoldings = new HoldingsModel({});
-			newHoldings.positions.push(newPosition);
-			userAccount = new AccountModel({
-				user: request.session.userId,
-				holdings: [newHoldings.id],
-			});
-			const doc = await userAccount.save();
-			const holdingsDoc = await newHoldings.save();
-			console.log('created account', doc, holdingsDoc);
+			console.error('holding not found');
+			// const newHoldings = new HoldingsModel({});
+			// newHoldings.positions.push(newPosition);
+			// userAccount = new AccountModel({
+			// 	user: request.session.userId,
+			// 	holdings: [newHoldings.id],
+			// });
+			// const doc = await userAccount.save();
+			// const holdingsDoc = await newHoldings.save();
+			// console.log('created account', doc, holdingsDoc);
 		}
 	} catch (err) {
 		console.log({ createNewAccountError: err });

@@ -21,8 +21,8 @@
 	let stockQuotes = {};
 	let modal = { component: null, data: null };
 
-	function toggleAccountModal(account = null) {
-		showAccount = account ? account.name : null;
+	function toggleAccountModal(holding = null) {
+		showAccount = holding ? holding._id : null;
 	}
 
 	const toggleModalAddAccount = () => {
@@ -55,7 +55,7 @@
 		}
 	});
 
-	function handleBuyForm(e, { formData, account, toggleModal }) {
+	function handleBuyForm(e, { formData, account, holding, toggleModal }) {
 		toggleModal();
 		const newPosition = {
 			symbol: formData.symbol,
@@ -69,7 +69,8 @@
 			type: 'stock',
 			fees: +formData.fee,
 		};
-		accountStore.addPosition(newPosition, account ? account.name : 'alpha');
+		console.log({ holding });
+		accountStore.addPosition(newPosition, holding._id);
 	}
 
 	function handlePositionDelete(position, holding) {
@@ -228,7 +229,7 @@
 				on:click={() => toggleAccountModal(holding)}>
 				<Fa icon={faPlusCircle} color="blue" />
 			</button>
-			{#if showAccount === holding.name}
+			{#if showAccount === holding._id}
 				<BuyModal
 					toggleModal={toggleAccountModal}
 					handleData={handleBuyForm}

@@ -10,6 +10,7 @@
 
 	onMount(() => {
 		if (!position) position = {};
+		console.log({ holding });
 		formData = {
 			symbol: position.symbol || '',
 			date: new Date(position.date || new Date().toISOString())
