@@ -32,7 +32,7 @@
 
 	const unsubscribe = accountStore.subscribe(async list => {
 		const quotes = {};
-		if (list.length === 0) return;
+		if (!list || list.length === 0) return;
 		const clearSpinner = setSpinner();
 		try {
 			accountList = list;
@@ -106,7 +106,10 @@
 		modal.data = {
 			toggleModal: () => (modal.component = null),
 			handleData: (e, { formData: { accountName } }) => {
-				console.log(accountName);
+				console.log({ accountName });
+				if (typeof accountName == 'string' && accountName.length > 0) {
+					accountStore.addHoldingsAccount(accountName);
+				}
 				modal.component = null;
 			},
 		};
@@ -241,7 +244,7 @@
 		<button
 			class="round"
 			aria-label="add account"
-			on:click={toggleModalAddAccount}>
+			on:click={handleEditAccount}>
 			<Fa icon={faPlus} size="2x" color="green" />
 		</button>
 		{#if showAddAccount}

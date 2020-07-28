@@ -49,6 +49,18 @@ export const accountStore = writable([], (set) => {
 });
 
 accountStore.subscribe((data) => console.log({ data }));
+
+accountStore.addHoldingsAccount = async (accountName) => {
+	console.log(accountName);
+	accountStore.update((storeData) => {
+		console.log(storeData.holdings);
+		storeData.holdings.forEach((holding) => console.log(holding.name));
+		storeData.holdings.push({ name: accountName, _id: 1, positions: [] });
+
+		return storeData;
+	});
+};
+
 accountStore.addPosition = async (newPosition, holdingsId) => {
 	try {
 		const patchRes = await addPosition({
@@ -74,6 +86,7 @@ accountStore.addPosition = async (newPosition, holdingsId) => {
 		console.error({ err });
 	}
 };
+
 accountStore.deletePosition = async (positionId, holdingId) => {
 	const res = await deletePosition({
 		positionId,
