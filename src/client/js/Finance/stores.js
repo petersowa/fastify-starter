@@ -54,8 +54,15 @@ accountStore.addHoldingsAccount = async (accountName) => {
 	console.log(accountName);
 	accountStore.update((storeData) => {
 		console.log(storeData.holdings);
-		storeData.holdings.forEach((holding) => console.log(holding.name));
-		storeData.holdings.push({ name: accountName, _id: 1, positions: [] });
+		const alreadyExists = storeData.holdings.find(
+			(holding) => accountName == holding.name
+		);
+		storeData.holdings.push({
+			alreadyExists,
+			name: accountName,
+			_id: 1,
+			positions: [],
+		});
 
 		return storeData;
 	});
