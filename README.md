@@ -1,4 +1,4 @@
-# fastify-starter
+# Investment Tracking App using Fastify and Svelte
 
 Test server side app with svelte client code and handlebar templates.
 
