@@ -24,9 +24,9 @@ async function getAccounts() {
 	return getFetch(ACCOUNT_ROUTE);
 }
 
-export async function addPosition({ account, position }) {
+export async function addPosition({ holdingsId, position }) {
 	return secureFetch(ACCOUNT_ROUTE, PUT, {
-		account,
+		holdingsId,
 		position,
 	});
 }

@@ -1,12 +1,11 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
-	import Modal from './modal.svelte';
-	import Spinner from './spinner.svelte';
-	import Box from './box.svelte';
-	import WatchList from './Finance/WatchList.svelte';
+	import Modal from './components/modal.svelte';
+	import Spinner from './components/spinner.svelte';
+	import WatchList from './Finance/components/WatchList.svelte';
 	import { watchList, appStore, setSpinner } from './Finance/stores';
-	import Quote from './Finance/Quote.svelte';
-	import Accounts from './Finance/Accounts.svelte';
+	import Quote from './Finance/components/Quote.svelte';
+	import Accounts from './Finance/components/Accounts.svelte';
 	import {
 		postWatchlist,
 		getQuote,

@@ -2,8 +2,8 @@
 	import Sortable from 'sortablejs';
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
-	import { watchList } from './stores';
-	import { postWatchlist } from './handle-ajax';
+	import { watchList } from '../stores';
+	import { postWatchlist } from '../handle-ajax';
 	import Fa from 'svelte-fa';
 	import {
 		faEdit,

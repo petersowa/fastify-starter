@@ -1,10 +1,11 @@
 <script>
-	import Modal from '../modal.svelte';
+	import Modal from '../../components/modal.svelte';
 	import { get } from 'svelte/store';
-	import { accountStore, setSpinner } from './stores';
+	import { accountStore, setSpinner } from '../stores';
 	import BuyModal from '../modals/Buy.svelte';
+	import AccountModal from '../modals/Account.svelte';
 	import Position from './Position.svelte';
-	import { getQuote } from './handle-ajax';
+	import { getQuote } from '../handle-ajax';
 	import Fa from 'svelte-fa';
 	import {
 		faEdit,
@@ -20,8 +21,8 @@
 	let stockQuotes = {};
 	let modal = { component: null, data: null };
 
-	function toggleAccountModal(account = null) {
-		showAccount = account ? account.name : null;
+	function toggleAccountModal(holding = null) {
+		showAccount = holding ? holding._id : null;
 	}
 
 	const toggleModalAddAccount = () => {
@@ -31,7 +32,7 @@
 
 	const unsubscribe = accountStore.subscribe(async list => {
 		const quotes = {};
-		if (list.length === 0) return;
+		if (!list || list.length === 0) return;
 		const clearSpinner = setSpinner();
 		try {
 			accountList = list;
@@ -49,13 +50,13 @@
 			console.log({ accountList });
 			clearSpinner();
 		} catch (err) {
-			clearSpinner();
 			console.error(err);
+			clearSpinner();
 		}
 	});
 
-	function handleBuyForm(e, { formData, account, toggleAccountModal }) {
-		toggleAccountModal();
+	function handleBuyForm(e, { formData, account, holding, toggleModal }) {
+		toggleModal();
 		const newPosition = {
 			symbol: formData.symbol,
 			date: new Date(formData.date).toLocaleDateString(),
@@ -68,7 +69,50 @@
 			type: 'stock',
 			fees: +formData.fee,
 		};
-		accountStore.addPosition(newPosition, account ? account.name : 'alpha');
+		console.log({ holding });
+		accountStore.addPosition(newPosition, holding._id);
+	}
+
+	function handlePositionDelete(position, holding) {
+		return e => {
+			accountStore.deletePosition(position._id, holding._id);
+		};
+	}
+
+	function handlePositionUpdate(position, holding) {
+		return e => {
+			modal.component = BuyModal;
+			modal.data = {
+				handleData: (e, { position, formData, holding }) => {
+					position.symbol = formData.symbol;
+					position.purchaseDate = new Date(formData.date);
+					position.quantity = formData.shares;
+					position.cost =
+						+formData.price * +formData.shares + +formData.fee;
+					position.purchasePrice = +formData.price;
+					position.fees = +formData.fee;
+					accountStore.updatePosition(position, holding._id);
+					modal.component = null;
+				},
+				position,
+				holding,
+				toggleModal: () => (modal.component = null),
+			};
+		};
+	}
+
+	function handleEditAccount() {
+		modal.component = AccountModal;
+		modal.data = {
+			toggleModal: () => (modal.component = null),
+			handleData: (e, { formData: { accountName } }) => {
+				console.log({ accountName });
+				if (typeof accountName == 'string' && accountName.length > 0) {
+					accountStore.addHoldingsAccount(accountName);
+				}
+				modal.component = null;
+			},
+		};
 	}
 </script>
 
@@ -149,7 +193,10 @@
 					<button class="item-control" aria-label="view">
 						<Fa icon={faBinoculars} color="gray" />
 					</button>
-					<button class="item-control" aria-label="edit">
+					<button
+						class="item-control"
+						aria-label="edit"
+						on:click={handleEditAccount}>
 						<Fa icon={faEdit} color="gray" />
 					</button>
 					<button class="item-control" aria-label="delete">
@@ -173,25 +220,9 @@
 					{#if position}
 						<Position
 							{position}
-							{stockQuotes}
-							handleDelete={() => {
-								console.log('handle delete');
-								accountStore.deletePosition(position._id, holding._id);
-							}}
-							handleUpdate={() => {
-								modal.component = BuyModal;
-								modal.data = { handleBuyForm: (e, { position, formData, holding }) => {
-										position.symbol = formData.symbol;
-										position.purchaseDate = new Date(formData.date);
-										position.quantity = formData.shares;
-										position.cost = +formData.price * +formData.shares + +formData.fee;
-										position.purchasePrice = +formData.price;
-										position.fees = +formData.fee;
-										accountStore.updatePosition(position, holding._id);
-										modal.component = null;
-									}, position, holding, toggleAccountModal: () => (modal.component = null) };
-								console.log(modal);
-							}} />
+							quote={stockQuotes[position.symbol]}
+							onDelete={handlePositionDelete(position, holding)}
+							onUpdate={handlePositionUpdate(position, holding)} />
 					{/if}
 				</li>
 			{/each}
@@ -201,8 +232,11 @@
 				on:click={() => toggleAccountModal(holding)}>
 				<Fa icon={faPlusCircle} color="blue" />
 			</button>
-			{#if showAccount === holding.name}
-				<BuyModal {toggleAccountModal} {handleBuyForm} {holding} />
+			{#if showAccount === holding._id}
+				<BuyModal
+					toggleModal={toggleAccountModal}
+					handleData={handleBuyForm}
+					{holding} />
 			{/if}
 		{/each}
 	{/if}
@@ -210,13 +244,13 @@
 		<button
 			class="round"
 			aria-label="add account"
-			on:click={toggleModalAddAccount}>
+			on:click={handleEditAccount}>
 			<Fa icon={faPlus} size="2x" color="green" />
 		</button>
 		{#if showAddAccount}
 			<BuyModal
-				toggleAccountModal={toggleModalAddAccount}
-				{handleBuyForm} />
+				toggleModal={toggleModalAddAccount}
+				handleData={handleBuyForm} />
 		{/if}
 	</div>
 	<svelte:component this={modal.component} {...modal.data} />

@@ -49,27 +49,51 @@ export const accountStore = writable([], (set) => {
 });
 
 accountStore.subscribe((data) => console.log({ data }));
-accountStore.addPosition = async (newPosition, accountName) => {
-	const patchRes = await addPosition({
-		account: accountName,
-		position: newPosition,
-	});
-	console.log({ patchRes });
-	console.log(newPosition);
+
+accountStore.addHoldingsAccount = async (accountName) => {
+	console.log(accountName);
 	accountStore.update((storeData) => {
-		console.log({ storeData });
-		if (!storeData.holdings) {
-			getAccounts().then((accounts) => {
-				accountStore.update(() => accounts);
-			});
-		} else {
-			storeData.holdings
-				.find((item) => item.name === accountName)
-				.positions.push(patchRes.newPosition);
-			return storeData;
-		}
+		console.log(storeData.holdings);
+		const alreadyExists = storeData.holdings.find(
+			(holding) => accountName == holding.name
+		);
+		storeData.holdings.push({
+			alreadyExists,
+			name: accountName,
+			_id: 1,
+			positions: [],
+		});
+
+		return storeData;
 	});
 };
+
+accountStore.addPosition = async (newPosition, holdingsId) => {
+	try {
+		const patchRes = await addPosition({
+			holdingsId,
+			position: newPosition,
+		});
+		console.log({ patchRes });
+		console.log(newPosition);
+		accountStore.update((storeData) => {
+			console.log({ storeData });
+			if (!storeData.holdings) {
+				getAccounts().then((accounts) => {
+					accountStore.update(() => accounts);
+				});
+			} else {
+				storeData.holdings
+					.find((item) => item._id == holdingsId)
+					.positions.push(patchRes.newPosition);
+				return storeData;
+			}
+		});
+	} catch (err) {
+		console.error({ err });
+	}
+};
+
 accountStore.deletePosition = async (positionId, holdingId) => {
 	const res = await deletePosition({
 		positionId,
