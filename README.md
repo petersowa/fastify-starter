@@ -2,6 +2,10 @@
 
 Test server side app with svelte client code and handlebar templates.
 
+<p align='center'>
+<img src='https://i.ibb.co/pLyHRB3/Inv-App-Screen-Shot.jpg' width='600' alt='investment app'>
+</p>
+
 Backend is using fastify.
 Connecting to mongo db via mongoose.
 
@@ -9,7 +13,7 @@ Client is responsive with mobile and desktop views.
 Uses CSS for styling core server html.
 
 # Using IEX data:
-'''
+```
 avgTotalVolume: 8377844
 calculationPrice: "tops"
 change: -0.65
@@ -65,4 +69,4 @@ volume: null
 week52High: 239.71
 week52Low: 48.18
 ytdChange: 0.7465299999999999
-'''
+```
