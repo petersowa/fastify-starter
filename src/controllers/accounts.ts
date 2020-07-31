@@ -110,16 +110,26 @@ const addHoldingsAccount: UpdateFunction<{}> = async function (request, reply) {
 	}
 
 	try {
-		const holdingsDoc = await HoldingsModel.findOne({
-			name: holdingsName,
+		const userAccount = await AccountModel.findOne({
+			user: request.session.userId,
 		});
-		if (holdingsDoc) {
-			reply.code(409);
-			return { id: holdingsDoc.id };
+		if (userAccount) {
+			const holdingsDoc = await HoldingsModel.findOne({
+				name: holdingsName,
+			});
+			if (holdingsDoc) {
+				reply.code(409);
+				return { id: holdingsDoc.id };
+			} else {
+				const holdingsDoc = new HoldingsModel({ name: holdingsName });
+				const result = await holdingsDoc.save();
+				userAccount.holdings.push(holdingsDoc._id);
+				await userAccount.save();
+				return { data: result };
+			}
 		} else {
-			const holdingsDoc = new HoldingsModel({ name: holdingsName });
-			const result = await holdingsDoc.save();
-			return { data: result };
+			reply.code(500);
+			return { status: 'unable to find user' };
 		}
 	} catch (err) {
 		reply.code(500);

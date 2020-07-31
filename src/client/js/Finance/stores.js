@@ -57,20 +57,22 @@ accountStore.addHoldingsAccount = async (accountName) => {
 		});
 
 		console.log({ accountName, patchRes });
-		accountStore.update((storeData) => {
-			console.log(storeData.holdings);
-			const alreadyExists = storeData.holdings.find(
-				(holding) => accountName == holding.name
-			);
-			storeData.holdings.push({
-				alreadyExists,
-				name: accountName,
-				_id: 1,
-				positions: [],
-			});
+		if (patchRes.status == 200) {
+			accountStore.update((storeData) => {
+				console.log(storeData.holdings);
+				const alreadyExists = storeData.holdings.find(
+					(holding) => accountName == holding.name
+				);
+				storeData.holdings.push({
+					alreadyExists,
+					name: accountName,
+					_id: 1,
+					positions: [],
+				});
 
-			return storeData;
-		});
+				return storeData;
+			});
+		}
 	} catch (err) {
 		console.error({ err });
 	}
@@ -91,7 +93,7 @@ accountStore.addPosition = async (newPosition, holdingsId) => {
 			} else {
 				storeData.holdings
 					.find((item) => item._id == holdingsId)
-					.positions.push(patchRes.newPosition);
+					.positions.push(patchRes.data.newPosition);
 				return storeData;
 			}
 		});
@@ -105,7 +107,7 @@ accountStore.deletePosition = async (positionId, holdingId) => {
 		positionId,
 		holdingId,
 	});
-	if (res && res.positionId) {
+	if (res.data && res.data.positionId) {
 		accountStore.update((storeData) => {
 			const holding = storeData.holdings.find(
 				(holding) => holding._id === holdingId
@@ -126,7 +128,7 @@ accountStore.updatePosition = async (position, holdingId) => {
 		holdingId,
 	});
 
-	if (res.id) {
+	if (res.data.id) {
 		accountStore.update((storeData) => {
 			const holding = storeData.holdings.find(
 				(holding) => holding._id === holdingId
