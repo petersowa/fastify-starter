@@ -1,5 +1,18 @@
 # Investment Tracking App using Fastify and Svelte
 
+.env file is needed for private settings to run app.
+
+Sample format for .env file:
+
+'''
+MONGODB_NAME = 'mongodb+srv://xxx'
+SESSION_SECRET = 'xxx'
+IEX_TOKEN = 'xxx'
+IEX_URL = 'https://cloud.iexapis.com/v1'
+'''
+
+After .env file is added run dev server with 'npm run dev', it is configured to run on localhost:3999 by default.
+
 Test server side app with svelte client code and handlebar templates.
 
 <p align='center'>
