@@ -7,6 +7,7 @@ import {
 	addHoldingPosition,
 	deletePosition,
 	updateHoldingPosition,
+	addHoldingsAccount,
 } from '../controllers/accounts';
 
 const options = { preHandler: checkSessionAuth };
@@ -19,6 +20,7 @@ async function routes(
 	fastify.get('/quote/:symbol/:date', options, getHistoricalQuote);
 	fastify.get('/watchlist', options, getWatchlist);
 	fastify.post('/watchlist', options, updateWatchlist);
+	fastify.post('/holdings', options, addHoldingsAccount);
 	fastify.get('/account', options, getAccounts);
 	fastify.put('/account', options, addHoldingPosition);
 	fastify.delete('/account', options, deletePosition);

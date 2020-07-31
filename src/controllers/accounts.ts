@@ -100,6 +100,33 @@ const addHoldingPosition: UpdateFunction<{}> = async function (request, reply) {
 	return { newPosition };
 };
 
+// const addHoldingsAccount
+const addHoldingsAccount: UpdateFunction<{}> = async function (request, reply) {
+	const { holdingsName } = request.body;
+
+	if (!holdingsName) {
+		reply.code(400);
+		return { status: 'bad request' };
+	}
+
+	try {
+		const holdingsDoc = await HoldingsModel.findOne({
+			name: holdingsName,
+		});
+		if (holdingsDoc) {
+			reply.code(409);
+			return { id: holdingsDoc.id };
+		} else {
+			const holdingsDoc = new HoldingsModel({ name: holdingsName });
+			const result = await holdingsDoc.save();
+			return { data: result };
+		}
+	} catch (err) {
+		reply.code(500);
+		return { status: (err as Error).message };
+	}
+};
+
 const updateHoldingPosition: UpdateFunction<{}> = async function (
 	request,
 	reply
@@ -136,4 +163,5 @@ export {
 	getAccounts,
 	deletePosition,
 	updateHoldingPosition,
+	addHoldingsAccount,
 };

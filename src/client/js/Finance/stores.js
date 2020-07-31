@@ -4,6 +4,7 @@ import {
 	addPosition,
 	deletePosition,
 	updatePosition,
+	addHoldingsAccount,
 } from './handle-ajax';
 
 export function setSpinner() {
@@ -41,7 +42,6 @@ export const accountStore = writable([], (set) => {
 				set({});
 				console.error({ error: 'no account holdings data found' });
 			}
-			console.log({ accountData });
 		})
 		.catch((err) => {
 			console.error({ error: err.message });
@@ -51,21 +51,29 @@ export const accountStore = writable([], (set) => {
 accountStore.subscribe((data) => console.log({ data }));
 
 accountStore.addHoldingsAccount = async (accountName) => {
-	console.log(accountName);
-	accountStore.update((storeData) => {
-		console.log(storeData.holdings);
-		const alreadyExists = storeData.holdings.find(
-			(holding) => accountName == holding.name
-		);
-		storeData.holdings.push({
-			alreadyExists,
-			name: accountName,
-			_id: 1,
-			positions: [],
+	try {
+		const patchRes = await addHoldingsAccount({
+			holdingsName: accountName,
 		});
 
-		return storeData;
-	});
+		console.log({ accountName, patchRes });
+		accountStore.update((storeData) => {
+			console.log(storeData.holdings);
+			const alreadyExists = storeData.holdings.find(
+				(holding) => accountName == holding.name
+			);
+			storeData.holdings.push({
+				alreadyExists,
+				name: accountName,
+				_id: 1,
+				positions: [],
+			});
+
+			return storeData;
+		});
+	} catch (err) {
+		console.error({ err });
+	}
 };
 
 accountStore.addPosition = async (newPosition, holdingsId) => {
@@ -74,10 +82,8 @@ accountStore.addPosition = async (newPosition, holdingsId) => {
 			holdingsId,
 			position: newPosition,
 		});
-		console.log({ patchRes });
-		console.log(newPosition);
+
 		accountStore.update((storeData) => {
-			console.log({ storeData });
 			if (!storeData.holdings) {
 				getAccounts().then((accounts) => {
 					accountStore.update(() => accounts);
@@ -108,10 +114,8 @@ accountStore.deletePosition = async (positionId, holdingId) => {
 				(position) => position._id !== positionId
 			);
 			holding.positions = positions;
-			console.log({ storeData });
 			return storeData;
 		});
-		console.log('delete position', { res });
 	} else {
 		console.log({ res });
 	}
@@ -121,7 +125,7 @@ accountStore.updatePosition = async (position, holdingId) => {
 		position,
 		holdingId,
 	});
-	console.log({ res });
+
 	if (res.id) {
 		accountStore.update((storeData) => {
 			const holding = storeData.holdings.find(
@@ -137,7 +141,6 @@ accountStore.updatePosition = async (position, holdingId) => {
 				return true;
 			});
 
-			console.log({ storeData });
 			return storeData;
 		});
 	} else {

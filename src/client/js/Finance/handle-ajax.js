@@ -1,6 +1,7 @@
 const WATCHLIST_ROUTE = '/stocks/watchlist';
 const ACCOUNT_ROUTE = '/stocks/account';
 const QUOTE_ROUTE = '/stocks/quote';
+const HOLDINGS_ROUTE = '/stocks/holdings';
 const POST = 'POST';
 const PATCH = 'PATCH';
 const DELETE = 'DELETE';
@@ -10,6 +11,10 @@ async function postWatchlist(list) {
 	return secureFetch(WATCHLIST_ROUTE, POST, {
 		watchList: list,
 	});
+}
+
+async function addHoldingsAccount({ holdingsName }) {
+	return secureFetch(HOLDINGS_ROUTE, POST, { holdingsName });
 }
 
 async function getQuote(symbol) {
@@ -62,7 +67,15 @@ async function secureFetch(route, method, body) {
 			},
 			body: JSON.stringify(body),
 		});
-		return res.json();
+		console.log({ res });
+		const data = await res.json();
+		return {
+			data,
+			status: res.status,
+			ok: res.ok,
+			url: res.url,
+			redirected: res.redirected,
+		};
 	} catch (err) {
 		console.log({ ajaxERROR: err.message });
 		return { error: err.message };
@@ -79,4 +92,10 @@ async function getFetch(route) {
 	}
 }
 
-export { postWatchlist, getQuote, getWatchlist, getAccounts };
+export {
+	postWatchlist,
+	getQuote,
+	getWatchlist,
+	getAccounts,
+	addHoldingsAccount,
+};
