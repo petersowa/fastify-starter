@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 const app = document.getElementById('app');
 if (app) {
 	import('./quote.svelte').then((App) => {
-		new App.default({ target: app, data: {} });
+		new App.default({ target: app });
 	});
 }
 
