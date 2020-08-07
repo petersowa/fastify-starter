@@ -3,8 +3,9 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 // import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
-import autoPreprocess from 'svelte-preprocess';
+import sveltePreprocess from 'svelte-preprocess';
 import scssPlugin from 'rollup-plugin-scss';
+import typescript from '@rollup/plugin-typescript';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -18,6 +19,7 @@ export default {
 		chunkFileNames: '[name].js',
 	},
 	plugins: [
+		typescript({ sourceMap: !production }),
 		svelte({
 			// enable run-time checks when not in production
 			dev: !production,
@@ -26,7 +28,9 @@ export default {
 			css: (css) => {
 				css.write('../../public/css/main-svelte.css');
 			},
-			preprocess: autoPreprocess(),
+			preprocess: sveltePreprocess({
+				sourceMap: !production,
+			}),
 		}),
 
 		// If you have external dependencies installed from
@@ -60,23 +64,34 @@ export default {
 	},
 };
 
-function serve() {
-	let started = false;
-
+function typeCheck() {
 	return {
 		writeBundle() {
-			if (!started) {
-				started = true;
-
-				require('child_process').spawn(
-					'npm',
-					['run', 'start', '--', '--dev'],
-					{
-						stdio: ['ignore', 'inherit', 'inherit'],
-						shell: true,
-					}
-				);
-			}
+			require('child_process').spawn('svelte-check', {
+				stdio: ['ignore', 'inherit', 'inherit'],
+				shell: true,
+			});
 		},
 	};
 }
+
+// function serve() {
+// 	let started = false;
+
+// 	return {
+// 		writeBundle() {
+// 			if (!started) {
+// 				started = true;
+
+// 				require('child_process').spawn(
+// 					'npm',
+// 					['run', 'start', '--', '--dev'],
+// 					{
+// 						stdio: ['ignore', 'inherit', 'inherit'],
+// 						shell: true,
+// 					}
+// 				);
+// 			}
+// 		},
+// 	};
+// }

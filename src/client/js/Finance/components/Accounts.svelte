@@ -116,7 +116,7 @@
 	}
 </script>
 
-<style type="scss">
+<style type="text/scss" lang="scss">
 	.data {
 		display: flex;
 		flex-direction: column;
