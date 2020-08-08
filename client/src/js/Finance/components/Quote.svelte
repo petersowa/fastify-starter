@@ -74,10 +74,6 @@
 	.h-center {
 		margin: auto;
 	}
-
-	form {
-		padding: 2em;
-	}
 </style>
 
 <div class="quotes">
