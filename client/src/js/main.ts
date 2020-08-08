@@ -47,7 +47,7 @@ const idTable = {
 	},
 	'form-submit': {
 		events: {
-			submit: (event) => {
+			submit: (/* event: Event */) => {
 				// event.preventDefault();
 				// const csrf = /_csrf=(\S*);/.exec(document.cookie)[1];
 				// const csrf = document
