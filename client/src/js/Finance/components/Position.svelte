@@ -23,8 +23,38 @@
 		: 'loading...';
 </script>
 
-<style type="text/scss" lang="scss" src="../../../styles/position.scss">
+<style type="text/scss">
+	.control {
+		display: flex;
+		margin-top: 0;
+		align-items: center;
+		justify-content: space-evenly;
+		padding: 0.2em 0;
+		& > :not(:last-child) {
+			margin-right: 8px;
+		}
+	}
 
+	.right-justify {
+		justify-self: right;
+	}
+
+	.item-control {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 1.5em;
+		height: 1.5em;
+		margin: 0 0.1em;
+		border: none;
+		box-shadow: 0 0 0 0.2em transparent, 0 0 0.2em 0 var(--clr-dark);
+		border-radius: 0.2em;
+		padding: 0;
+		color: var(--clr-dark);
+		&:active {
+			box-shadow: 0 0 0 0.2em var(--clr-white);
+		}
+	}
 </style>
 
 <span>{position.symbol.toUpperCase()}</span>
