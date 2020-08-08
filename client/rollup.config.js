@@ -9,7 +9,7 @@ import scssPlugin from 'rollup-plugin-scss';
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
-	input: 'src/js/test.js',
+	input: 'src/js/main.ts',
 	output: {
 		sourcemap: true,
 		format: 'es',
