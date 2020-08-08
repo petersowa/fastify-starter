@@ -55,36 +55,41 @@
 <Modal on:close={toggleModal}>
 	<h2 class="buy-title" slot="header">Account Info</h2>
 	<form class="buy-form" on:submit|preventDefault={handleSubmit}>
-		<label>Symbol</label>
+		<label for="symbol-input">Symbol</label>
 		<input
+			id="symbol-input"
 			tabindex="0"
 			class="form-input"
 			type="text"
 			placeholder="Symbol"
 			bind:value={formData.symbol} />
-		<label>Date</label>
+		<label for="date-input">Date</label>
 		<input
+			id="date-input"
 			tabindex="0"
 			class="form-input"
 			type="date"
 			placeholder="Date"
 			bind:value={formData.date} />
-		<label>Shares</label>
+		<label for="shares-input">Shares</label>
 		<input
+			id="shares-input"
 			tabindex="0"
 			class="form-input"
 			type="text"
 			placeholder="Shares"
 			bind:value={formData.shares} />
-		<label>Price</label>
+		<label for="price-input">Price</label>
 		<input
+			id="price-input"
 			tabindex="0"
 			class="form-input"
 			type="text"
 			placeholder="Price"
 			bind:value={formData.price} />
-		<label>Fees</label>
+		<label for="fees-input">Fees</label>
 		<input
+			id="fees-input"
 			tabindex="0"
 			class="form-input"
 			type="text"
