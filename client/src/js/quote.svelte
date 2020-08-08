@@ -163,8 +163,8 @@
 
 	<div class="app">
 		<form on:submit|preventDefault={handleSubmit}>
-			<label>Stock Name:</label>
-			<input type="string" bind:value={symbol} />
+			<label for="stock-name">Stock Name:</label>
+			<input id="stock-name" type="string" bind:value={symbol} />
 			<button type="submit">
 				<Fa icon={faSearch} />
 			</button>
@@ -193,8 +193,8 @@
 	<Modal on:close={() => (showModal = false)}>
 		<h2 slot="header">Stock Order</h2>
 		<form>
-			<label>Stock</label>
-			<input type="text" />
+			<label for="stock-order">Stock</label>
+			<input id="stock-order" type="text" />
 		</form>
 	</Modal>
 {/if}

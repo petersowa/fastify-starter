@@ -34,8 +34,9 @@
 <Modal on:close={toggleModal}>
 	<h2 class="title" slot="header">Account Info</h2>
 	<form class="form" on:submit|preventDefault={handleSubmit}>
-		<label>Account Name</label>
+		<label for="account-name">Account Name</label>
 		<input
+			id="account-name"
 			tabindex="0"
 			class="input"
 			type="text"
