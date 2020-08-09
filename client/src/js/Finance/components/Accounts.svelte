@@ -117,7 +117,6 @@
 
 	const handleDeleteAccount = (holdingsId) => () => {
 		if (holdingsId) {
-			console.log({ holdingsId });
 			accountStore.deleteHoldingsAccount(holdingsId);
 		}
 	};
