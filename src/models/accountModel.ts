@@ -1,11 +1,12 @@
 import dbInstance from '../utils/db';
 import { Schema, Document, Types } from 'mongoose';
+import { HoldingsModel, HoldingsInterface } from './holdingsModel';
 
 export interface AccountInterface extends Document {
 	updated: Date;
 	user: Types.ObjectId;
 	secondaryUser?: Types.ObjectId;
-	holdings: [Types.ObjectId];
+	holdings: Types.DocumentArray<HoldingsInterface>;
 	transactions: Types.ObjectId;
 }
 
