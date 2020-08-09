@@ -17,6 +17,10 @@ async function addHoldingsAccount({ holdingsName }) {
 	return secureFetch(HOLDINGS_ROUTE, POST, { holdingsName });
 }
 
+async function deleteHoldingsAccount({ holdingsId }) {
+	return secureFetch(HOLDINGS_ROUTE, DELETE, { holdingsId });
+}
+
 async function getQuote(symbol) {
 	return await getFetch(`${QUOTE_ROUTE}/${symbol}`);
 }
@@ -98,4 +102,5 @@ export {
 	getWatchlist,
 	getAccounts,
 	addHoldingsAccount,
+	deleteHoldingsAccount,
 };
