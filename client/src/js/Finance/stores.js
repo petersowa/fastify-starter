@@ -5,6 +5,7 @@ import {
 	deletePosition,
 	updatePosition,
 	addHoldingsAccount,
+	deleteHoldingsAccount,
 } from './handle-ajax';
 
 export function setSpinner() {
@@ -59,18 +60,31 @@ accountStore.addHoldingsAccount = async (accountName) => {
 		console.log({ accountName, patchRes });
 		if (patchRes.status == 200) {
 			accountStore.update((storeData) => {
-				console.log(storeData.holdings);
-				const alreadyExists = storeData.holdings.find(
-					(holding) => accountName == holding.name
-				);
-				storeData.holdings.push({
-					alreadyExists,
-					name: accountName,
-					_id: 1,
-					positions: [],
-				});
+				storeData.holdings.push(patchRes.data.data);
 
 				return storeData;
+			});
+		}
+	} catch (err) {
+		console.error({ err });
+	}
+};
+
+accountStore.deleteHoldingsAccount = async (holdingsId) => {
+	try {
+		const patchRes = await deleteHoldingsAccount({
+			holdingsId,
+		});
+
+		console.log({ holdingsId, patchRes });
+		if (patchRes.status == 200) {
+			accountStore.update((storeData) => {
+				return {
+					...storeData,
+					holdings: storeData.holdings.filter(
+						(holding) => holding._id !== holdingsId
+					),
+				};
 			});
 		}
 	} catch (err) {
