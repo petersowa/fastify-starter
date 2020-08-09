@@ -137,6 +137,40 @@ const addHoldingsAccount: UpdateFunction<{}> = async function (request, reply) {
 	}
 };
 
+const deleteHoldingsAccount: UpdateFunction<{}> = async function (
+	request,
+	reply
+) {
+	const { holdingsId } = request.body;
+
+	if (!holdingsId) {
+		reply.code(400);
+		return { status: 'bad request' };
+	}
+
+	try {
+		const userAccount = await AccountModel.findOne({
+			user: request.session.userId,
+		});
+		console.log({ userAccount });
+		if (userAccount) {
+			userAccount.holdings.pull(holdingsId);
+			await userAccount.save();
+			const holdingsDoc = await HoldingsModel.findByIdAndDelete(
+				holdingsId
+			);
+			return { data: holdingsDoc };
+		} else {
+			reply.code(500);
+			return { status: 'unable to find user' };
+		}
+	} catch (err) {
+		reply.code(500);
+		console.log({ err });
+		return { status: (err as Error).message };
+	}
+};
+
 const updateHoldingPosition: UpdateFunction<{}> = async function (
 	request,
 	reply
@@ -174,4 +208,5 @@ export {
 	deletePosition,
 	updateHoldingPosition,
 	addHoldingsAccount,
+	deleteHoldingsAccount,
 };
