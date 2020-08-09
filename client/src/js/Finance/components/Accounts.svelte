@@ -16,7 +16,6 @@
 	} from '@fortawesome/free-solid-svg-icons';
 
 	let showAccount = null;
-	let showAddAccount = false;
 	let accountList = [];
 	let stockQuotes = {};
 	let modal = { component: null, data: null };
@@ -24,11 +23,6 @@
 	function toggleAccountModal(holding = null) {
 		showAccount = holding ? holding._id : null;
 	}
-
-	const toggleModalAddAccount = () => {
-		console.log({ showAddAccount });
-		showAddAccount = !showAddAccount;
-	};
 
 	const unsubscribe = accountStore.subscribe(async (list) => {
 		const quotes = {};
@@ -92,6 +86,29 @@
 					position.purchasePrice = +formData.price;
 					position.fees = +formData.fee;
 					accountStore.updatePosition(position, holding._id);
+					modal.component = null;
+				},
+				position,
+				holding,
+				toggleModal: () => (modal.component = null),
+			};
+		};
+	}
+
+	function handlePositionAdd(holding) {
+		const position = {};
+		return (e) => {
+			modal.component = BuyModal;
+			modal.data = {
+				handleData: (e, { position, formData, holding }) => {
+					position.symbol = formData.symbol;
+					position.purchaseDate = new Date(formData.date);
+					position.quantity = formData.shares;
+					position.cost =
+						+formData.price * +formData.shares + +formData.fee;
+					position.purchasePrice = +formData.price;
+					position.fees = +formData.fee;
+					accountStore.addPosition(position, holding._id);
 					modal.component = null;
 				},
 				position,
@@ -238,15 +255,9 @@
 			<button
 				class="item-control"
 				aria-label="add position"
-				on:click={() => toggleAccountModal(holding)}>
+				on:click={handlePositionAdd(holding)}>
 				<Fa icon={faPlusCircle} color="blue" />
 			</button>
-			{#if showAccount === holding._id}
-				<BuyModal
-					toggleModal={toggleAccountModal}
-					handleData={handleBuyForm}
-					{holding} />
-			{/if}
 		{/each}
 	{/if}
 	<div class="control">
@@ -256,11 +267,6 @@
 			on:click={handleEditAccount}>
 			<Fa icon={faPlus} size="2x" color="green" />
 		</button>
-		{#if showAddAccount}
-			<BuyModal
-				toggleModal={toggleModalAddAccount}
-				handleData={handleBuyForm} />
-		{/if}
 	</div>
 	<svelte:component this={modal.component} {...modal.data} />
 </ul>
