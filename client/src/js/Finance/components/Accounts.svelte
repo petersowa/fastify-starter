@@ -30,7 +30,7 @@
 		showAddAccount = !showAddAccount;
 	};
 
-	const unsubscribe = accountStore.subscribe(async list => {
+	const unsubscribe = accountStore.subscribe(async (list) => {
 		const quotes = {};
 		if (!list || list.length === 0) return;
 		const clearSpinner = setSpinner();
@@ -38,15 +38,15 @@
 			accountList = list;
 			console.log({ list });
 			if (!accountList.holdings) throw new Error('no holdings');
-			accountList.holdings.forEach(holding => {
-				holding.positions.forEach(position => {
+			accountList.holdings.forEach((holding) => {
+				holding.positions.forEach((position) => {
 					if (position.symbol in quotes) return;
 					quotes[position.symbol] = getQuote(position.symbol);
 				});
 			});
 
 			const res = await Promise.all(Object.values(quotes));
-			res.forEach(quote => (stockQuotes[quote.symbol] = quote));
+			res.forEach((quote) => (stockQuotes[quote.symbol] = quote));
 			console.log({ accountList });
 			clearSpinner();
 		} catch (err) {
@@ -74,13 +74,13 @@
 	}
 
 	function handlePositionDelete(position, holding) {
-		return e => {
+		return (e) => {
 			accountStore.deletePosition(position._id, holding._id);
 		};
 	}
 
 	function handlePositionUpdate(position, holding) {
-		return e => {
+		return (e) => {
 			modal.component = BuyModal;
 			modal.data = {
 				handleData: (e, { position, formData, holding }) => {
@@ -114,6 +114,13 @@
 			},
 		};
 	}
+
+	const handleDeleteAccount = (holdingsId) => () => {
+		if (holdingsId) {
+			console.log({ holdingsId });
+			accountStore.deleteHoldingsAccount(holdingsId);
+		}
+	};
 </script>
 
 <style type="text/scss" lang="scss">
@@ -199,7 +206,10 @@
 						on:click={handleEditAccount}>
 						<Fa icon={faEdit} color="gray" />
 					</button>
-					<button class="item-control" aria-label="delete">
+					<button
+						class="item-control"
+						aria-label="delete"
+						on:click={handleDeleteAccount(holding._id)}>
 						<Fa icon={faMinusCircle} color="red" />
 					</button>
 				</div>
