@@ -96,7 +96,6 @@
 	}
 
 	function handlePositionAdd(holding) {
-		const position = {};
 		return (e) => {
 			modal.component = BuyModal;
 			modal.data = {
@@ -111,7 +110,7 @@
 					accountStore.addPosition(position, holding._id);
 					modal.component = null;
 				},
-				position,
+				position: {},
 				holding,
 				toggleModal: () => (modal.component = null),
 			};
