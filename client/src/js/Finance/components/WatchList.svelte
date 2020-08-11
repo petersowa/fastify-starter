@@ -16,7 +16,7 @@
 	let watchItems = [];
 	$: priceColor = 'white';
 
-	const unsubscribe = watchList.subscribe(list => {
+	const unsubscribe = watchList.subscribe((list) => {
 		console.log('update subscription');
 		watchItems = [...list];
 	});
@@ -25,7 +25,7 @@
 		Sortable.create(document.getElementById('watchlist'), {
 			handle: '.drag-handle',
 			animation: 150,
-			onSort: e => {
+			onSort: (e) => {
 				reorderWatchlist(e.oldIndex, e.newIndex);
 			},
 		});
@@ -34,39 +34,40 @@
 	function removeSymbol(sym) {
 		postWatchlist(
 			watchItems
-				.filter(item => item.symbol !== sym)
-				.map(item => item.symbol)
+				.filter((item) => item.symbol !== sym)
+				.map((item) => item.symbol)
 		)
-			.then(res => {
-				watchList.update(list => {
-					const newList = list.filter(item => item.symbol !== sym);
+			.then((res) => {
+				watchList.update((list) => {
+					const newList = list.filter((item) => item.symbol !== sym);
 					return newList;
 				});
 			})
-			.catch(err => console.log('UNABLE TO UPDATE WATCHLIST', err));
+			.catch((err) => console.log('UNABLE TO UPDATE WATCHLIST', err));
 	}
 
 	async function reorderWatchlist(fromIndex, toIndex) {
 		if (fromIndex === toIndex) return;
 		const moveItem = watchItems[fromIndex];
 		const newList = watchItems.filter(
-			item => item.symbol !== moveItem.symbol
+			(item) => item.symbol !== moveItem.symbol
 		);
 		newList.splice(toIndex, 0, moveItem);
 
-		const orderedList = newList.map(item => item.symbol);
+		const orderedList = newList.map((item) => item.symbol);
 
 		await postWatchlist(orderedList);
-		watchList.update(list => newList);
+		watchList.update((list) => newList);
 	}
 
 	function changeColor(change) {
-		return `rgba(${200 - change * 1000},${200 + change * 1000},${200 -
-			Math.abs(change * 1000)},.4)`;
+		return `rgba(${200 - change * 1000},${200 + change * 1000},${
+			200 - Math.abs(change * 1000)
+		},.4)`;
 	}
 </script>
 
-<style type="scss">
+<style type="text/scss">
 	.watchlist {
 		display: grid;
 		margin: 0;
