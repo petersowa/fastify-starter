@@ -19,6 +19,7 @@
 	let accountList = [];
 	let stockQuotes = {};
 	let modal = { component: null, data: null };
+	let holdingSummary = {};
 
 	function toggleAccountModal(holding = null) {
 		showAccount = holding ? holding._id : null;
@@ -41,7 +42,19 @@
 
 			const res = await Promise.all(Object.values(quotes));
 			res.forEach((quote) => (stockQuotes[quote.symbol] = quote));
-			console.log({ accountList });
+
+			accountList.holdings.forEach((holding) => {
+				holdingSummary[holding.name] = { cost: 0, value: 0 };
+				const summary = holdingSummary[holding.name];
+				holding.positions.forEach((position) => {
+					summary.cost += position.cost;
+					summary.value +=
+						position.quantity *
+						stockQuotes[position.symbol].latestPrice;
+				});
+				console.log({ summary, stockQuotes });
+			});
+
 			clearSpinner();
 		} catch (err) {
 			console.error(err);
@@ -251,6 +264,10 @@
 					{/if}
 				</li>
 			{/each}
+			{#if holding.name in holdingSummary}
+				<span>Value: {holdingSummary[holding.name].value}</span>
+				<span>Cost: {holdingSummary[holding.name].cost}</span>
+			{/if}
 			<button
 				class="item-control"
 				aria-label="add position"
