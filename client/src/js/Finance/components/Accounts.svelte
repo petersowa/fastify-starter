@@ -44,15 +44,19 @@
 			res.forEach((quote) => (stockQuotes[quote.symbol] = quote));
 
 			accountList.holdings.forEach((holding) => {
-				holdingSummary[holding.name] = { cost: 0, value: 0 };
-				const summary = holdingSummary[holding.name];
+				let cost = 0;
+				let value = 0;
 				holding.positions.forEach((position) => {
-					summary.cost += position.cost;
-					summary.value +=
+					cost += position.cost;
+					value +=
 						position.quantity *
 						stockQuotes[position.symbol].latestPrice;
 				});
-				console.log({ summary, stockQuotes });
+				holdingSummary[holding.name] = {
+					cost,
+					value,
+					gain: value - cost,
+				};
 			});
 
 			clearSpinner();
@@ -213,6 +217,21 @@
 			box-shadow: 0 0 0 0.2em var(--clr-white);
 		}
 	}
+	.holdings-summary {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		max-width: 50ch;
+		flex-grow: 1;
+		margin: 1em;
+		margin-left: auto;
+		border-radius: 5px;
+		box-shadow: 3px 3px 10px 2px rgba(0, 0, 0, 0.1);
+		background-color: rgba(255, 255, 0, 0.1);
+		padding: 0.5em;
+		flex-wrap: wrap;
+		min-width: 40ch;
+	}
 	.round {
 		border-radius: 50%;
 	}
@@ -265,8 +284,17 @@
 				</li>
 			{/each}
 			{#if holding.name in holdingSummary}
-				<span>Value: {holdingSummary[holding.name].value}</span>
-				<span>Cost: {holdingSummary[holding.name].cost}</span>
+				<div class="holdings-summary">
+					<span>
+						Value: {holdingSummary[holding.name].value.toFixed(2)}
+					</span>
+					<span>
+						Cost: {holdingSummary[holding.name].cost.toFixed(2)}
+					</span>
+					<span>
+						Gain: {holdingSummary[holding.name].gain.toFixed(2)}
+					</span>
+				</div>
 			{/if}
 			<button
 				class="item-control"
