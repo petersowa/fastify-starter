@@ -219,18 +219,22 @@
 	}
 	.holdings-summary {
 		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		max-width: 50ch;
-		flex-grow: 1;
 		margin: 1em;
 		margin-left: auto;
-		border-radius: 5px;
-		box-shadow: 3px 3px 10px 2px rgba(0, 0, 0, 0.1);
-		background-color: rgba(255, 255, 0, 0.1);
-		padding: 0.5em;
+		// border-radius: 5px;
+		// box-shadow: 3px 3px 10px 2px rgba(0, 0, 0, 0.1);
+		// background-color: rgba(255, 255, 0, 0.1);
+		// padding: 0.5em;
 		flex-wrap: wrap;
-		min-width: 40ch;
+		width: 60ch;
+		max-width: 40%;
+		& > * {
+			flex-grow: 1;
+			flex-basis: calc(calc(42ch - 100%) * 999);
+			text-align: right;
+			font-variant-numeric: tabular-nums;
+			white-space: nowrap;
+		}
 	}
 	.round {
 		border-radius: 50%;
