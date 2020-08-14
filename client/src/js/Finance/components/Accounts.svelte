@@ -2,9 +2,8 @@
 	import Modal from '../../components/modal.svelte';
 	import { get } from 'svelte/store';
 	import { accountStore, setSpinner } from '../stores';
-	import BuyModal from '../modals/Buy.svelte';
 	import AccountModal from '../modals/Account.svelte';
-	import Position from './Position.svelte';
+	import Positions from './Positions.svelte';
 	import HoldingsSummary from './HoldingsSummary.svelte';
 	import { getQuote } from '../handle-ajax';
 	import Fa from 'svelte-fa';
@@ -12,11 +11,9 @@
 		faEdit,
 		faBinoculars,
 		faMinusCircle,
-		faPlusCircle,
 		faPlus,
 	} from '@fortawesome/free-solid-svg-icons';
 
-	let showAccount = null;
 	let accountList = [];
 	let stockQuotes = {};
 	let modal = { component: null, data: null };
@@ -66,74 +63,6 @@
 			clearSpinner();
 		}
 	});
-
-	function handleBuyForm(e, { formData, account, holding, toggleModal }) {
-		toggleModal();
-		const newPosition = {
-			symbol: formData.symbol,
-			date: new Date(formData.date).toLocaleDateString(),
-			purchaseDate: new Date(formData.date),
-			quantity: formData.shares,
-			cost: +formData.price * +formData.shares + +formData.fee,
-			purchasePrice: +formData.price,
-			gain: 0,
-			dollarGain: 0,
-			type: 'stock',
-			fees: +formData.fee,
-		};
-		console.log({ holding });
-		accountStore.addPosition(newPosition, holding._id);
-	}
-
-	function handlePositionDelete(position, holding) {
-		return (e) => {
-			accountStore.deletePosition(position._id, holding._id);
-		};
-	}
-
-	function handlePositionUpdate(position, holding) {
-		return (e) => {
-			modal.component = BuyModal;
-			modal.data = {
-				handleData: (e, { position, formData, holding }) => {
-					position.symbol = formData.symbol;
-					position.purchaseDate = new Date(formData.date);
-					position.quantity = formData.shares;
-					position.cost =
-						+formData.price * +formData.shares + +formData.fee;
-					position.purchasePrice = +formData.price;
-					position.fees = +formData.fee;
-					accountStore.updatePosition(position, holding._id);
-					modal.component = null;
-				},
-				position,
-				holding,
-				toggleModal: () => (modal.component = null),
-			};
-		};
-	}
-
-	function handlePositionAdd(holding) {
-		return (e) => {
-			modal.component = BuyModal;
-			modal.data = {
-				handleData: (e, { position, formData, holding }) => {
-					position.symbol = formData.symbol;
-					position.purchaseDate = new Date(formData.date);
-					position.quantity = formData.shares;
-					position.cost =
-						+formData.price * +formData.shares + +formData.fee;
-					position.purchasePrice = +formData.price;
-					position.fees = +formData.fee;
-					accountStore.addPosition(position, holding._id);
-					modal.component = null;
-				},
-				position: {},
-				holding,
-				toggleModal: () => (modal.component = null),
-			};
-		};
-	}
 
 	function handleEditAccount() {
 		modal.component = AccountModal;
@@ -191,16 +120,6 @@
 			margin-right: 8px;
 		}
 	}
-	.position {
-		display: grid;
-		grid-template-columns: 0.5fr 1fr 0.5fr 0.8fr 0.5fr 1fr 8em;
-		grid-auto-rows: 1.8em;
-		align-items: center;
-		justify-items: right;
-	}
-	.right-justify {
-		justify-self: right;
-	}
 
 	.item-control {
 		display: flex;
@@ -248,35 +167,9 @@
 					</button>
 				</div>
 			</li>
-			<li>
-				<span>Positions</span>
-			</li>
-			<li class="position">
-				<span>Symbol</span>
-				<span>Date</span>
-				<span class="right-justify">Quantity</span>
-				<span class="right-justify">Cost</span>
-				<span class="right-justify">Value</span>
-				<span class="right-justify">$ Gain</span>
-			</li>
-			{#each holding.positions as position}
-				<li class="position">
-					{#if position}
-						<Position
-							{position}
-							quote={stockQuotes[position.symbol]}
-							onDelete={handlePositionDelete(position, holding)}
-							onUpdate={handlePositionUpdate(position, holding)} />
-					{/if}
-				</li>
-			{/each}
 
-			<button
-				class="item-control"
-				aria-label="add position"
-				on:click={handlePositionAdd(holding)}>
-				<Fa icon={faPlusCircle} color="blue" />
-			</button>
+			<Positions {holding} {stockQuotes} {modal} />
+
 			<HoldingsSummary
 				holdingSummary={holding.name in holdingSummary && holdingSummary[holding.name]} />
 		{/each}
