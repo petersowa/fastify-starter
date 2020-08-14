@@ -5,6 +5,7 @@
 	import BuyModal from '../modals/Buy.svelte';
 	import AccountModal from '../modals/Account.svelte';
 	import Position from './Position.svelte';
+	import HoldingsSummary from './HoldingsSummary.svelte';
 	import { getQuote } from '../handle-ajax';
 	import Fa from 'svelte-fa';
 	import {
@@ -217,25 +218,7 @@
 			box-shadow: 0 0 0 0.2em var(--clr-white);
 		}
 	}
-	.holdings-summary {
-		display: flex;
-		margin: 1em;
-		margin-left: auto;
-		// border-radius: 5px;
-		// box-shadow: 3px 3px 10px 2px rgba(0, 0, 0, 0.1);
-		// background-color: rgba(255, 255, 0, 0.1);
-		// padding: 0.5em;
-		flex-wrap: wrap;
-		width: 60ch;
-		max-width: 40%;
-		& > * {
-			flex-grow: 1;
-			flex-basis: calc(calc(42ch - 100%) * 999);
-			text-align: right;
-			font-variant-numeric: tabular-nums;
-			white-space: nowrap;
-		}
-	}
+
 	.round {
 		border-radius: 50%;
 	}
@@ -287,25 +270,15 @@
 					{/if}
 				</li>
 			{/each}
-			{#if holding.name in holdingSummary}
-				<div class="holdings-summary">
-					<span>
-						Value: {holdingSummary[holding.name].value.toFixed(2)}
-					</span>
-					<span>
-						Cost: {holdingSummary[holding.name].cost.toFixed(2)}
-					</span>
-					<span>
-						Gain: {holdingSummary[holding.name].gain.toFixed(2)}
-					</span>
-				</div>
-			{/if}
+
 			<button
 				class="item-control"
 				aria-label="add position"
 				on:click={handlePositionAdd(holding)}>
 				<Fa icon={faPlusCircle} color="blue" />
 			</button>
+			<HoldingsSummary
+				holdingSummary={holding.name in holdingSummary && holdingSummary[holding.name]} />
 		{/each}
 	{/if}
 	<div class="control">
