@@ -6,6 +6,7 @@ import {
 	updatePosition,
 	addHoldingsAccount,
 	deleteHoldingsAccount,
+	getQuote,
 } from './handle-ajax';
 
 export function setSpinner() {
@@ -163,3 +164,33 @@ accountStore.updatePosition = async (position, holdingId) => {
 		console.error({ res });
 	}
 };
+
+export const stockStore = writable([], (set) => {
+	const stockQuotes = {};
+
+	accountStore.subscribe(async (accountList) => {
+		const quotes = {};
+		if (accountList && accountList.length > 0) {
+			const clearSpinner = setSpinner();
+			try {
+				if (!accountList.holdings) throw new Error('no holdings');
+				accountList.holdings.forEach((holding) => {
+					holding.positions.forEach((position) => {
+						if (position.symbol in quotes) return;
+						quotes[position.symbol] = getQuote(position.symbol);
+					});
+				});
+
+				const res = await Promise.all(Object.values(quotes));
+				res.forEach((quote) => (stockQuotes[quote.symbol] = quote));
+				// set(stockQuotes);
+
+				clearSpinner();
+			} catch (err) {
+				console.error(err);
+				clearSpinner();
+			}
+		}
+	});
+	set(stockQuotes);
+});

@@ -1,11 +1,10 @@
 <script>
 	import Modal from '../../components/modal.svelte';
 	import { get } from 'svelte/store';
-	import { accountStore, setSpinner } from '../stores';
+	import { accountStore, setSpinner, stockStore } from '../stores';
 	import AccountModal from '../modals/Account.svelte';
 	import Positions from './Positions.svelte';
 	import HoldingsSummary from './HoldingsSummary.svelte';
-	import { getQuote } from '../handle-ajax';
 	import Fa from 'svelte-fa';
 	import {
 		faEdit,
@@ -31,30 +30,25 @@
 			accountList = list;
 			console.log({ list });
 			if (!accountList.holdings) throw new Error('no holdings');
-			accountList.holdings.forEach((holding) => {
-				holding.positions.forEach((position) => {
-					if (position.symbol in quotes) return;
-					quotes[position.symbol] = getQuote(position.symbol);
-				});
-			});
 
-			const res = await Promise.all(Object.values(quotes));
-			res.forEach((quote) => (stockQuotes[quote.symbol] = quote));
-
-			accountList.holdings.forEach((holding) => {
-				let cost = 0;
-				let value = 0;
-				holding.positions.forEach((position) => {
-					cost += position.cost;
-					value +=
-						position.quantity *
-						stockQuotes[position.symbol].latestPrice;
+			console.log(stockStore);
+			stockStore.subscribe((stockQuotes) => {
+				console.log({ stockQuotes });
+				accountList.holdings.forEach((holding) => {
+					let cost = 0;
+					let value = 0;
+					holding.positions.forEach((position) => {
+						cost += position.cost;
+						value +=
+							position.quantity *
+							stockQuotes[position.symbol].latestPrice;
+					});
+					holdingSummary[holding.name] = {
+						cost,
+						value,
+						gain: value - cost,
+					};
 				});
-				holdingSummary[holding.name] = {
-					cost,
-					value,
-					gain: value - cost,
-				};
 			});
 
 			clearSpinner();
