@@ -23,31 +23,31 @@
 	}
 
 	const unsubscribe = accountStore.subscribe(async (list) => {
-		const quotes = {};
 		if (!list || list.length === 0) return;
 		const clearSpinner = setSpinner();
 		try {
 			accountList = list;
-			console.log({ list });
 			if (!accountList.holdings) throw new Error('no holdings');
 
-			console.log(stockStore);
 			stockStore.subscribe((stockQuotes) => {
-				console.log({ stockQuotes });
+				console.log(stockQuotes);
+				if (!stockQuotes) return;
 				accountList.holdings.forEach((holding) => {
 					let cost = 0;
 					let value = 0;
 					holding.positions.forEach((position) => {
-						cost += position.cost;
-						value +=
-							position.quantity *
-							stockQuotes[position.symbol].latestPrice;
+						if (position.symbol in stockQuotes) {
+							cost += position.cost;
+							value +=
+								position.quantity *
+								stockQuotes[position.symbol].latestPrice;
+							holdingSummary[holding.name] = {
+								cost,
+								value,
+								gain: value - cost,
+							};
+						}
 					});
-					holdingSummary[holding.name] = {
-						cost,
-						value,
-						gain: value - cost,
-					};
 				});
 			});
 
@@ -162,7 +162,7 @@
 				</div>
 			</li>
 
-			<Positions {holding} {stockQuotes} {modal} />
+			<Positions {holding} />
 
 			<HoldingsSummary
 				holdingSummary={holding.name in holdingSummary && holdingSummary[holding.name]} />

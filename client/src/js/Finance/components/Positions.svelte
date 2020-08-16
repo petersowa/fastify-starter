@@ -1,9 +1,9 @@
 <script>
-	import { accountStore, setSpinner } from '../stores';
+	import { accountStore, setSpinner, stockStore } from '../stores';
 	import BuyModal from '../modals/Buy.svelte';
 	import Position from './Position.svelte';
 	export let holding;
-	export let stockQuotes;
+	let stockQuotes = {};
 	// export let modal;
 	let modal = { component: null, data: null };
 	import Fa from 'svelte-fa';
@@ -14,6 +14,8 @@
 			accountStore.deletePosition(position._id, holding._id);
 		};
 	}
+
+	stockStore.subscribe((data) => (stockQuotes = data));
 
 	function handlePositionUpdate(position, holding) {
 		return (e) => {
@@ -107,7 +109,7 @@
 			{#if position}
 				<Position
 					{position}
-					quote={stockQuotes[position.symbol]}
+					quote={position.symbol in stockQuotes && stockQuotes[position.symbol]}
 					onDelete={handlePositionDelete(position, holding)}
 					onUpdate={handlePositionUpdate(position, holding)} />
 			{/if}

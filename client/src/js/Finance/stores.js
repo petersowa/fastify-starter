@@ -165,32 +165,40 @@ accountStore.updatePosition = async (position, holdingId) => {
 	}
 };
 
-export const stockStore = writable([], (set) => {
+export const stockStore = writable({});
+
+accountStore.subscribe(async (accountList) => {
 	const stockQuotes = {};
 
-	accountStore.subscribe(async (accountList) => {
-		const quotes = {};
-		if (accountList && accountList.length > 0) {
-			const clearSpinner = setSpinner();
-			try {
-				if (!accountList.holdings) throw new Error('no holdings');
-				accountList.holdings.forEach((holding) => {
-					holding.positions.forEach((position) => {
-						if (position.symbol in quotes) return;
-						quotes[position.symbol] = getQuote(position.symbol);
-					});
+	const quotes = {};
+	if (
+		accountList &&
+		accountList.holdings &&
+		accountList.holdings.length > 0
+	) {
+		const clearSpinner = setSpinner();
+		try {
+			if (!accountList.holdings) throw new Error('no holdings');
+			accountList.holdings.forEach((holding) => {
+				holding.positions.forEach((position) => {
+					if (position.symbol in quotes) return;
+					quotes[position.symbol] = getQuote(position.symbol);
 				});
+			});
 
-				const res = await Promise.all(Object.values(quotes));
-				res.forEach((quote) => (stockQuotes[quote.symbol] = quote));
-				// set(stockQuotes);
+			const res = await Promise.all(Object.values(quotes));
+			res.forEach((quote) => (stockQuotes[quote.symbol] = quote));
+			console.log('checking holdings', res);
+			console.log({ stockQuotes });
 
-				clearSpinner();
-			} catch (err) {
-				console.error(err);
-				clearSpinner();
-			}
+			clearSpinner();
+		} catch (err) {
+			console.error(err);
+			clearSpinner();
 		}
+	}
+
+	stockStore.update((data) => {
+		return stockQuotes;
 	});
-	set(stockQuotes);
 });
