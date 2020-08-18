@@ -3,7 +3,12 @@
 	import Modal from './components/modal.svelte';
 	import Spinner from './components/spinner.svelte';
 	import WatchList from './Finance/components/WatchList.svelte';
-	import { watchList, appStore, setSpinner } from './Finance/stores';
+	import {
+		watchList,
+		appStore,
+		setSpinner,
+		quotesStore,
+	} from './Finance/stores';
 	import Quote from './Finance/components/Quote.svelte';
 	import Accounts from './Finance/components/Accounts.svelte';
 	import {
@@ -26,7 +31,7 @@
 
 	$: fracHigh = quote && (quote.latestPrice / quote.week52High) * 100;
 
-	appStore.subscribe(value => {
+	appStore.subscribe((value) => {
 		(isLoaded = value.isLoaded), (isMinWait = value.isMinWait);
 	});
 
@@ -48,12 +53,17 @@
 				console.log({ watchListItems });
 				const quotes = await Promise.all(
 					watchListItems
-						.filter(sym => sym !== null)
-						.map(async sym => {
+						.filter((sym) => sym !== null)
+						.map(async (sym) => {
+							quotesStore.addPosition(sym);
+							console.log(sym);
 							return await getQuote(sym);
 						})
 				);
-				watchList.update(list => {
+				await quotesStore.refresh();
+				quotesStore.subscribe((data) => console.log(data));
+				console.log();
+				watchList.update((list) => {
 					console.log(quotes);
 					return [...quotes];
 				});
@@ -101,14 +111,14 @@
 	};
 
 	function addToWatchlist() {
-		watchList.update(list => {
-			if (list.find(item => item.symbol === quote.symbol)) return list;
+		watchList.update((list) => {
+			if (list.find((item) => item.symbol === quote.symbol)) return list;
 			console.log('list is', list);
 
 			const newList = [...list, quote];
-			postWatchlist(newList.map(item => item.symbol))
-				.then(res => console.log({ watchlist: res }))
-				.catch(err => console.error({ watchlist: err }));
+			postWatchlist(newList.map((item) => item.symbol))
+				.then((res) => console.log({ watchlist: res }))
+				.catch((err) => console.error({ watchlist: err }));
 			return newList;
 		});
 	}
