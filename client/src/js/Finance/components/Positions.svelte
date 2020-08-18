@@ -102,6 +102,7 @@
 		<span class="right-justify">Quantity</span>
 		<span class="right-justify">Cost</span>
 		<span class="right-justify">Value</span>
+		<span class="right-justify">Change</span>
 		<span class="right-justify">$ Gain</span>
 	</li>
 	{#each holding.positions as position}
