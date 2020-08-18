@@ -169,8 +169,8 @@ export const stockStore = writable({});
 
 accountStore.subscribe(async (accountList) => {
 	const stockQuotes = {};
-
 	const quotes = {};
+
 	if (
 		accountList &&
 		accountList.holdings &&
@@ -178,7 +178,6 @@ accountStore.subscribe(async (accountList) => {
 	) {
 		const clearSpinner = setSpinner();
 		try {
-			if (!accountList.holdings) throw new Error('no holdings');
 			accountList.holdings.forEach((holding) => {
 				holding.positions.forEach((position) => {
 					if (position.symbol in quotes) return;
@@ -198,7 +197,33 @@ accountStore.subscribe(async (accountList) => {
 		}
 	}
 
-	stockStore.update((data) => {
+	stockStore.update(() => {
 		return stockQuotes;
 	});
 });
+
+export const quotesStore = writable({ symbols: [], quote: {} });
+
+quotesStore.subscribe((quotesData) => {
+	quotesData.symbols.forEach(async (symbol) => {
+		if (!(symbol in quotesData.quote)) {
+			const quote = await getQuote(symbol);
+			quotesData.quote[symbol] = quote;
+		}
+	});
+});
+
+quotesStore.addPosition = (symbol) => {
+	quotesStore.update((quotesData) => {
+		quotesData.symbols.push(symbol);
+		return quotesData;
+	});
+};
+
+quotesStore.refresh = async () => {};
+
+quotesStore.getQuote = (symbol) => {
+	let quote = {};
+	quotesStore.update((quotes) => (quote = quotes[symbol]));
+	return quote;
+};
