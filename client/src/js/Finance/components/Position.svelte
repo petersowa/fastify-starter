@@ -1,12 +1,6 @@
 <script>
 	import Fa from 'svelte-fa';
-	import {
-		faEdit,
-		faBinoculars,
-		faMinusCircle,
-		faPlusCircle,
-		faPlus,
-	} from '@fortawesome/free-solid-svg-icons';
+	import { faEdit, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
 	import { format } from 'date-fns';
 	import { deletePosition } from '../handle-ajax';
 
@@ -20,6 +14,11 @@
 		: 'loading...';
 	$: dollarGain = quote
 		? (position.quantity * quote.latestPrice - position.cost).toFixed(2)
+		: 'loading...';
+	$: change = quote
+		? (position.quantity * quote.latestPrice * quote.changePercent).toFixed(
+				2
+		  )
 		: 'loading...';
 </script>
 
@@ -62,6 +61,7 @@
 <span class="right-justify">{position.quantity}</span>
 <span class="right-justify">{position.cost.toFixed(2)}</span>
 <span class="right-justify">{value}</span>
+<span class="right-justify">{change}</span>
 <span class="right-justify">{dollarGain}</span>
 <div class="control">
 	<button class="item-control" aria-label="edit" on:click={onUpdate}>
