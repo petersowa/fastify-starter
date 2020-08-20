@@ -66,13 +66,16 @@
 <style lang="scss">
 	.position {
 		display: grid;
-		grid-template-columns: 0.5fr 1fr 0.5fr 0.8fr 0.5fr 1fr 8em;
+		grid-template-columns: 0.5fr 1fr 0.5fr 0.8fr 0.5fr 0.8fr 0.8fr 8em;
 		grid-auto-rows: 1.8em;
 		align-items: center;
 		justify-items: right;
 	}
-	.right-justify {
-		justify-self: right;
+	.heading {
+		background: rgba(0, 0, 0, 0.2);
+		border-radius: 0.2em;
+		margin-left: -0.5em;
+		margin-right: -0.5em;
 	}
 	.item-control {
 		display: flex;
@@ -93,17 +96,15 @@
 </style>
 
 {#if holding}
-	<li>
-		<span>Positions</span>
-	</li>
-	<li class="position">
+
+	<li class="position heading">
 		<span>Symbol</span>
 		<span>Date</span>
-		<span class="right-justify">Quantity</span>
-		<span class="right-justify">Cost</span>
-		<span class="right-justify">Value</span>
-		<span class="right-justify">Change</span>
-		<span class="right-justify">$ Gain</span>
+		<span>Quantity</span>
+		<span>Cost</span>
+		<span>Value</span>
+		<span>Change</span>
+		<span>$ Gain</span>
 	</li>
 	{#each holding.positions as position}
 		<li class="position">
