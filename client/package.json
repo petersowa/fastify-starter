@@ -35,7 +35,7 @@
 		"@babel/preset-env": "^7.11.0",
 		"@rollup/plugin-typescript": "^5.0.2",
 		"@tsconfig/svelte": "^1.0.10",
-		"svelte-check": "^1.0.16",
+		"svelte-check": "^1.0.20",
 		"typescript": "^3.9.7"
 	}
 }
