@@ -72,12 +72,12 @@
 		display: grid;
 		margin: 0;
 		padding: 0;
-		grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(18em, 1fr));
 		&__row {
 			display: grid;
 			position: relative;
 			overflow: hidden;
-			grid-template-columns: minmax(2em, 2em) 5rem 1fr minmax(3em, 3em);
+			grid-template-columns: minmax(2em, 5em) 5rem 1fr 3em;
 			grid-auto-rows: auto;
 			grid-template-areas:
 				'handle date date date'
