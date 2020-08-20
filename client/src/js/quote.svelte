@@ -130,6 +130,7 @@
 		display: flex;
 		flex-direction: column;
 		padding: 0;
+		font-size: calc(0.2em + 1vw);
 	}
 	form {
 		padding: 2em;
@@ -143,26 +144,29 @@
 		margin-bottom: 1em;
 		border-radius: 0.2em;
 		box-shadow: 4px 4px 12px 2px rgba(0, 0, 0, 0.2);
-		border: 1px solid rgba(0, 0, 0, 0.1);
+		// border: 1px solid rgba(0, 0, 0, 0.1);
 	}
 
 	.apps-title {
 		position: relative;
+		display: flex;
 		margin: 0.5rem 0;
-		letter-spacing: 0.2em;
+		letter-spacing: 0.4em;
 		text-transform: uppercase;
-		text-align: center;
-		font-weight: 300;
-		width: 100%;
+		font-weight: 600;
+		width: fit-content;
+		color: hsl(calc(200 + 30), 70%, 60%);
+		margin: auto;
+		justify-content: center;
+		align-items: center;
 		&:before {
 			position: absolute;
 			content: '';
-			height: 0.1em;
-			background-color: blue;
+			height: 0.5em;
+			background-color: hsla(200, 100%, 90%, 0.5);
+			bottom: 0.2em;
 			width: 100%;
-			left: 0;
-			bottom: 0;
-			opacity: 0.5;
+			z-index: -1;
 		}
 	}
 </style>
