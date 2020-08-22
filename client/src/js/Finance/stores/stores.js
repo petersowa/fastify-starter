@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import { quotesStore } from '../stores/QuotesStore';
 import {
 	getAccounts,
 	addPosition,
@@ -6,10 +7,9 @@ import {
 	updatePosition,
 	addHoldingsAccount,
 	deleteHoldingsAccount,
-	getQuote,
-} from './handle-ajax';
+} from '../handle-ajax';
 
-export function setSpinner() {
+function setSpinner() {
 	let isLoaded = false;
 	let isMinWait = false;
 	appStore.update((v) => ({ isLoaded, isMinWait, count: v.count + 1 }));
@@ -27,15 +27,13 @@ export function setSpinner() {
 	};
 }
 
-export const appStore = writable({
+const appStore = writable({
 	isMinWait: true,
 	isLoaded: true,
 	count: 0,
 });
 
-export const watchList = writable([]);
-
-export const accountStore = writable([], (set) => {
+const accountStore = writable([], (set) => {
 	getAccounts()
 		.then((accountData) => {
 			if (accountData) {
@@ -165,7 +163,7 @@ accountStore.updatePosition = async (position, holdingId) => {
 	}
 };
 
-export const stockStore = writable({});
+const stockStore = writable({});
 
 accountStore.subscribe(async (accountList) => {
 	const stockQuotes = {};
@@ -179,9 +177,11 @@ accountStore.subscribe(async (accountList) => {
 		const clearSpinner = setSpinner();
 		try {
 			accountList.holdings.forEach((holding) => {
-				holding.positions.forEach((position) => {
+				holding.positions.forEach(async (position) => {
 					if (position.symbol in quotes) return;
-					quotes[position.symbol] = getQuote(position.symbol);
+					quotes[position.symbol] = await quotesStore.getQuote(
+						position.symbol
+					);
 				});
 			});
 
@@ -202,28 +202,4 @@ accountStore.subscribe(async (accountList) => {
 	});
 });
 
-export const quotesStore = writable({ symbols: [], quote: {} });
-
-quotesStore.subscribe((quotesData) => {
-	quotesData.symbols.forEach(async (symbol) => {
-		if (!(symbol in quotesData.quote)) {
-			const quote = await getQuote(symbol);
-			quotesData.quote[symbol] = quote;
-		}
-	});
-});
-
-quotesStore.addPosition = (symbol) => {
-	quotesStore.update((quotesData) => {
-		quotesData.symbols.push(symbol);
-		return quotesData;
-	});
-};
-
-quotesStore.refresh = async () => {};
-
-quotesStore.getQuote = (symbol) => {
-	let quote = {};
-	quotesStore.update((quotes) => (quote = quotes[symbol]));
-	return quote;
-};
+export { stockStore, accountStore, appStore, setSpinner };
