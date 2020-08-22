@@ -1,20 +1,15 @@
 <script>
 	import Sortable from 'sortablejs';
 	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
-	import { watchList } from '../stores';
+	import { watchList } from '../stores/WatchList';
 	import { postWatchlist } from '../handle-ajax';
 	import Fa from 'svelte-fa';
 	import {
-		faEdit,
-		faBinoculars,
-		faMinusCircle,
-		faPlusCircle,
 		faArrowsAlt,
+		faMinusCircle,
 	} from '@fortawesome/free-solid-svg-icons';
 
 	let watchItems = [];
-	$: priceColor = 'white';
 
 	const unsubscribe = watchList.subscribe((list) => {
 		console.log('update subscription');

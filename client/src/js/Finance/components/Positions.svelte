@@ -1,13 +1,14 @@
 <script>
-	import { accountStore, setSpinner, stockStore } from '../stores';
+	import { accountStore } from '../stores/stores';
+	import { quotesStore } from '../stores/QuotesStore';
 	import BuyModal from '../modals/Buy.svelte';
 	import Position from './Position.svelte';
-	export let holding;
-	let stockQuotes = {};
-	// export let modal;
-	let modal = { component: null, data: null };
 	import Fa from 'svelte-fa';
 	import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+
+	export let holding;
+	let stockQuotes = {};
+	let modal = { component: null, data: null };
 
 	function handlePositionDelete(position, holding) {
 		return (e) => {
@@ -15,7 +16,7 @@
 		};
 	}
 
-	stockStore.subscribe((data) => (stockQuotes = data));
+	quotesStore.subscribe((data) => (stockQuotes = data.quote));
 
 	function handlePositionUpdate(position, holding) {
 		return (e) => {

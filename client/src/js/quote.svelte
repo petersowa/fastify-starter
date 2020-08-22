@@ -3,19 +3,12 @@
 	import Modal from './components/modal.svelte';
 	import Spinner from './components/spinner.svelte';
 	import WatchList from './Finance/components/WatchList.svelte';
-	import {
-		watchList,
-		appStore,
-		setSpinner,
-		quotesStore,
-	} from './Finance/stores';
+	import { appStore, setSpinner } from './Finance/stores/stores';
+	import { watchList } from './Finance/stores/WatchList';
+	import { quotesStore } from './Finance/stores/QuotesStore';
 	import Quote from './Finance/components/Quote.svelte';
 	import Accounts from './Finance/components/Accounts.svelte';
-	import {
-		postWatchlist,
-		getQuote,
-		getWatchlist,
-	} from './Finance/handle-ajax';
+	import { postWatchlist, getWatchlist } from './Finance/handle-ajax';
 	import Fa from 'svelte-fa';
 
 	import { faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -39,7 +32,10 @@
 		const clearSpinner = setSpinner();
 		await refreshWatchlist();
 		clearSpinner();
-		refreshInterval = setInterval(() => refreshWatchlist(), 1000 * 60 * 15);
+		refreshInterval = setInterval(() => {
+			refreshWatchlist();
+			quotesStore.refresh();
+		}, 1000 * 60 * 10);
 	});
 
 	onDestroy(() => {
@@ -50,21 +46,19 @@
 		try {
 			const watchListItems = await getWatchlist();
 			if (watchListItems) {
-				console.log({ watchListItems });
 				const quotes = await Promise.all(
 					watchListItems
 						.filter((sym) => sym !== null)
 						.map(async (sym) => {
 							quotesStore.addPosition(sym);
-							console.log(sym);
-							return await getQuote(sym);
+							return await quotesStore.getQuote(sym);
 						})
 				);
 				await quotesStore.refresh();
-				quotesStore.subscribe((data) => console.log(data));
-				console.log();
-				watchList.update((list) => {
-					console.log(quotes);
+				quotesStore.subscribe((data) =>
+					console.log('quoteStore update', data)
+				);
+				watchList.update(() => {
 					return [...quotes];
 				});
 			}
@@ -78,7 +72,7 @@
 		const clearSpinner = setSpinner();
 		console.log(symbol);
 		try {
-			const data = await getQuote(symbol);
+			const data = await quotesStore.getQuote(symbol.toUpperCase());
 			if (data) {
 				quote = data;
 				console.log({ quote, error: data.error });

@@ -1,7 +1,8 @@
 <script>
 	import Modal from '../../components/modal.svelte';
 	import { get } from 'svelte/store';
-	import { accountStore, setSpinner, stockStore } from '../stores';
+	import { accountStore, setSpinner } from '../stores/stores';
+	import { quotesStore } from '../stores/QuotesStore';
 	import AccountModal from '../modals/Account.svelte';
 	import Positions from './Positions.svelte';
 	import HoldingsSummary from './HoldingsSummary.svelte';
@@ -29,8 +30,8 @@
 			accountList = list;
 			if (!accountList.holdings) throw new Error('no holdings');
 
-			stockStore.subscribe((stockQuotes) => {
-				console.log(stockQuotes);
+			quotesStore.subscribe((quoteData) => {
+				stockQuotes = quoteData.quote;
 				if (!stockQuotes) return;
 				accountList.holdings.forEach((holding) => {
 					let cost = 0;
