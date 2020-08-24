@@ -50,11 +50,10 @@
 					watchListItems
 						.filter((sym) => sym !== null)
 						.map(async (sym) => {
-							quotesStore.addPosition(sym);
 							return await quotesStore.getQuote(sym);
 						})
 				);
-				await quotesStore.refresh();
+				// await quotesStore.refresh();
 				quotesStore.subscribe((data) =>
 					console.log('quoteStore update', data)
 				);
