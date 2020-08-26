@@ -1,6 +1,5 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
-	import Modal from './components/modal.svelte';
 	import Spinner from './components/spinner.svelte';
 	import WatchList from './Finance/components/WatchList.svelte';
 	import { appStore, setSpinner } from './Finance/stores/stores';
@@ -36,6 +35,9 @@
 			refreshWatchlist();
 			quotesStore.refresh();
 		}, 1000 * 60 * 10);
+
+		const appTitle = document.getElementById('app-title');
+		appTitle.innerHTML = 'GraniteCode.com - Investments';
 	});
 
 	onDestroy(() => {
@@ -134,39 +136,14 @@
 
 	.app {
 		background: #eee;
-		margin-bottom: 1em;
+		margin: 0.5rem 0;
 		border-radius: 0.2em;
 		box-shadow: 4px 4px 12px 2px rgba(0, 0, 0, 0.2);
 		// border: 1px solid rgba(0, 0, 0, 0.1);
 	}
-
-	.apps-title {
-		position: relative;
-		display: flex;
-		margin: 0.5rem 0;
-		letter-spacing: 0.4em;
-		text-transform: uppercase;
-		font-weight: 600;
-		width: fit-content;
-		color: hsl(calc(200 + 30), 70%, 60%);
-		margin: auto;
-		justify-content: center;
-		align-items: center;
-		&:before {
-			position: absolute;
-			content: '';
-			height: 0.5em;
-			background-color: hsla(200, 100%, 90%, 0.5);
-			bottom: 0.2em;
-			width: 100%;
-			z-index: -1;
-		}
-	}
 </style>
 
 <div class="apps">
-
-	<h1 class="apps-title">Investments</h1>
 
 	<div class="app">
 		<form on:submit|preventDefault={handleSubmit}>
@@ -195,16 +172,6 @@
 	</div>
 
 </div>
-
-{#if showModal}
-	<Modal on:close={() => (showModal = false)}>
-		<h2 slot="header">Stock Order</h2>
-		<form>
-			<label for="stock-order">Stock</label>
-			<input id="stock-order" type="text" />
-		</form>
-	</Modal>
-{/if}
 
 {#if !isLoaded || !isMinWait}
 	<Spinner />
