@@ -14,14 +14,7 @@
 
 	let quote = {};
 	let symbol = '';
-	let change = '';
-	let showModal = false;
-	let watchListItems = null;
 	let refreshInterval = null;
-	let isLoaded = false;
-	let isMinWait = false;
-
-	$: fracHigh = quote && (quote.latestPrice / quote.week52High) * 100;
 
 	onMount(async () => {
 		const clearSpinner = setSpinner();
@@ -73,7 +66,6 @@
 			if (data) {
 				quote = data;
 				console.log({ quote, error: data.error });
-				updateStats();
 				clearSpinner();
 			}
 		} catch (err) {
@@ -82,24 +74,6 @@
 		console.log({ quote });
 		symbol = '';
 	}
-
-	function updateStats() {
-		const {
-			latestPrice,
-			previousClose,
-			previousVolume,
-			week52High,
-			week52Low,
-		} = quote;
-		change = (
-			((latestPrice - previousClose) / previousClose) *
-			100
-		).toFixed(2);
-	}
-
-	const formatData = (name, value) => {
-		return `<span>${name}</span><span>${value}</span>`;
-	};
 
 	function addToWatchlist() {
 		watchList.update((list) => {
@@ -120,7 +94,7 @@
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
-		padding: 0;
+		padding: 0.8em 0;
 		font-size: calc(0.2em + 1vw);
 	}
 	form {
@@ -132,9 +106,9 @@
 
 	.app {
 		background: #eee;
-		margin: 0.5rem 0;
+		margin: 0.4em 0;
 		border-radius: 0.2em;
-		box-shadow: 4px 4px 12px 2px rgba(0, 0, 0, 0.2);
+		// box-shadow: 4px 4px 12px 2px rgba(0, 0, 0, 0.2);
 		// border: 1px solid rgba(0, 0, 0, 0.1);
 	}
 </style>
