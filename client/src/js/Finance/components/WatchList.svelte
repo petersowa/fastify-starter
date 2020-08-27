@@ -137,7 +137,6 @@
 		}
 		li {
 			color: #222;
-			box-shadow: 0px 0px 8px 2px #3334;
 			padding: 0.1em 0.4em;
 			margin: 2px;
 			border-radius: 0.2em;
