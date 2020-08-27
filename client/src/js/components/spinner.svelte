@@ -1,5 +1,17 @@
 <script>
 	let modal;
+
+	import { appStore } from '../Finance/stores/stores';
+	import { onDestroy } from 'svelte';
+
+	let isLoaded;
+	let isMinWait;
+
+	const unsubscribe = appStore.subscribe((value) => {
+		(isLoaded = value.isLoaded), (isMinWait = value.isMinWait);
+	});
+
+	onDestroy(unsubscribe);
 </script>
 
 <style>
@@ -113,10 +125,12 @@
 	}
 </style>
 
-<div class="modal-background" />
+{#if !isLoaded || !isMinWait}
+	<div class="modal-background" />
 
-<div class="modal-svelte" role="dialog" aria-modal="true" bind:this={modal}>
-	<div class="cssload-container">
-		<div class="cssload-whirlpool" />
+	<div class="modal-svelte" role="dialog" aria-modal="true" bind:this={modal}>
+		<div class="cssload-container">
+			<div class="cssload-whirlpool" />
+		</div>
 	</div>
-</div>
+{/if}
