@@ -2,7 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import Spinner from './components/spinner.svelte';
 	import WatchList from './Finance/components/WatchList.svelte';
-	import { appStore, setSpinner } from './Finance/stores/stores';
+	import { setSpinner } from './Finance/stores/stores';
 	import { watchList } from './Finance/stores/WatchList';
 	import { quotesStore } from './Finance/stores/QuotesStore';
 	import Quote from './Finance/components/Quote.svelte';
@@ -22,10 +22,6 @@
 	let isMinWait = false;
 
 	$: fracHigh = quote && (quote.latestPrice / quote.week52High) * 100;
-
-	appStore.subscribe((value) => {
-		(isLoaded = value.isLoaded), (isMinWait = value.isMinWait);
-	});
 
 	onMount(async () => {
 		const clearSpinner = setSpinner();
@@ -173,6 +169,4 @@
 
 </div>
 
-{#if !isLoaded || !isMinWait}
-	<Spinner />
-{/if}
+<Spinner />
