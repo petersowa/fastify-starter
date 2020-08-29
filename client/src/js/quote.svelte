@@ -116,6 +116,10 @@
 			white-space: nowrap;
 		}
 	}
+
+	.apps + .apps {
+		margin-top: 1em;
+	}
 	form {
 		padding: 2em;
 		& > button {
@@ -125,42 +129,47 @@
 
 	.app {
 		background: #eee;
-		margin: 0.4em 0;
+		margin: 0;
 		border-radius: 0.2em;
 		// box-shadow: 4px 4px 12px 2px rgba(0, 0, 0, 0.2);
 		// border: 1px solid rgba(0, 0, 0, 0.1);
 	}
+
+	.main {
+		margin: 0;
+		padding: 0.5em;
+	}
 </style>
 
-<div class="apps">
-	<div class="app">
-		<form on:submit|preventDefault="{handleSubmit}">
-			<label for="stock-name">Stock Name:</label>
-			<input id="stock-name" type="string" bind:value="{symbol}" />
-			<button type="submit">
-				<Fa icon="{faSearch}" />
-			</button>
-		</form>
-	</div>
-	{#if quote.symbol}
+<div class="main">
+	<div class="apps">
 		<div class="app">
-			<Quote {quote} addToWatchlist="addToWatchlist" />
+			<form on:submit|preventDefault="{handleSubmit}">
+				<label for="stock-name">Stock Name:</label>
+				<input id="stock-name" type="string" bind:value="{symbol}" />
+				<button type="submit">
+					<Fa icon="{faSearch}" />
+				</button>
+			</form>
+			{#if quote.symbol}
+				<div class="app">
+					<Quote {quote} addToWatchlist="addToWatchlist" />
+				</div>
+			{:else if quote.error}
+				<pre>{quote.error}</pre>
+			{/if}
 		</div>
-	{:else if quote.error}
-		<pre>{quote.error}</pre>
-	{/if}
-</div>
-
-<div class="apps">
-
-	<div class="app">
-		<WatchList />
 	</div>
+	<div class="apps">
 
-	<div class="app">
-		<Accounts />
+		<div class="app">
+			<WatchList />
+		</div>
+
+		<div class="app">
+			<Accounts />
+		</div>
 	</div>
-
 </div>
 
 <Spinner />
