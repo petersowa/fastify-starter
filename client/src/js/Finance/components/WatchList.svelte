@@ -7,6 +7,7 @@
 	import {
 		faArrowsAlt,
 		faMinusCircle,
+		faPlusCircle,
 	} from '@fortawesome/free-solid-svg-icons';
 
 	let watchItems = [];
@@ -67,23 +68,24 @@
 		display: grid;
 		margin: 0;
 		padding: 0;
-		grid-template-columns: repeat(auto-fill, minmax(18em, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
 		&__row {
 			display: grid;
 			position: relative;
 			overflow: hidden;
-			grid-template-columns: minmax(2em, 5em) 5rem 1fr 3em;
+			margin: 0;
+			padding: 0;
+			grid-template-columns: repeat(4, 1fr);
 			grid-auto-rows: auto;
 			grid-template-areas:
 				'handle date date date'
-				'symbol price pe control'
-				'. changeDay . control'
-				'. changeYear . control';
+				'symbol price . pe'
+				'. changeDay . .'
+				'. changeYear control control';
 			/* gap: 10px 5px; */
-			padding: 0;
 			align-items: center;
 			cursor: pointer;
-			gap: 0.5rem;
+			gap: 0.1em;
 			background: var(--priceColor);
 		}
 		.grid-handle {
@@ -93,7 +95,6 @@
 			grid-area: symbol;
 		}
 		.grid-date {
-			width: 100%;
 			grid-area: date;
 		}
 		.grid-price {
@@ -114,7 +115,6 @@
 			align-self: end;
 		}
 		button {
-			font-size: 16px;
 			box-shadow: none;
 			margin: 0;
 			background: #2222;
@@ -174,7 +174,6 @@
 			height: 1.2em;
 			width: 1.2em;
 			cursor: grab;
-			font-size: 1.8rem;
 			opacity: 0.8;
 			background: rgba(0, 0, 0, 0.1);
 			border-radius: 0.2em;
@@ -184,7 +183,13 @@
 			width: 1.5em;
 			height: 1.5em;
 			padding: 0;
-			margin: 0.2em;
+			margin: 0;
+		}
+		.controls {
+			display: flex;
+			&:hover {
+				outline: 1px solid red;
+			}
 		}
 	}
 </style>
@@ -192,11 +197,11 @@
 <ul class="watchlist" id="watchlist">
 	{#each watchItems as quote (quote.symbol)}
 		<li
-			data-sym={quote.symbol}
+			data-sym="{quote.symbol}"
 			class="watchlist__row"
 			style="--priceColor:{changeColor(quote.changePercent)};--price52WeekColor:{changeColor(quote.latestPrice / quote.week52High - 0.9)}">
 			<div class="grid-handle drag-handle">
-				<Fa icon={faArrowsAlt} />
+				<Fa icon="{faArrowsAlt}" />
 			</div>
 			<span class="grid-symbol">{quote.symbol}</span>
 			<span class="justify-right grid-price">
@@ -217,11 +222,18 @@
 				{new Date(quote.latestUpdate).toLocaleString()}
 			</span>
 			<div class="grid-control">
-				<button
-					class="btn-control"
-					on:click={removeSymbol(quote.symbol)}>
-					<Fa icon={faMinusCircle} color="red" />
-				</button>
+				<span class="controls">
+					<button
+						class="btn-control"
+						on:click="{removeSymbol(quote.symbol)}">
+						<Fa icon="{faMinusCircle}" color="red" />
+					</button>
+					<button
+						class="btn-control"
+						on:click="{removeSymbol(quote.symbol)}">
+						<Fa icon="{faPlusCircle}" color="blue" />
+					</button>
+				</span>
 			</div>
 		</li>
 	{/each}
