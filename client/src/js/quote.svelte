@@ -91,11 +91,30 @@
 
 <style type="text/scss">
 	.apps {
-		flex-grow: 1;
+		// flex-grow: 1;
+		// display: flex;
+		// flex-direction: column;
+		// padding: 0.8em 0;
+		font-size: calc(0.4em + 0.5vw);
+	}
+
+	.apps {
 		display: flex;
-		flex-direction: column;
-		padding: 0.8em 0;
-		font-size: calc(0.2em + 1vw);
+		// margin: 1em;
+		// margin-left: auto;
+		// border-radius: 5px;
+		// box-shadow: 3px 3px 10px 2px rgba(0, 0, 0, 0.1);
+		// background-color: rgba(255, 255, 0, 0.1);
+		// padding: 0.5em;
+		flex-wrap: wrap;
+		max-width: 100%;
+		gap: 0.5em;
+		& > * {
+			flex-grow: 1;
+			flex-basis: calc(calc(800px - 100%) * 999);
+			font-variant-numeric: tabular-nums;
+			white-space: nowrap;
+		}
 	}
 	form {
 		padding: 2em;
@@ -114,24 +133,25 @@
 </style>
 
 <div class="apps">
-
 	<div class="app">
-		<form on:submit|preventDefault={handleSubmit}>
+		<form on:submit|preventDefault="{handleSubmit}">
 			<label for="stock-name">Stock Name:</label>
-			<input id="stock-name" type="string" bind:value={symbol} />
+			<input id="stock-name" type="string" bind:value="{symbol}" />
 			<button type="submit">
-				<Fa icon={faSearch} />
+				<Fa icon="{faSearch}" />
 			</button>
 		</form>
 	</div>
-
 	{#if quote.symbol}
 		<div class="app">
-			<Quote {quote} {addToWatchlist} />
+			<Quote {quote} addToWatchlist="addToWatchlist" />
 		</div>
 	{:else if quote.error}
 		<pre>{quote.error}</pre>
 	{/if}
+</div>
+
+<div class="apps">
 
 	<div class="app">
 		<WatchList />
