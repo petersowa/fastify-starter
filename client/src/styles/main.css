@@ -223,7 +223,7 @@ a:focus::before {
 	flex-direction: column;
 	/* min-height: calc(100vh - 0.6em); */
 	margin: 0;
-	border-radius: 0.3em;
+	/* border-radius: 0.3em; */
 	overflow: auto;
 	flex-grow: 1;
 	z-index: 1;
@@ -245,7 +245,7 @@ a:focus::before {
 
 .main-content {
 	flex-grow: 1;
-	padding: 0 1vw;
+	padding: 0;
 }
 
 .sidebar {
@@ -523,7 +523,7 @@ body.show-modal {
 	.h-flex-container {
 		display: flex;
 		flex-direction: column;
-		padding: 1em 0;
+		padding: 0;
 	}
 	.sidebar {
 		display: flex;
