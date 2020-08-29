@@ -15,7 +15,7 @@
 		"@fortawesome/free-solid-svg-icons": "^5.14.0",
 		"@rollup/plugin-commonjs": "11.0.2",
 		"@rollup/plugin-node-resolve": "^7.0.0",
-		"date-fns": "^2.15.0",
+		"date-fns": "^2.16.0",
 		"extract-text-webpack-plugin": "^3.0.2",
 		"node-sass": "^4.14.1",
 		"rollup": "^1.20.0",
@@ -35,7 +35,7 @@
 		"@babel/preset-env": "^7.11.0",
 		"@rollup/plugin-typescript": "^5.0.2",
 		"@tsconfig/svelte": "^1.0.10",
-		"svelte-check": "^1.0.25",
+		"svelte-check": "^1.0.28",
 		"typescript": "^3.9.7"
 	}
 }
