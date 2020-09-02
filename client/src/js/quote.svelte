@@ -5,6 +5,7 @@
 	import { setSpinner } from './Finance/stores/stores';
 	import { watchList } from './Finance/stores/WatchList';
 	import { quotesStore } from './Finance/stores/QuotesStore';
+	import { modalStore } from './Finance/stores/Modal';
 	import Quote from './Finance/components/Quote.svelte';
 	import Accounts from './Finance/components/Accounts.svelte';
 	import { postWatchlist, getWatchlist } from './Finance/handle-ajax';
@@ -15,6 +16,7 @@
 	let quote = {};
 	let symbol = '';
 	let refreshInterval = null;
+	let modal;
 
 	onMount(async () => {
 		const clearSpinner = setSpinner();
@@ -29,7 +31,12 @@
 		appTitle.innerHTML = 'GraniteCode.com - Investments';
 	});
 
+	const unsubscribeModalStore = modalStore.subscribe((store) => {
+		modal = store.modal;
+	});
+
 	onDestroy(() => {
+		unsubscribeModalStore();
 		clearInterval(refreshInterval);
 	});
 
@@ -153,7 +160,7 @@
 			</form>
 			{#if quote.symbol}
 				<div class="app">
-					<Quote {quote} addToWatchlist="addToWatchlist" />
+					<Quote quote="{quote}" addToWatchlist="{addToWatchlist}" />
 				</div>
 			{:else if quote.error}
 				<pre>{quote.error}</pre>
@@ -161,7 +168,6 @@
 		</div>
 	</div>
 	<div class="apps">
-
 		<div class="app">
 			<WatchList />
 		</div>
@@ -171,5 +177,7 @@
 		</div>
 	</div>
 </div>
+
+<svelte:component this="{modal.component}" {...modal.data} />
 
 <Spinner />

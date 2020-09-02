@@ -1,6 +1,7 @@
 <script>
 	import { accountStore } from '../stores/stores';
 	import { quotesStore } from '../stores/QuotesStore';
+	import { setModal, clearModal } from '../stores/Modal';
 	import BuyModal from '../modals/Buy.svelte';
 	import Position from './Position.svelte';
 	import Fa from 'svelte-fa';
@@ -8,7 +9,6 @@
 
 	export let holding;
 	let stockQuotes = {};
-	let modal = { component: null, data: null };
 
 	function handlePositionDelete(position, holding) {
 		return (e) => {
@@ -20,46 +20,49 @@
 
 	function handlePositionUpdate(position, holding) {
 		return (e) => {
-			modal.component = BuyModal;
-			modal.data = {
-				handleData: (e, { position, formData, holding }) => {
-					position.symbol = formData.symbol;
-					position.purchaseDate = new Date(formData.date);
-					position.quantity = formData.shares;
-					position.cost =
-						+formData.price * +formData.shares + +formData.fee;
-					position.purchasePrice = +formData.price;
-					position.fees = +formData.fee;
-					accountStore.updatePosition(position, holding._id);
-					modal.component = null;
+			setModal({
+				component: BuyModal,
+				data: {
+					handleData: (e, { position, formData, holding }) => {
+						position.symbol = formData.symbol;
+						position.purchaseDate = new Date(formData.date);
+						position.quantity = formData.shares;
+						position.cost =
+							+formData.price * +formData.shares + +formData.fee;
+						position.purchasePrice = +formData.price;
+						position.fees = +formData.fee;
+						accountStore.updatePosition(position, holding._id);
+						clearModal();
+					},
+					position,
+					holding,
+					toggleModal: () => clearModal(),
 				},
-				position,
-				holding,
-				toggleModal: () => (modal.component = null),
-			};
+			});
 		};
 	}
 
 	function handlePositionAdd(holding) {
-		console.log(modal);
 		return (e) => {
-			modal.component = BuyModal;
-			modal.data = {
-				handleData: (e, { position, formData, holding }) => {
-					position.symbol = formData.symbol;
-					position.purchaseDate = new Date(formData.date);
-					position.quantity = formData.shares;
-					position.cost =
-						+formData.price * +formData.shares + +formData.fee;
-					position.purchasePrice = +formData.price;
-					position.fees = +formData.fee;
-					accountStore.addPosition(position, holding._id);
-					modal.component = null;
+			setModal({
+				component: BuyModal,
+				data: {
+					handleData: (e, { position, formData, holding }) => {
+						position.symbol = formData.symbol;
+						position.purchaseDate = new Date(formData.date);
+						position.quantity = formData.shares;
+						position.cost =
+							+formData.price * +formData.shares + +formData.fee;
+						position.purchasePrice = +formData.price;
+						position.fees = +formData.fee;
+						accountStore.addPosition(position, holding._id);
+						clearModal();
+					},
+					position: {},
+					holding,
+					toggleModal: () => clearModal(),
 				},
-				position: {},
-				holding,
-				toggleModal: () => (modal.component = null),
-			};
+			});
 		};
 	}
 </script>
@@ -97,7 +100,6 @@
 </style>
 
 {#if holding}
-
 	<li class="position heading">
 		<span>Symbol</span>
 		<span>Date</span>
@@ -111,10 +113,10 @@
 		<li class="position">
 			{#if position}
 				<Position
-					{position}
-					quote={position.symbol in stockQuotes && stockQuotes[position.symbol]}
-					onDelete={handlePositionDelete(position, holding)}
-					onUpdate={handlePositionUpdate(position, holding)} />
+					position="{position}"
+					quote="{position.symbol in stockQuotes && stockQuotes[position.symbol]}"
+					onDelete="{handlePositionDelete(position, holding)}"
+					onUpdate="{handlePositionUpdate(position, holding)}" />
 			{/if}
 		</li>
 	{/each}
@@ -122,9 +124,7 @@
 	<button
 		class="item-control"
 		aria-label="add position"
-		on:click={handlePositionAdd(holding)}>
-		<Fa icon={faPlusCircle} color="blue" />
+		on:click="{handlePositionAdd(holding)}">
+		<Fa icon="{faPlusCircle}" color="blue" />
 	</button>
-
-	<svelte:component this={modal.component} {...modal.data} />
 {/if}

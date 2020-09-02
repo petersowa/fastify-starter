@@ -1,8 +1,8 @@
 <script>
-	import Modal from '../../components/modal.svelte';
-	import { get } from 'svelte/store';
+	import { onDestroy } from 'svelte';
 	import { accountStore, setSpinner } from '../stores/stores';
 	import { quotesStore } from '../stores/QuotesStore';
+	import { setModal, clearModal } from '../stores/Modal';
 	import AccountModal from '../modals/Account.svelte';
 	import Positions from './Positions.svelte';
 	import HoldingsSummary from './HoldingsSummary.svelte';
@@ -16,12 +16,7 @@
 
 	let accountList = [];
 	let stockQuotes = {};
-	let modal = { component: null, data: null };
 	let holdingSummary = {};
-
-	function toggleAccountModal(holding = null) {
-		showAccount = holding ? holding._id : null;
-	}
 
 	const unsubscribe = accountStore.subscribe(async (list) => {
 		if (!list || list.length === 0) return;
@@ -59,18 +54,26 @@
 		}
 	});
 
+	onDestroy(() => {
+		unsubscribe();
+	});
+
 	function handleEditAccount() {
-		modal.component = AccountModal;
-		modal.data = {
-			toggleModal: () => (modal.component = null),
-			handleData: (e, { formData: { accountName } }) => {
-				console.log({ accountName });
-				if (typeof accountName == 'string' && accountName.length > 0) {
-					accountStore.addHoldingsAccount(accountName);
-				}
-				modal.component = null;
+		setModal({
+			component: AccountModal,
+			data: {
+				toggleModal: () => clearModal(),
+				handleData: (e, { formData: { accountName } }) => {
+					if (
+						typeof accountName == 'string' &&
+						accountName.length > 0
+					) {
+						accountStore.addHoldingsAccount(accountName);
+					}
+					clearModal();
+				},
 			},
-		};
+		});
 	}
 
 	const handleDeleteAccount = (holdingsId) => () => {
@@ -143,39 +146,38 @@
 		{#each accountList.holdings as holding}
 			<li class="data__row">
 				<span>{holding.name || 'account name'}</span>
-				<i class="fas fa-camera" />
+				<i class="fas fa-camera"></i>
 				<div class="control">
 					<button class="item-control" aria-label="view">
-						<Fa icon={faBinoculars} color="gray" />
+						<Fa icon="{faBinoculars}" color="gray" />
 					</button>
 					<button
 						class="item-control"
 						aria-label="edit"
-						on:click={handleEditAccount}>
-						<Fa icon={faEdit} color="gray" />
+						on:click="{handleEditAccount}">
+						<Fa icon="{faEdit}" color="gray" />
 					</button>
 					<button
 						class="item-control"
 						aria-label="delete"
-						on:click={handleDeleteAccount(holding._id)}>
-						<Fa icon={faMinusCircle} color="red" />
+						on:click="{handleDeleteAccount(holding._id)}">
+						<Fa icon="{faMinusCircle}" color="red" />
 					</button>
 				</div>
 			</li>
 
-			<Positions {holding} />
+			<Positions holding="{holding}" />
 
 			<HoldingsSummary
-				holdingSummary={holding.name in holdingSummary && holdingSummary[holding.name]} />
+				holdingSummary="{holding.name in holdingSummary && holdingSummary[holding.name]}" />
 		{/each}
 	{/if}
 	<div class="control">
 		<button
 			class="round"
 			aria-label="add account"
-			on:click={handleEditAccount}>
-			<Fa icon={faPlus} size="2x" color="green" />
+			on:click="{handleEditAccount}">
+			<Fa icon="{faPlus}" size="2x" color="green" />
 		</button>
 	</div>
-	<svelte:component this={modal.component} {...modal.data} />
 </ul>
