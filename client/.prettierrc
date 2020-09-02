@@ -1,5 +1,6 @@
 {
-	"svelteStrictMode": true,
+	"svelteStrictMode": false,
+	"svelteAllowShorthand": true,
 	"endOfLine": "lf",
 	"semi": true,
 	"singleQuote": true,
