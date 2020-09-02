@@ -26,6 +26,7 @@ Client is responsive with mobile and desktop views.
 Uses CSS for styling core server html.
 
 # Using IEX data:
+
 ```
 avgTotalVolume: 8377844
 calculationPrice: "tops"
@@ -83,3 +84,8 @@ week52High: 239.71
 week52Low: 48.18
 ytdChange: 0.7465299999999999
 ```
+
+# TODO
+
+-   [x] Create a modal store to fix issue with buy modal display
+-   [x] test
