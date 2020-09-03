@@ -10,7 +10,7 @@
 	export let holding;
 	let stockQuotes = {};
 
-	function handlePositionDelete(position, holding) {
+	function handlePositionDelete(holding, position) {
 		return (e) => {
 			accountStore.deletePosition(position._id, holding._id);
 		};
@@ -18,47 +18,32 @@
 
 	quotesStore.subscribe((data) => (stockQuotes = data.quote));
 
-	function handlePositionUpdate(position, holding) {
-		return (e) => {
-			setModal({
-				component: BuyModal,
-				data: {
-					handleData: (e, { position, formData, holding }) => {
-						position.symbol = formData.symbol;
-						position.purchaseDate = new Date(formData.date);
-						position.quantity = formData.shares;
-						position.cost =
-							+formData.price * +formData.shares + +formData.fee;
-						position.purchasePrice = +formData.price;
-						position.fees = +formData.fee;
-						accountStore.updatePosition(position, holding._id);
-						clearModal();
-					},
-					position,
-					holding,
-					toggleModal: () => clearModal(),
-				},
-			});
+	function handleFormData(formData) {
+		return {
+			symbol: formData.symbol,
+			purchaseDate: new Date(formData.date),
+			quantity: formData.shares,
+			cost: +formData.price * +formData.shares + +formData.fee,
+			purchasePrice: +formData.price,
+			fees: +formData.fee,
 		};
 	}
 
-	function handlePositionAdd(holding) {
+	function handlePositionUpdate(holding, currentPosition = null) {
 		return (e) => {
 			setModal({
 				component: BuyModal,
 				data: {
 					handleData: (e, { position, formData, holding }) => {
-						position.symbol = formData.symbol;
-						position.purchaseDate = new Date(formData.date);
-						position.quantity = formData.shares;
-						position.cost =
-							+formData.price * +formData.shares + +formData.fee;
-						position.purchasePrice = +formData.price;
-						position.fees = +formData.fee;
-						accountStore.addPosition(position, holding._id);
+						position = { ...position, ...handleFormData(formData) };
+						if (currentPosition) {
+							accountStore.updatePosition(position, holding._id);
+						} else {
+							accountStore.addPosition(position, holding._id);
+						}
 						clearModal();
 					},
-					position: {},
+					position: currentPosition || {},
 					holding,
 					toggleModal: () => clearModal(),
 				},
@@ -113,10 +98,10 @@
 		<li class="position">
 			{#if position}
 				<Position
-					position="{position}"
-					quote="{position.symbol in stockQuotes && stockQuotes[position.symbol]}"
-					onDelete="{handlePositionDelete(position, holding)}"
-					onUpdate="{handlePositionUpdate(position, holding)}" />
+					{position}
+					quote={position.symbol in stockQuotes && stockQuotes[position.symbol]}
+					onDelete={handlePositionDelete(holding, position)}
+					onUpdate={handlePositionUpdate(holding, position)} />
 			{/if}
 		</li>
 	{/each}
@@ -124,7 +109,7 @@
 	<button
 		class="item-control"
 		aria-label="add position"
-		on:click="{handlePositionAdd(holding)}">
-		<Fa icon="{faPlusCircle}" color="blue" />
+		on:click={handlePositionUpdate(holding)}>
+		<Fa icon={faPlusCircle} color="blue" />
 	</button>
 {/if}
