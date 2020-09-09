@@ -5,7 +5,11 @@
 		{{#if username}}
 		<div id="app" />
 		{{else}}
-		<div>Please <a href="/login">Login</a> or <a href="/register">Register</a></div>
+		<div class="main-content__noauth">
+			<a class="" href="/login">Login</a>
+			<div>or</div>
+			<a class="" href="/register">Register</a>
+		</div>
 		{{/if}}
 	</main>
 

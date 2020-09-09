@@ -35,7 +35,7 @@ html {
 	--clr-white: #fff;
 	--clr-black: #000;
 	--clr-hi-light: rgba(255, 52, 228, 0.856);
-	--clr-action: #56aaff;
+	--clr-action: #fcad1b;
 }
 
 body {
@@ -246,6 +246,35 @@ a:focus::before {
 .main-content {
 	flex-grow: 1;
 	padding: 0;
+}
+
+.main-content__noauth {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 2em;
+	font-size: 1.3rem;
+	min-height: fit-content;
+	top: 50%;
+	left: 50%;
+	gap: 1em;
+	transform: translate(-50%, -50%);
+	border-radius: 0.2em;
+	background-color: var(--clr-button-default);
+}
+
+.main-content__noauth a {
+	text-decoration: none;
+	background-color: var(--clr-action);
+	padding: 0.2em 0.5em;
+	font-style: inherit;
+}
+
+.main-content__noauth a,
+.main-content__noauth a:visited {
+	color: var(--clr-body-text);
 }
 
 .sidebar {
