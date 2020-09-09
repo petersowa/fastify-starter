@@ -27,7 +27,13 @@ const app: fastify.FastifyInstance<
 	Server,
 	IncomingMessage,
 	ServerResponse
-> = fastify({ logger: false, http2: false, trustProxy: true });
+> = fastify({
+	logger: process.env.NODE_ENV !== 'production',
+	http2: false,
+	trustProxy: true,
+});
+
+console.log('IS_PROD', process.env.NODE_ENV);
 
 app.register(helmet);
 
