@@ -8,7 +8,11 @@
 	import { modalStore } from './Finance/stores/Modal';
 	import Quote from './Finance/components/Quote.svelte';
 	import Accounts from './Finance/components/Accounts.svelte';
-	import { postWatchlist, getWatchlist } from './Finance/handle-ajax';
+	import {
+		postWatchlist,
+		getWatchlist,
+		getStats,
+	} from './Finance/handle-ajax';
 	import Fa from 'svelte-fa';
 
 	import { faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -68,6 +72,7 @@
 	async function handleSubmit() {
 		const clearSpinner = setSpinner();
 		console.log(symbol);
+		console.log(await getStats(symbol));
 		try {
 			const data = await quotesStore.getQuote(symbol.toUpperCase());
 			if (data) {
@@ -146,21 +151,38 @@
 		margin: 0;
 		padding: 0.5em;
 	}
+
+	.attribution {
+		position: fixed;
+		width: fit-content;
+		background: rgba(0, 0, 0, 0.2);
+		color: white;
+		right: 0;
+		bottom: 0;
+		padding: 0.5rem;
+		border-radius: 0.5em;
+		font-size: 0.8rem;
+		margin: 0.2em;
+
+		& > a {
+			color: rgba(255, 255, 255, 0.5);
+		}
+	}
 </style>
 
 <div class="main">
 	<div class="apps">
 		<div class="app">
-			<form on:submit|preventDefault="{handleSubmit}">
+			<form on:submit|preventDefault={handleSubmit}>
 				<label for="stock-name">Stock Name:</label>
-				<input id="stock-name" type="string" bind:value="{symbol}" />
+				<input id="stock-name" type="string" bind:value={symbol} />
 				<button type="submit">
-					<Fa icon="{faSearch}" />
+					<Fa icon={faSearch} />
 				</button>
 			</form>
 			{#if quote.symbol}
 				<div class="app">
-					<Quote quote="{quote}" addToWatchlist="{addToWatchlist}" />
+					<Quote {quote} {addToWatchlist} />
 				</div>
 			{:else if quote.error}
 				<pre>{quote.error}</pre>
@@ -178,6 +200,10 @@
 	</div>
 </div>
 
-<svelte:component this="{modal.component}" {...modal.data} />
+<div class="attribution">
+	<a href="https://iexcloud.io" rel="noopener" target="_blank">Data provided
+		by IEX Cloud</a>
+</div>
+<svelte:component this={modal.component} {...modal.data} />
 
 <Spinner />

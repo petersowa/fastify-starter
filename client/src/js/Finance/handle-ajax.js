@@ -1,6 +1,7 @@
 const WATCHLIST_ROUTE = '/stocks/watchlist';
 const ACCOUNT_ROUTE = '/stocks/account';
 const QUOTE_ROUTE = '/stocks/quote';
+const STATS_ROUTE = '/stocks/stats';
 const HOLDINGS_ROUTE = '/stocks/holdings';
 const POST = 'POST';
 const PATCH = 'PATCH';
@@ -23,6 +24,11 @@ async function deleteHoldingsAccount({ holdingsId }) {
 
 async function getQuote(symbol) {
 	return await getFetch(`${QUOTE_ROUTE}/${symbol}`);
+}
+
+async function getStats(symbol) {
+	console.log('getting stats...');
+	return await getFetch(`${STATS_ROUTE}/${symbol}`);
 }
 
 async function getWatchlist() {
@@ -99,6 +105,7 @@ async function getFetch(route) {
 export {
 	postWatchlist,
 	getQuote,
+	getStats,
 	getWatchlist,
 	getAccounts,
 	addHoldingsAccount,
