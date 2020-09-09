@@ -15,12 +15,10 @@ const getStoreQuote = (symbol) => {
 };
 
 const fetchQuote = async (symbol) => {
-	//check for stored quote
 	let quote;
 	const storeQuote = getStoreQuote(symbol);
 	console.log({ storeQuote });
 	if (!storeQuote || Date.now() - storeQuote.__age > MAX_AGE) {
-		// console.log('getting quote for ', symbol);
 		quote = await getQuote(symbol);
 	}
 	if (quote) {
@@ -28,7 +26,6 @@ const fetchQuote = async (symbol) => {
 			if (!quotesData.quote[symbol]) {
 				quotesData.symbols.push(symbol);
 			}
-			// console.log('store quote data', quotesData);
 			quotesData.quote[symbol] = { ...quote, __age: Date.now() };
 			return quotesData;
 		});

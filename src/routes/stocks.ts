@@ -1,7 +1,7 @@
 import * as fastify from 'fastify';
-import { checkSessionAuth } from '../controllers/protected';
-import { updateWatchlist, getWatchlist } from '../controllers/watchlist';
-import { getQuote, getStats, getHistoricalQuote } from '../controllers/quote';
+import { checkSessionAuth } from './controllers/protected';
+import { updateWatchlist, getWatchlist } from './controllers/watchlist';
+import { getQuote, getStats, getHistoricalQuote } from './controllers/quote';
 import {
 	getAccounts,
 	addHoldingPosition,
@@ -9,7 +9,7 @@ import {
 	updateHoldingPosition,
 	addHoldingsAccount,
 	deleteHoldingsAccount,
-} from '../controllers/accounts';
+} from './controllers/accounts';
 
 const options = { preHandler: checkSessionAuth };
 

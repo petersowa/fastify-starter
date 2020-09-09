@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { ServerResponse } from 'http';
-import WatchList from '../models/watchList';
+import WatchList from '../../models/watchList';
 
 async function getWatchlist(
 	request: FastifyRequest,

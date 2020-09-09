@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { ServerResponse } from 'http';
-import AccountModel, { AccountInterface } from '../models/accountModel';
-import { HoldingsModel, PositionModel } from '../models/holdingsModel';
+import AccountModel, { AccountInterface } from '../../models/accountModel';
+import { HoldingsModel, PositionModel } from '../../models/holdingsModel';
 
 async function getAccounts(
 	request: FastifyRequest,

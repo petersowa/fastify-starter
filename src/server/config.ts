@@ -4,14 +4,13 @@ import fastifyCookie from 'fastify-cookie';
 import path from 'path';
 
 import { Server, IncomingMessage, ServerResponse } from 'http';
-import authRoutes from '../routes/auth';
-import stockRoutes from '../routes/stocks';
 import helmet from 'fastify-helmet';
 import formBody from 'fastify-formbody';
+import fastifyCSRF from 'fastify-csrf';
+
 import socketIo from './socket-io';
-
-import 'fastify-csrf';
-
+import authRoutes from '../routes/auth';
+import stockRoutes from '../routes/stocks';
 import registerHandlebars from './handlebars';
 import registerSessions from './sessions';
 import { WebStatsModel } from '../models/webStats';
@@ -19,21 +18,21 @@ import { WebStatsModel } from '../models/webStats';
 import flash from './flash';
 import appState from './app-state';
 
-const fastifyCSRF = require('fastify-csrf');
-
 const PORT: number = parseInt(process.env.PORT || '3999', 10);
+
+const logger = false; //process.env.NODE_ENV !== 'production';
 
 const app: fastify.FastifyInstance<
 	Server,
 	IncomingMessage,
 	ServerResponse
 > = fastify({
-	logger: process.env.NODE_ENV !== 'production',
+	logger,
 	http2: false,
 	trustProxy: true,
 });
 
-console.log('IS_PROD', process.env.NODE_ENV);
+console.log('ENV:', process.env.NODE_ENV);
 
 app.register(helmet);
 

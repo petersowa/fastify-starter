@@ -2,7 +2,7 @@ import hbs from 'handlebars';
 import fastify from 'fastify';
 import { Server, IncomingMessage, ServerResponse } from 'http';
 
-import templateRoutes from '../routes/template';
+import templateRoutes from '../routes/main';
 
 hbs.registerHelper('debugJSON', (value) => {
 	return new hbs.SafeString(`<pre>${JSON.stringify(value, null, 2)}</pre>`);

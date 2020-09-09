@@ -16,9 +16,9 @@ function eventsInit(io: socket.Server): void {
 		});
 	});
 
-	setInterval(() => {
-		io.emit('update', 'server message: ' + Date.now());
-	}, 10000);
+	// setInterval(() => {
+	// 	io.emit('update', 'server message: ' + Date.now());
+	// }, 10000);
 }
 
 export default { init };
