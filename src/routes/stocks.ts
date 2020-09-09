@@ -1,7 +1,7 @@
 import * as fastify from 'fastify';
 import { checkSessionAuth } from '../controllers/protected';
 import { updateWatchlist, getWatchlist } from '../controllers/watchlist';
-import { getQuote, getHistoricalQuote } from '../controllers/quote';
+import { getQuote, getStats, getHistoricalQuote } from '../controllers/quote';
 import {
 	getAccounts,
 	addHoldingPosition,
@@ -19,6 +19,7 @@ async function routes(
 ): Promise<void> {
 	fastify.get('/quote/:symbol', options, getQuote);
 	fastify.get('/quote/:symbol/:date', options, getHistoricalQuote);
+	fastify.get('/stats/:symbol', options, getStats);
 	fastify.get('/watchlist', options, getWatchlist);
 	fastify.post('/watchlist', options, updateWatchlist);
 	fastify.post('/holdings', options, addHoldingsAccount);
