@@ -1,11 +1,39 @@
 import axios, { AxiosResponse } from 'axios';
 import QuotesModel, { QuotesInterface, Quote } from '../models/quotesModel';
 import { getCache, setCache, HashData } from '../utils/hash-cache';
+import { RapidStatsResult } from './types';
 
 const apiToken = process.env.IEX_TOKEN;
 const iexURL = process.env.IEX_URL;
+const rapidURL = process.env.RAPIDAPI_URL;
+const rapidHost = process.env.RAPIDAPI_HOST;
+const rapidKey = process.env.RAPIDAPI_KEY;
 
-export async function fetchQuote(
+async function fetchStats(
+	symbol: string,
+	date?: string
+): Promise<RapidStatsResult | null> {
+	let stats: AxiosResponse<RapidStatsResult> | null = null;
+	try {
+		stats = await axios.get<RapidStatsResult>(
+			`${rapidURL}/get-statistics?region=US&symbol=${symbol}`,
+			{
+				headers: {
+					'x-rapidapi-key': rapidKey,
+					'x-rapidapi-host': rapidHost,
+					useQueryString: true,
+				},
+			}
+		);
+
+		return stats.data || null;
+	} catch (err) {
+		console.error('UNABLE to FETCH STATS', { err });
+		return null;
+	}
+}
+
+async function fetchQuote(
 	symbol: string,
 	date?: string
 ): Promise<Quote | null> {
@@ -26,7 +54,7 @@ export async function fetchQuote(
 			return quote.data;
 		}
 	} catch (err) {
-		console.error('Fetch Quote Error: ', (err as Error).message);
+		console.error('Fetch Quote Error: ', (err as Error).message, { err });
 		return null;
 	}
 	return null;
@@ -74,3 +102,5 @@ async function updateQuoteDB(symbol: string, data: Quote): Promise<boolean> {
 			});
 	});
 }
+
+export { fetchStats, fetchQuote };
