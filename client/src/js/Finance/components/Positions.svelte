@@ -45,7 +45,7 @@
 					},
 					position: currentPosition || {},
 					holding,
-					toggleModal: () => clearModal(),
+					toggleModal: clearModal,
 				},
 			});
 		};
