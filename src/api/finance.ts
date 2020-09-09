@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
-import QuotesModel, { QuotesInterface, Quote } from '../../models/quotesModel';
-import { getCache, setCache, HashData } from '../../utils/hash-cache';
+import QuotesModel, { QuotesInterface, Quote } from '../models/quotesModel';
+import { getCache, setCache, HashData } from '../utils/hash-cache';
 import { RapidStatsResult } from './types';
 
 const apiToken = process.env.IEX_TOKEN;

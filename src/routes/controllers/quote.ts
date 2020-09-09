@@ -2,8 +2,8 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import { ServerResponse } from 'http';
 
 import { Quote } from '../../models/quotesModel';
-import { fetchQuote, fetchStats } from './finance';
-import { RapidStatsResult } from './types';
+import { fetchQuote, fetchStats } from '../../api/finance';
+import { RapidStatsResult } from '../../api/types';
 
 export async function getQuote(
 	request: FastifyRequest,
