@@ -80,7 +80,7 @@
 	<span class="quotes__head">{quote.companyName}</span>
 	<span class="quotes__head2">{quote.primaryExchange}</span>
 	<div class="quotes__row">
-		{#each [['Close Price', quote.latestPrice], ['Percent of 52 Week High', fracHigh.toFixed(2)], ['Change', change]] as item}
+		{#each [['Close Price', quote.latestPrice], ['Percent of 52 Week High', fracHigh.toFixed(2)], ['Change', change], ['Fac Score', quote.facScore.toFixed(1)]] as item}
 			<span>{item[0]}</span>
 			<span class="quotes__row--value">{item[1]}</span>
 		{/each}
