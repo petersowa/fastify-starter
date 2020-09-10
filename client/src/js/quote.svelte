@@ -69,44 +69,6 @@
 		}
 	}
 
-	function calcScore(stats) {
-		try {
-			const { financialData, price } = stats;
-			const sharePrice = financialData.currentPrice.raw;
-			const marketCap = price.marketCap.raw;
-			const revenue = financialData.totalRevenue.raw;
-			const operatingMargin = financialData.operatingMargins.raw;
-			const revenueGrowth = financialData.revenueGrowth.raw;
-			const cash = financialData.totalCash.raw;
-			const debt = financialData.totalDebt.raw;
-
-			const revPerMCap = revenue / marketCap;
-			const revPerMCapPerOpMargin = revPerMCap * operatingMargin;
-			const tDebtPerRev = (cash - debt) / revenue;
-			const facScore =
-				500 * revPerMCapPerOpMargin +
-				500 * operatingMargin * revPerMCap +
-				150 * revenueGrowth * revPerMCap +
-				100 * tDebtPerRev;
-
-			console.log({
-				facScore,
-				revPerMCap,
-				revPerMCapPerOpMargin,
-				tDebtPerRev,
-				revenue,
-				marketCap,
-				operatingMargin,
-				revenueGrowth,
-				cash,
-				debt,
-			});
-			return facScore;
-		} catch (err) {
-			return 'not found';
-		}
-	}
-
 	async function handleSubmit() {
 		const clearSpinner = setSpinner();
 		console.log(symbol);
@@ -119,8 +81,6 @@
 				quotesStore.getQuote(symbol),
 				savedStats || getStats(symbol),
 			]);
-			const facScore = calcScore(stats);
-			console.log({ facScore });
 			if (!savedStats && stats) {
 				sessionStorage.setItem(
 					'stats:' + symbol,
@@ -130,7 +90,7 @@
 			console.log({ stats });
 			if (data) {
 				quote = data;
-				quote.facScore = facScore;
+				quote.facScore = stats.facScore || 'not found';
 				console.log({ quote, error: data.error });
 				clearSpinner();
 			}

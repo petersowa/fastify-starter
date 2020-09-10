@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import QuotesModel, { QuotesInterface, Quote } from '../models/quotesModel';
-import { getCache, setCache, HashData } from '../utils/hash-cache';
+import { HashCache, HashData } from '../utils/hash-cache';
 import { RapidStatsResult } from './types';
 
 const apiToken = process.env.IEX_TOKEN;
@@ -9,12 +9,65 @@ const rapidURL = process.env.RAPIDAPI_URL;
 const rapidHost = process.env.RAPIDAPI_HOST;
 const rapidKey = process.env.RAPIDAPI_KEY;
 
+const quoteCache = new HashCache<Quote>();
+const statsCache = new HashCache<RapidStatsResult>();
+
+function calcScore(stats: RapidStatsResult): number | string {
+	try {
+		const { financialData, price } = stats;
+		const sharePrice = financialData.currentPrice.raw;
+		const marketCap = price.marketCap.raw;
+		const revenue = financialData.totalRevenue.raw;
+		const operatingMargin = financialData.operatingMargins.raw;
+		const revenueGrowth = financialData.revenueGrowth.raw;
+		const cash = financialData.totalCash.raw;
+		const debt = financialData.totalDebt.raw;
+
+		const revPerMCap = revenue / marketCap;
+		const revPerMCapPerOpMargin = revPerMCap * operatingMargin;
+		const tDebtPerRev = (cash - debt) / revenue;
+		const facScore =
+			500 * revPerMCapPerOpMargin +
+			500 * operatingMargin * revPerMCap +
+			150 * revenueGrowth * revPerMCap +
+			100 * tDebtPerRev;
+
+		console.log({
+			facScore,
+			revPerMCap,
+			revPerMCapPerOpMargin,
+			tDebtPerRev,
+			revenue,
+			marketCap,
+			operatingMargin,
+			revenueGrowth,
+			cash,
+			debt,
+		});
+		return facScore;
+	} catch (err) {
+		return 'not found';
+	}
+}
+
 async function fetchStats(
 	symbol: string,
 	date?: string
 ): Promise<RapidStatsResult | null> {
 	let stats: AxiosResponse<RapidStatsResult> | null = null;
+	let facScore: number | string;
+
 	try {
+		const cacheStats: HashData<
+			RapidStatsResult
+		> | null = statsCache.getCache(symbol);
+
+		if (cacheStats && cacheStats.data) {
+			console.log('stats cache HIT');
+			cacheStats.data.facScore = calcScore(cacheStats.data);
+			return cacheStats.data;
+		}
+
 		stats = await axios.get<RapidStatsResult>(
 			`${rapidURL}/get-statistics?region=US&symbol=${symbol}`,
 			{
@@ -26,11 +79,17 @@ async function fetchStats(
 			}
 		);
 
-		return stats.data || null;
+		if (stats.data) {
+			stats.data.facScore = calcScore(stats.data);
+			statsCache.setCache(symbol, stats.data);
+			return stats.data;
+		}
 	} catch (err) {
-		console.error('UNABLE to FETCH STATS', { err });
+		console.error('ERROR: fetching stats', { err });
 		return null;
 	}
+	console.error('UNABLE to FETCH STATS');
+	return null;
 }
 
 async function fetchQuote(
@@ -41,7 +100,7 @@ async function fetchQuote(
 	// let stats: AxiosResponse<RapidStatsResult> | null = null;
 
 	try {
-		const cacheData: HashData | null = getCache(symbol);
+		const cacheData: HashData<Quote> | null = quoteCache.getCache(symbol);
 		if (cacheData) {
 			console.log('hit');
 			return cacheData.data || null;
@@ -54,7 +113,7 @@ async function fetchQuote(
 		]);
 		if (quote) {
 			// quote.data.stats=stats;
-			setCache(symbol, quote.data);
+			quoteCache.setCache(symbol, quote.data);
 			await updateQuoteDB(symbol, quote.data);
 			return quote.data;
 		}
