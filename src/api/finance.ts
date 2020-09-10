@@ -1,7 +1,12 @@
 import axios, { AxiosResponse } from 'axios';
+import chalk from 'chalk';
 import QuotesModel, { QuotesInterface, Quote } from '../models/quotesModel';
+import StatsModel, { StatsInterface } from '../models/statsModel';
 import { HashCache, HashData } from '../utils/hash-cache';
 import { RapidStatsResult } from './types';
+
+const MAXAGE_STATS = 1000 * 60 * 60 * 24 * 30;
+const MAXAGE_QUOTE = 1000 * 60 * 60;
 
 const apiToken = process.env.IEX_TOKEN;
 const iexURL = process.env.IEX_URL;
@@ -10,7 +15,10 @@ const rapidHost = process.env.RAPIDAPI_HOST;
 const rapidKey = process.env.RAPIDAPI_KEY;
 
 const quoteCache = new HashCache<Quote>();
-const statsCache = new HashCache<RapidStatsResult>();
+const statsCache = new HashCache<RapidStatsResult>(MAXAGE_STATS, 997);
+
+const missCache = chalk.bgRed.black;
+const chalkData = chalk.yellow;
 
 function calcScore(stats: RapidStatsResult): number | string {
 	try {
@@ -55,6 +63,7 @@ async function fetchStats(
 	date?: string
 ): Promise<RapidStatsResult | null> {
 	let stats: AxiosResponse<RapidStatsResult> | null = null;
+	let statsData: RapidStatsResult | null = null;
 	let facScore: number | string;
 
 	try {
@@ -68,21 +77,36 @@ async function fetchStats(
 			return cacheStats.data;
 		}
 
-		stats = await axios.get<RapidStatsResult>(
-			`${rapidURL}/get-statistics?region=US&symbol=${symbol}`,
-			{
-				headers: {
-					'x-rapidapi-key': rapidKey,
-					'x-rapidapi-host': rapidHost,
-					useQueryString: true,
-				},
+		const statsDB = await getLatestSavedStats(symbol);
+		console.log(chalkData(statsDB?.date));
+		if (
+			statsDB &&
+			statsDB.data &&
+			!isExpiredData(statsDB.date, MAXAGE_STATS)
+		) {
+			statsData = statsDB.data;
+		} else {
+			console.log(missCache('FETCHING FROM YAHOO API'));
+			stats = await axios.get<RapidStatsResult>(
+				`${rapidURL}/get-statistics?region=US&symbol=${symbol}`,
+				{
+					headers: {
+						'x-rapidapi-key': rapidKey,
+						'x-rapidapi-host': rapidHost,
+						useQueryString: true,
+					},
+				}
+			);
+			if (stats && stats.data) {
+				statsData = stats.data;
+				await updateStatsDB(symbol, statsData);
 			}
-		);
+		}
 
-		if (stats.data) {
-			stats.data.facScore = calcScore(stats.data);
-			statsCache.setCache(symbol, stats.data);
-			return stats.data;
+		if (statsData) {
+			statsData.facScore = calcScore(statsData);
+			statsCache.setCache(symbol, statsData);
+			return statsData;
 		}
 	} catch (err) {
 		console.error('ERROR: fetching stats', { err });
@@ -105,6 +129,7 @@ async function fetchQuote(
 			console.log('hit');
 			return cacheData.data || null;
 		}
+		console.log(missCache('FETCHING FROM IEX API'));
 		const [quote, stats] = await Promise.all([
 			axios.get<Quote>(
 				`${iexURL}/stock/${symbol}/quote?token=${apiToken}`
@@ -140,7 +165,7 @@ function getLatestSavedQuote(symbol: string): Promise<QuotesInterface | null> {
 async function updateQuoteDB(symbol: string, data: Quote): Promise<boolean> {
 	const quote = await getLatestSavedQuote(symbol);
 	if (quote) {
-		if (Date.now() - Date.parse(quote.date) < 1000 * 60 * 15) {
+		if (!isExpiredData(quote.date, MAXAGE_QUOTE)) {
 			console.log('found recent quote');
 			return new Promise((resolve, reject) => resolve(false));
 		}
@@ -163,6 +188,54 @@ async function updateQuoteDB(symbol: string, data: Quote): Promise<boolean> {
 			.catch((err) => {
 				reject(false);
 				console.error({ QuoteModel: err.message });
+			});
+	});
+}
+
+function getLatestSavedStats(symbol: string): Promise<StatsInterface | null> {
+	return new Promise((resolve, reject) => {
+		StatsModel.findOne({ symbol })
+			.sort({ date: -1 })
+			.then((data) => {
+				resolve(data);
+			})
+			.catch((err) => {
+				reject(err);
+			});
+	});
+}
+
+function isExpiredData(dataDate: string, maxAge: number): boolean {
+	console.log('check if expired', dataDate, maxAge);
+	const isExpired = Date.now() - Date.parse(dataDate) > maxAge;
+	console.log({ isExpired });
+	return isExpired;
+}
+
+async function updateStatsDB(
+	symbol: string,
+	data: RapidStatsResult
+): Promise<boolean> {
+	const stats = await getLatestSavedStats(symbol);
+	if (stats) {
+		if (!isExpiredData(stats.date, MAXAGE_STATS)) {
+			console.log('found recent stats in db');
+			return new Promise((resolve, reject) => resolve(false));
+		}
+	}
+	return new Promise((resolve, reject) => {
+		const stats = new StatsModel({
+			symbol,
+			data,
+		});
+		stats
+			.save()
+			.then((doc) => {
+				resolve(true);
+			})
+			.catch((err) => {
+				reject(false);
+				console.error({ StatsModel: err.message });
 			});
 	});
 }
