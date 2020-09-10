@@ -10,6 +10,7 @@ export interface RapidStatsResult {
 	pageViews: PageViews;
 	quoteData: QuoteData;
 	mktmData: MktmData;
+	facScore?: string | number;
 }
 
 export interface CalendarEvents {
