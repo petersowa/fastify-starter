@@ -110,13 +110,18 @@ const addHoldingsAccount: UpdateFunction<{}> = async function (request, reply) {
 	}
 
 	try {
-		const userAccount = await AccountModel.findOne({
+		let userAccount = await AccountModel.findOne({
 			user: request.session.userId,
 		});
+
+		if (!userAccount) {
+			userAccount = new AccountModel({ user: request.session.userId });
+		}
+
 		if (userAccount) {
-			const holdingsDoc = await HoldingsModel.findOne({
-				name: holdingsName,
-			});
+			const holdingsDoc = userAccount.holdings.find(
+				(holding) => holding.name === holdingsName
+			);
 			if (holdingsDoc) {
 				reply.code(409);
 				return { id: holdingsDoc.id };
