@@ -59,6 +59,7 @@ accountStore.addHoldingsAccount = async (accountName) => {
 		console.log({ accountName, patchRes });
 		if (patchRes.status == 200) {
 			accountStore.update((storeData) => {
+				if (!storeData.holdings) storeData.holdings = [];
 				storeData.holdings.push(patchRes.data.data);
 
 				return storeData;
