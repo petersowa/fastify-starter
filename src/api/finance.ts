@@ -37,7 +37,8 @@ async function fetchQuote(
 	symbol: string,
 	date?: string
 ): Promise<Quote | null> {
-	let quote: AxiosResponse<Quote> | null = null;
+	// let quote: AxiosResponse<Quote> | null = null;
+	// let stats: AxiosResponse<RapidStatsResult> | null = null;
 
 	try {
 		const cacheData: HashData | null = getCache(symbol);
@@ -45,10 +46,14 @@ async function fetchQuote(
 			console.log('hit');
 			return cacheData.data || null;
 		}
-		quote = await axios.get<Quote>(
-			`${iexURL}/stock/${symbol}/quote?token=${apiToken}`
-		);
+		const [quote, stats] = await Promise.all([
+			axios.get<Quote>(
+				`${iexURL}/stock/${symbol}/quote?token=${apiToken}`
+			),
+			null,
+		]);
 		if (quote) {
+			// quote.data.stats=stats;
 			setCache(symbol, quote.data);
 			await updateQuoteDB(symbol, quote.data);
 			return quote.data;
