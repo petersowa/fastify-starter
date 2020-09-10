@@ -1,6 +1,6 @@
 const MINUTES = 60 * 1000;
 const HOURS = 60 * MINUTES;
-const QUOTE_AGE = 0.5 * HOURS;
+const INTERVAL_AGE = 0.5 * HOURS;
 
 export interface HashData<T> {
 	key: string;
@@ -10,9 +10,11 @@ export interface HashData<T> {
 
 export class HashCache<T> {
 	private table: HashData<T>[];
+	private maxIntervalAge = INTERVAL_AGE;
 
-	constructor() {
-		this.table = new Array(541);
+	constructor(maxIntervalAge = INTERVAL_AGE, hashElements = 541) {
+		this.table = new Array(hashElements);
+		this.maxIntervalAge = maxIntervalAge;
 	}
 
 	getCache(key: string): HashData<T> | null {
@@ -20,7 +22,7 @@ export class HashCache<T> {
 		const hashTable = this.table;
 
 		if (index in hashTable) {
-			if (isExpired(hashTable[index].time)) return null;
+			if (this.isExpired(hashTable[index].time)) return null;
 			const data = hashTable[index];
 			if (data.key === key) return data;
 			console.log('hash collision');
@@ -33,7 +35,7 @@ export class HashCache<T> {
 		const hashTable = this.table;
 
 		if (index in hashTable) {
-			if (isExpired(hashTable[index].time)) {
+			if (this.isExpired(hashTable[index].time)) {
 				hashTable[index] = { key, data, time: Date.now() };
 				return true;
 			}
@@ -51,12 +53,9 @@ export class HashCache<T> {
 		}
 		return hash;
 	};
-}
 
-const isExpired = (
-	timeStamp: number,
-	interval: number = QUOTE_AGE
-): boolean => {
-	if (Date.now() - timeStamp > interval) return true;
-	return false;
-};
+	isExpired(timeStamp: number): boolean {
+		if (Date.now() - timeStamp > this.maxIntervalAge) return true;
+		return false;
+	}
+}
