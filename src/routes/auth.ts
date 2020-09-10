@@ -58,7 +58,7 @@ async function routes(
 		// console.log(username, password, passwordMatch);
 		if (password !== passwordMatch) {
 			// request.flash('auth', 'Passwords do not match.');
-			request.session.flash.add('auth', 'Passwords do not match');
+			request.session.flash.add('auth', 'passwords do not match');
 			return reply.redirect('/register');
 		}
 		const newUser = new UserModel({
@@ -68,11 +68,17 @@ async function routes(
 		});
 		newUser
 			.save()
-			.then((result: {}) => {
+			.then((user) => {
+				request.session.isAuth = true;
+				request.session.username = username; // email
+				request.session.userId = user.id;
 				return reply.redirect('/');
 			})
 			.catch((err: Error) => {
-				request.session.flash.add('auth', err.message);
+				request.session.flash.add(
+					'auth',
+					'duplicate or unable to register'
+				);
 				return reply.redirect('/register');
 			});
 	});
