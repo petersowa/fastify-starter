@@ -83,6 +83,7 @@ async function fetchStats(
 			!isExpiredData(statsDB.date, MAXAGE_STATS)
 		) {
 			statsData = statsDB.data;
+			console.log('got stats from db');
 		} else {
 			console.log(missCache('FETCHING FROM YAHOO API', symbol));
 			stats = await axios.get<RapidStatsResult>(
@@ -99,13 +100,12 @@ async function fetchStats(
 			);
 			if (stats && stats.data) {
 				statsData = stats.data;
-				if (stats.data.quoteType.quoteType === 'EQUITY')
-					await updateStatsDB(symbol, statsData);
+				await updateStatsDB(symbol, statsData);
 			}
 		}
-
 		if (statsData) {
-			statsData.facScore = calcScore(statsData);
+			if (statsData.quoteType.quoteType === 'EQUITY')
+				statsData.facScore = calcScore(statsData);
 			statsCache.setCache(symbol, statsData);
 			return statsData;
 		}
