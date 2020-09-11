@@ -131,13 +131,15 @@ async function fetchQuote(
 		}
 
 		const quoteDB = await getLatestSavedQuote(symbol);
-		console.log(chalkData(quoteDB?.date));
+		// console.log(chalkData(quoteDB?.date));
 		if (
 			quoteDB &&
 			quoteDB.data &&
 			!isExpiredData(quoteDB.date, MAXAGE_QUOTE)
-		)
+		) {
+			quoteCache.setCache(symbol, quoteDB.data);
 			return quoteDB.data;
+		}
 
 		console.log(missCache('FETCHING FROM IEX API', symbol));
 		const [quote, stats] = await Promise.all([
@@ -216,9 +218,9 @@ function getLatestSavedStats(symbol: string): Promise<StatsInterface | null> {
 }
 
 function isExpiredData(dataDate: string, maxAge: number): boolean {
-	console.log('check if expired', dataDate, maxAge);
+	// console.log('check if expired', dataDate, maxAge);
 	const isExpired = Date.now() - Date.parse(dataDate) > maxAge;
-	console.log({ isExpired });
+	// console.log({ isExpired });
 	return isExpired;
 }
 
