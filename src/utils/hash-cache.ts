@@ -45,6 +45,7 @@ export class HashCache<T> {
 	setCache(key: string, data: T): boolean {
 		const index = this.hashStringToInt(key);
 		const hashTable = this.table;
+		const cacheData = { key, data, time: Date.now() };
 
 		let cached = hashTable[index];
 
@@ -52,17 +53,14 @@ export class HashCache<T> {
 			if (Array.isArray(cached)) {
 				cached = cached.filter((item) => !this.isExpired(item.time));
 				if (cached.length === 0) {
-					hashTable[index] = { key, data, time: Date.now() };
+					hashTable[index] = cacheData;
 				}
-				hashTable[index] = [...cached, { key, data, time: Date.now() }];
+				hashTable[index] = [...cached, cacheData];
 			} else {
 				if (this.isExpired(cached.time)) {
-					hashTable[index] = { key, data, time: Date.now() };
+					hashTable[index] = cacheData;
 				} else {
-					hashTable[index] = [
-						cached,
-						{ key, data, time: Date.now() },
-					];
+					hashTable[index] = [cached, cacheData];
 				}
 			}
 		} else {
