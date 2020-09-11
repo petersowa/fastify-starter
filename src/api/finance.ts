@@ -84,7 +84,7 @@ async function fetchStats(
 		) {
 			statsData = statsDB.data;
 		} else {
-			console.log(missCache('FETCHING FROM YAHOO API'));
+			console.log(missCache('FETCHING FROM YAHOO API', symbol));
 			stats = await axios.get<RapidStatsResult>(
 				`${rapidURL}/get-statistics?region=US&symbol=${symbol
 					.split('.')
@@ -138,7 +138,7 @@ async function fetchQuote(
 		)
 			return quoteDB.data;
 
-		console.log(missCache('FETCHING FROM IEX API'));
+		console.log(missCache('FETCHING FROM IEX API', symbol));
 		const [quote, stats] = await Promise.all([
 			axios.get<Quote>(
 				`${iexURL}/stock/${symbol}/quote?token=${apiToken}`
@@ -175,11 +175,11 @@ async function updateQuoteDB(symbol: string, data: Quote): Promise<boolean> {
 	const quote = await getLatestSavedQuote(symbol);
 	if (quote) {
 		if (!isExpiredData(quote.date, MAXAGE_QUOTE)) {
-			console.log('found recent quote');
+			console.log('found recent quote', symbol);
 			return new Promise((resolve, reject) => resolve(false));
 		}
 		if (quote.data.latestUpdate === data.latestUpdate) {
-			console.log('same quote');
+			console.log('same quote', symbol);
 			return false;
 		}
 	}
