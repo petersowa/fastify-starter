@@ -66,17 +66,19 @@ export class HashCache<T> {
 		} else {
 			hashTable[index] = { key, data, time: Date.now() };
 		}
-		this.list();
 		return true;
 	}
 
 	list(): void {
 		const { table } = this;
-		table.forEach((cached) => {
+		table.forEach((cached, i) => {
 			if (Array.isArray(cached)) {
-				cached.forEach((item) => console.log(chalk.blue(item.key)));
+				console.log(
+					i,
+					chalk.blue(cached.map((item) => item.key).join(','))
+				);
 			} else {
-				console.log(chalk.blueBright(cached.key));
+				console.log(i, chalk.blue(cached.key));
 			}
 		});
 	}
