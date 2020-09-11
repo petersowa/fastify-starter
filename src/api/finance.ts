@@ -99,7 +99,8 @@ async function fetchStats(
 			);
 			if (stats && stats.data) {
 				statsData = stats.data;
-				await updateStatsDB(symbol, statsData);
+				if (stats.data.quoteType.quoteType === 'EQUITY')
+					await updateStatsDB(symbol, statsData);
 			}
 		}
 
