@@ -64,7 +64,6 @@ async function fetchStats(
 ): Promise<RapidStatsResult | null> {
 	let stats: AxiosResponse<RapidStatsResult> | null = null;
 	let statsData: RapidStatsResult | null = null;
-	let facScore: number | string;
 
 	try {
 		const cacheStats: HashData<
@@ -72,7 +71,6 @@ async function fetchStats(
 		> | null = statsCache.getCache(symbol);
 
 		if (cacheStats && cacheStats.data) {
-			console.log('stats cache HIT');
 			cacheStats.data.facScore = calcScore(cacheStats.data);
 			return cacheStats.data;
 		}
@@ -128,9 +126,18 @@ async function fetchQuote(
 	try {
 		const cacheData: HashData<Quote> | null = quoteCache.getCache(symbol);
 		if (cacheData) {
-			console.log('hit');
 			return cacheData.data || null;
 		}
+
+		const quoteDB = await getLatestSavedQuote(symbol);
+		console.log(chalkData(quoteDB?.date));
+		if (
+			quoteDB &&
+			quoteDB.data &&
+			!isExpiredData(quoteDB.date, MAXAGE_QUOTE)
+		)
+			return quoteDB.data;
+
 		console.log(missCache('FETCHING FROM IEX API'));
 		const [quote, stats] = await Promise.all([
 			axios.get<Quote>(
