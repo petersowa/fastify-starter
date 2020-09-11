@@ -10,7 +10,6 @@ async function getAccounts(
 	const accounts = await AccountModel.findOne({
 		user: request.session.userId,
 	}).populate('holdings');
-	console.log(JSON.stringify(accounts, null, 2));
 
 	if (!accounts) return null;
 	return accounts;
