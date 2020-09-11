@@ -1,3 +1,5 @@
+import chalk from 'chalk';
+
 const MINUTES = 60 * 1000;
 const HOURS = 60 * MINUTES;
 const INTERVAL_AGE = 0.5 * HOURS;
@@ -9,8 +11,8 @@ export interface HashData<T> {
 }
 
 export class HashCache<T> {
-	private table: HashData<T>[];
-	private maxIntervalAge = INTERVAL_AGE;
+	private table: (HashData<T> | HashData<T>[])[];
+	private maxIntervalAge: number;
 
 	constructor(maxIntervalAge = INTERVAL_AGE, hashElements = 541) {
 		this.table = new Array(hashElements);
@@ -21,12 +23,22 @@ export class HashCache<T> {
 		const index = this.hashStringToInt(key);
 		const hashTable = this.table;
 
-		if (index in hashTable) {
-			if (this.isExpired(hashTable[index].time)) return null;
-			const data = hashTable[index];
-			if (data.key === key) return data;
-			console.log('hash collision');
+		const cached = hashTable[index];
+
+		if (!cached) return null;
+
+		if (!Array.isArray(cached)) {
+			if (this.isExpired(cached.time)) return null;
+			if (cached.key === key) return cached;
+		} else {
+			const item = cached.find((item) => item.key === key);
+			if (item) {
+				if (this.isExpired(item.time)) return null;
+				return item;
+			}
+			return null;
 		}
+
 		return null;
 	}
 
@@ -34,14 +46,28 @@ export class HashCache<T> {
 		const index = this.hashStringToInt(key);
 		const hashTable = this.table;
 
-		if (index in hashTable) {
-			if (this.isExpired(hashTable[index].time)) {
-				hashTable[index] = { key, data, time: Date.now() };
-				return true;
+		let cached = hashTable[index];
+
+		if (cached) {
+			if (Array.isArray(cached)) {
+				cached = cached.filter((item) => !this.isExpired(item.time));
+				if (cached.length === 0) {
+					hashTable[index] = { key, data, time: Date.now() };
+				}
+				hashTable[index] = [...cached, { key, data, time: Date.now() }];
+			} else {
+				if (this.isExpired(cached.time)) {
+					hashTable[index] = { key, data, time: Date.now() };
+				} else {
+					hashTable[index] = [
+						cached,
+						{ key, data, time: Date.now() },
+					];
+				}
 			}
-			return false;
+		} else {
+			hashTable[index] = { key, data, time: Date.now() };
 		}
-		hashTable[index] = { key, data, time: Date.now() };
 		return true;
 	}
 
@@ -55,7 +81,6 @@ export class HashCache<T> {
 	};
 
 	isExpired(timeStamp: number): boolean {
-		if (Date.now() - timeStamp > this.maxIntervalAge) return true;
-		return false;
+		return Date.now() - timeStamp > this.maxIntervalAge;
 	}
 }
