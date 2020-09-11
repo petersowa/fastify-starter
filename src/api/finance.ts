@@ -88,7 +88,9 @@ async function fetchStats(
 		} else {
 			console.log(missCache('FETCHING FROM YAHOO API'));
 			stats = await axios.get<RapidStatsResult>(
-				`${rapidURL}/get-statistics?region=US&symbol=${symbol}`,
+				`${rapidURL}/get-statistics?region=US&symbol=${symbol
+					.split('.')
+					.join('-')}`,
 				{
 					headers: {
 						'x-rapidapi-key': rapidKey,
