@@ -66,7 +66,19 @@ export class HashCache<T> {
 		} else {
 			hashTable[index] = { key, data, time: Date.now() };
 		}
+		this.list();
 		return true;
+	}
+
+	list(): void {
+		const { table } = this;
+		table.forEach((cached) => {
+			if (Array.isArray(cached)) {
+				cached.forEach((item) => console.log(chalk.blue(item.key)));
+			} else {
+				console.log(chalk.blueBright(cached.key));
+			}
+		});
 	}
 
 	hashStringToInt: (str: string) => number = (str) => {
