@@ -2,7 +2,7 @@
 
 html {
 	box-sizing: border-box;
-	font-size: calc(0.9em + 0.1vw);
+	font-size: calc(1.1em + 0.1vw);
 	scroll-behavior: smooth;
 }
 
