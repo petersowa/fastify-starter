@@ -91,6 +91,7 @@
 			if (data) {
 				quote = data;
 				quote.facScore = stats.facScore || 'not found';
+				quote.stats = stats;
 				console.log({ quote, error: data.error });
 				clearSpinner();
 			}
@@ -147,7 +148,7 @@
 		margin-top: 1em;
 	}
 	form {
-		padding: 2em;
+		padding: 1em;
 		& > button {
 			margin: 10px;
 		}
@@ -187,13 +188,6 @@
 <div class="main">
 	<div class="apps">
 		<div class="app">
-			<form on:submit|preventDefault={handleSubmit}>
-				<label for="stock-name">Stock Name:</label>
-				<input id="stock-name" type="string" bind:value={symbol} />
-				<button type="submit">
-					<Fa icon={faSearch} />
-				</button>
-			</form>
 			{#if quote.symbol}
 				<div class="app">
 					<Quote {quote} {addToWatchlist} />
@@ -201,6 +195,13 @@
 			{:else if quote.error}
 				<pre>{quote.error}</pre>
 			{/if}
+			<form on:submit|preventDefault={handleSubmit}>
+				<label for="stock-name">Stock Name:</label>
+				<input id="stock-name" type="string" bind:value={symbol} />
+				<button type="submit">
+					<Fa icon={faSearch} />
+				</button>
+			</form>
 		</div>
 	</div>
 	<div class="apps">
