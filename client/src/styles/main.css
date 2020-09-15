@@ -13,6 +13,11 @@ html {
 	box-sizing: inherit;
 }
 
+input:focus,
+input:hover {
+	filter: brightness(90%) hue-rotate(90deg);
+}
+
 :root {
 	--clr-header: hsl(220, 30%, 50%);
 	--clr-header-h2: #867555;
