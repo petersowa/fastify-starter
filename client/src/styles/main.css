@@ -2,7 +2,7 @@
 
 html {
 	box-sizing: border-box;
-	font-size: calc(1.1em + 0.1vw);
+	font-size: calc(1.1em + 0.05vw);
 	scroll-behavior: smooth;
 }
 
@@ -233,12 +233,13 @@ a:focus::before {
 	flex-grow: 1;
 	z-index: 1;
 	background-color: var(--clr-body);
+	max-width: calc(100vw - 1em);
 }
 
 .h-flex-container {
 	display: flex;
 	/* max-width: 120rem; */
-	min-width: min-content;
+	/* min-width: min-content; */
 	/* width: 80vw; */
 	/* background-color: var(--clr-content); */
 	flex-direction: row;
