@@ -22,14 +22,40 @@
 	let refreshInterval = null;
 	let modal;
 
-	onMount(async () => {
+	console.log('ADD VISIBILITY CHANGE LISTENER');
+	document.addEventListener(
+		'visibilitychange',
+		async () => {
+			const { visibilityState } = document;
+			console.log(document.visibilityState);
+			if (visibilityState == 'visible' || refreshInterval === null) {
+				await initRefresh();
+				console.log('SET:', { refreshInterval });
+			} else {
+				clearInterval(refreshInterval);
+				refreshInterval = null;
+				console.log('CLEARED REFRESH');
+			}
+		},
+		false
+	);
+
+	async function initRefresh() {
 		const clearSpinner = setSpinner();
 		await refreshWatchlist();
 		clearSpinner();
-		refreshInterval = setInterval(() => {
-			refreshWatchlist();
-			quotesStore.refresh();
-		}, 1000 * 60 * 10);
+
+		if (!refreshInterval) {
+			refreshInterval = setInterval(() => {
+				refreshWatchlist();
+				quotesStore.refresh();
+			}, 1000 * 60 * 10);
+		}
+	}
+
+	onMount(async () => {
+		await initRefresh();
+		console.log('MOUNT:', { refreshInterval });
 
 		const appTitle = document.getElementById('app-title');
 		appTitle.innerHTML = 'GraniteCode.com - Investments';
