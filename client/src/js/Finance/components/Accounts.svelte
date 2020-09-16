@@ -90,7 +90,7 @@
 		justify-content: left;
 		margin: 0;
 		padding: 1em 1em;
-		width: 100%;
+		min-width: 25rem;
 		&__row {
 			display: flex;
 			overflow: hidden;
@@ -146,38 +146,38 @@
 		{#each accountList.holdings as holding}
 			<li class="data__row">
 				<span>{holding.name || 'account name'}</span>
-				<i class="fas fa-camera"></i>
+				<i class="fas fa-camera" />
 				<div class="control">
 					<button class="item-control" aria-label="view">
-						<Fa icon="{faBinoculars}" color="gray" />
+						<Fa icon={faBinoculars} color="gray" />
 					</button>
 					<button
 						class="item-control"
 						aria-label="edit"
-						on:click="{handleEditAccount}">
-						<Fa icon="{faEdit}" color="gray" />
+						on:click={handleEditAccount}>
+						<Fa icon={faEdit} color="gray" />
 					</button>
 					<button
 						class="item-control"
 						aria-label="delete"
-						on:click="{handleDeleteAccount(holding._id)}">
-						<Fa icon="{faMinusCircle}" color="red" />
+						on:click={handleDeleteAccount(holding._id)}>
+						<Fa icon={faMinusCircle} color="red" />
 					</button>
 				</div>
 			</li>
 
-			<Positions holding="{holding}" />
+			<Positions {holding} />
 
 			<HoldingsSummary
-				holdingSummary="{holding.name in holdingSummary && holdingSummary[holding.name]}" />
+				holdingSummary={holding.name in holdingSummary && holdingSummary[holding.name]} />
 		{/each}
 	{/if}
 	<div class="control">
 		<button
 			class="round"
 			aria-label="add account"
-			on:click="{handleEditAccount}">
-			<Fa icon="{faPlus}" size="2x" color="green" />
+			on:click={handleEditAccount}>
+			<Fa icon={faPlus} size="2x" color="green" />
 		</button>
 	</div>
 </ul>
