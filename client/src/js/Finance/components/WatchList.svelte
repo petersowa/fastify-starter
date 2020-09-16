@@ -68,7 +68,7 @@
 		display: grid;
 		margin: 0;
 		padding: 0;
-		grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(12em, 1fr));
 		&__row {
 			display: grid;
 			position: relative;
@@ -197,11 +197,11 @@
 <ul class="watchlist" id="watchlist">
 	{#each watchItems as quote (quote.symbol)}
 		<li
-			data-sym="{quote.symbol}"
+			data-sym={quote.symbol}
 			class="watchlist__row"
 			style="--priceColor:{changeColor(quote.changePercent)};--price52WeekColor:{changeColor(quote.latestPrice / quote.week52High - 0.9)}">
 			<div class="grid-handle drag-handle">
-				<Fa icon="{faArrowsAlt}" />
+				<Fa icon={faArrowsAlt} />
 			</div>
 			<span class="grid-symbol">{quote.symbol}</span>
 			<span class="justify-right grid-price">
@@ -225,13 +225,13 @@
 				<span class="controls">
 					<button
 						class="btn-control"
-						on:click="{removeSymbol(quote.symbol)}">
-						<Fa icon="{faMinusCircle}" color="red" />
+						on:click={removeSymbol(quote.symbol)}>
+						<Fa icon={faMinusCircle} color="red" />
 					</button>
 					<button
 						class="btn-control"
-						on:click="{removeSymbol(quote.symbol)}">
-						<Fa icon="{faPlusCircle}" color="blue" />
+						on:click={removeSymbol(quote.symbol)}>
+						<Fa icon={faPlusCircle} color="blue" />
 					</button>
 				</span>
 			</div>
