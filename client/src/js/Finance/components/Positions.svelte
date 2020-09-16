@@ -55,7 +55,7 @@
 <style lang="scss">
 	.position {
 		display: grid;
-		grid-template-columns: 0.5fr 1fr 0.5fr 0.8fr 0.5fr 0.8fr 0.8fr 8em;
+		grid-template-columns: 0.5fr 1fr 0.5fr 0.8fr 0.8fr 0.6fr 0.6fr 5em;
 		grid-auto-rows: 1.8em;
 		align-items: center;
 		justify-items: right;
