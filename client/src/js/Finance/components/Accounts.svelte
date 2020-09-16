@@ -90,7 +90,7 @@
 		justify-content: left;
 		margin: 0;
 		padding: 1em 1em;
-		min-width: 25rem;
+		min-width: 20rem;
 		&__row {
 			display: flex;
 			overflow: hidden;
