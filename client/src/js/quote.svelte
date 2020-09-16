@@ -46,6 +46,7 @@
 		clearSpinner();
 
 		if (!refreshInterval) {
+			console.log('SET REFRESH INTERVAL');
 			refreshInterval = setInterval(() => {
 				refreshWatchlist();
 				quotesStore.refresh();
