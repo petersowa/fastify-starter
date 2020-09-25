@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Lora|PT+Serif|Slabo+27px|Alegreya+Sans+SC|Merriweather|Noto+Serif|Open+Sans|Roboto|Source+Sans+Pro|Vollkorn|Work+Sans|Abril+Fatface&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Lora|PT+Serif|Slabo+27px|Alegreya+Sans+SC|Merriweather|Noto+Serif|Open+Sans|Roboto|Source+Sans+Pro|Vollkorn|Work+Sans|Righteous&display=swap');
 
 html {
 	box-sizing: border-box;
@@ -57,9 +57,9 @@ html {
 h1,
 h2,
 h3 {
-	font-family: 'Times New Roman', 'PT Serif', 'Source sans Pro', 'Vollkorn',
-		'Abril Fatface', 'Alegreya Sans SC', Times, serif;
-	/* font-weight: 600; */
+	font-family: 'Righteous', 'Times New Roman', 'PT Serif', 'Source sans Pro',
+		'Vollkorn', 'Abril Fatface', 'Alegreya Sans SC', Times, serif;
+	font-weight: 400;
 	letter-spacing: 0.05em;
 	/* text-transform: capitalize; */
 	padding: 0.1rem 0.3rem;
@@ -87,6 +87,7 @@ ul {
 img {
 	max-width: 100%;
 	height: auto;
+	display: block;
 }
 
 p {
