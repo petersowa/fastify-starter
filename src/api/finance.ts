@@ -6,7 +6,7 @@ import { HashCache, HashData } from '../utils/hash-cache';
 import { RapidStatsResult } from './types';
 
 const MAXAGE_STATS = 1000 * 60 * 60 * 24 * 30;
-const MAXAGE_QUOTE = 1000 * 60 * 60;
+const MAXAGE_QUOTE = 1000 * 60 * 5;
 
 const apiToken = process.env.IEX_TOKEN;
 const iexURL = process.env.IEX_URL;
