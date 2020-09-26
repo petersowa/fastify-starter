@@ -26,7 +26,7 @@
 		"rxjs": "^6.6.3",
 		"socket.io-client": "^2.3.0",
 		"sortablejs": "^1.12.0",
-		"svelte": "^3.26.0",
+		"svelte": "^3.28.0",
 		"svelte-fa": "^2.1.1",
 		"svelte-preprocess": "^3.9.12"
 	},
@@ -35,7 +35,7 @@
 		"@babel/preset-env": "^7.11.5",
 		"@rollup/plugin-typescript": "^5.0.2",
 		"@tsconfig/svelte": "^1.0.10",
-		"svelte-check": "^1.0.49",
+		"svelte-check": "^1.0.50",
 		"typescript": "^3.9.7"
 	}
 }
