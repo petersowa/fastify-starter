@@ -1,7 +1,7 @@
 {
 	"extends": "@tsconfig/svelte/tsconfig.json",
 
-	"include": ["src/js/**/*"],
+	"include": ["src/js/**/*", "src/node_modules"],
 	"exclude": ["node_modules/*", "__sapper__/*", "public/*"],
 	"compilerOptions": {
 		"rootDir": "src",
@@ -10,6 +10,8 @@
 		"paths": {
 			"*": ["node_modules/*", "src/types/*"]
 		},
-		"module": "ESNext"
+		"lib": ["DOM", "ESNext"],
+		"module": "ESNext",
+		"target": "ESNext"
 	}
 }
