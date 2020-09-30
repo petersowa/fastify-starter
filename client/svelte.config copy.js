@@ -3,7 +3,11 @@ const sass = require('node-sass');
 module.exports = {
 	preprocess: {
 		style: async ({ content, attributes }) => {
-			if (attributes.type !== 'text/scss' && attributes.lang !== 'scss')
+			if (
+				attributes.type !== 'text/scss' &&
+				attributes.lang !== 'scss' &&
+				attributes.lang !== 'typescript'
+			)
 				return;
 
 			return new Promise((resolve, reject) => {
