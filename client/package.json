@@ -12,12 +12,12 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@fortawesome/free-solid-svg-icons": "^5.14.0",
+		"@fortawesome/free-solid-svg-icons": "^5.15.0",
 		"date-fns": "^2.16.1",
 		"extract-text-webpack-plugin": "^3.0.2",
 		"node-sass": "^4.14.1",
 		"rxjs": "^6.6.3",
-		"socket.io-client": "^2.3.0",
+		"socket.io-client": "^2.3.1",
 		"sortablejs": "^1.12.0",
 		"svelte": "^3.28.0",
 		"svelte-fa": "^2.1.1"
@@ -34,7 +34,7 @@
 		"rollup-plugin-scss": "^2.6.0",
 		"rollup-plugin-svelte": "^5.2.3",
 		"rollup-plugin-terser": "^7.0.2",
-		"svelte-check": "^1.0.50",
+		"svelte-check": "^1.0.53",
 		"svelte-preprocess": "^3.9.12",
 		"typescript": "^3.9.7"
 	}
