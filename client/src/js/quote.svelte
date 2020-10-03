@@ -145,21 +145,11 @@
 
 <style type="text/scss">
 	.apps {
-		// flex-grow: 1;
-		// display: flex;
-		// flex-direction: column;
-		// padding: 0.8em 0;
 		font-size: calc(0.4em + 0.5vw);
 	}
 
 	.apps {
 		display: flex;
-		// margin: 1em;
-		// margin-left: auto;
-		// border-radius: 5px;
-		// box-shadow: 3px 3px 10px 2px rgba(0, 0, 0, 0.1);
-		// background-color: rgba(255, 255, 0, 0.1);
-		// padding: 0.5em;
 		flex-wrap: wrap;
 		max-width: 100%;
 		gap: 0.5em;
@@ -185,8 +175,6 @@
 		background: #eee;
 		margin: 0;
 		border-radius: 0.2em;
-		// box-shadow: 4px 4px 12px 2px rgba(0, 0, 0, 0.2);
-		// border: 1px solid rgba(0, 0, 0, 0.1);
 	}
 
 	.main {
