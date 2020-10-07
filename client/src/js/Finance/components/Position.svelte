@@ -59,7 +59,7 @@
 <span>{position.symbol.toUpperCase()}</span>
 <span>{format(new Date(position.date), 'MM/dd/yyy')}</span>
 <span class="right-justify">{position.quantity}</span>
-<span class="right-justify">{position.cost.toFixed(2)}</span>
+<span class="right-justify">{position.cost?.toFixed(2)}</span>
 <span class="right-justify">{value}</span>
 <span class="right-justify">{change}</span>
 <span class="right-justify">{dollarGain}</span>

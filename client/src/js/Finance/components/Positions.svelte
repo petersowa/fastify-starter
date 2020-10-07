@@ -2,7 +2,7 @@
 	import { accountStore } from '../stores/stores';
 	import { quotesStore } from '../stores/QuotesStore';
 	import { setModal, clearModal } from '../stores/Modal';
-	import BuyModal from '../modals/Buy.svelte';
+	import TransactionModal from '../modals/TransactionModal.svelte';
 	import Position from './Position.svelte';
 	import Fa from 'svelte-fa';
 	import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
@@ -32,7 +32,7 @@
 	function handlePositionUpdate(holding, currentPosition = null) {
 		return (e) => {
 			setModal({
-				component: BuyModal,
+				component: TransactionModal,
 				data: {
 					handleData: (e, { position, formData, holding }) => {
 						position = { ...position, ...handleFormData(formData) };

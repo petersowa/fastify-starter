@@ -1,4 +1,5 @@
 <script lang="typescript">
+	export let setTransactionType;
 </script>
 
 <style>
@@ -6,7 +7,7 @@
 
 <h2 class="title">Select Transaction</h2>
 <div>
-	<button>Buy</button>
+	<button on:click={() => setTransactionType('buy')}>Buy</button>
 	<button>Sell</button>
 	<button>Split</button>
 	<button>Dividend</button>
