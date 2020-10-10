@@ -5,7 +5,6 @@
 	export let position;
 	let transactionType = 'pending';
 	import Modal from '../../components/modal.svelte';
-	import { onMount } from 'svelte';
 	import BuyForm from '../components/Buy.svelte';
 
 	import TransactionSelect from '../components/Transaction.svelte';
