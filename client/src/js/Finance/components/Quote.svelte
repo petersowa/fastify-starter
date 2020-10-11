@@ -124,10 +124,6 @@
 			height: 10em;
 		}
 	}
-
-	.h-center {
-		margin: auto;
-	}
 </style>
 
 <div class="quotes">
