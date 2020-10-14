@@ -4,6 +4,7 @@
 	export let holding;
 	export let position;
 	import { onMount } from 'svelte';
+	import { quotesStore } from '../stores/QuotesStore';
 
 	let formData = { ...position };
 
@@ -26,12 +27,19 @@
 		// validate
 		// if valid date then send to handle buy form
 		formData.symbol = formData.symbol.toUpperCase();
-		handleData(e, {
-			formData,
-			toggleModal,
-			position,
-			holding,
-		});
+		quotesStore
+			.getQuote(formData.symbol)
+			.then((quote) => {
+				console.log('handle submit', { quote });
+				position.type = 'equity';
+				handleData(e, {
+					formData,
+					toggleModal,
+					position,
+					holding,
+				});
+			})
+			.catch((handleSubmitError) => console.log({ handleSubmitError }));
 	}
 </script>
 

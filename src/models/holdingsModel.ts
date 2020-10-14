@@ -24,7 +24,7 @@ const position: Schema = new Schema({
 	date: { type: Date, default: Date.now },
 	purchaseDate: { type: Date, required: true },
 	symbol: String,
-	type: String,
+	type: { type: String, required: false },
 	quantity: Number,
 	cost: Number,
 	fees: Number,
