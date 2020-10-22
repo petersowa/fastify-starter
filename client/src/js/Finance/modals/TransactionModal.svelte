@@ -1,19 +1,17 @@
 <script>
+	import Modal from '../../components/modal.svelte';
+	import BuyForm from '../components/BuyForm.svelte';
+
+	import TransactionSelect from '../components/Transaction.svelte';
+
 	export let toggleModal;
 	export let handleData;
 	export let holding;
 	export let position;
+
 	let transactionType = 'pending';
-	import Modal from '../../components/modal.svelte';
-	import { onMount } from 'svelte';
-	import BuyForm from '../components/Buy.svelte';
 
-	import TransactionSelect from '../components/Transaction.svelte';
-
-	function setTransactionType(type) {
-		console.log(type);
-		transactionType = type;
-	}
+	const setTransactionType = (type) => (transactionType = type);
 </script>
 
 <style>

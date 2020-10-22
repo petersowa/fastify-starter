@@ -1,13 +1,7 @@
 <script>
 	import { beforeUpdate } from 'svelte';
-	import Fa from 'svelte-fa';
-	import {
-		faPlusCircle,
-		faArrowAltCircleDown,
-	} from '@fortawesome/free-solid-svg-icons';
 
 	export let quote = {};
-	export let addToWatchlist;
 	let symbol = '';
 	let change = '';
 
@@ -98,14 +92,6 @@
 				justify-self: right;
 			}
 		}
-		&__controls {
-			display: flex;
-			flex-grow: 1;
-			flex-direction: row;
-			justify-content: flex-end;
-			align-items: center;
-			padding-right: 1em;
-		}
 	}
 	.center-xy {
 		display: flex;
@@ -131,11 +117,6 @@
 		<div class="center-xy">
 			<div class="quotes__head__title">{quote.companyName}</div>
 			<div class="quotes__head2">{quote.primaryExchange}</div>
-		</div>
-		<div class="quotes__controls">
-			<button on:click={addToWatchlist}>
-				<Fa icon={faArrowAltCircleDown} color="green" size="2x" />
-			</button>
 		</div>
 	</div>
 	<div class="quotes__info">

@@ -87,7 +87,8 @@ ytdChange: 0.7465299999999999
 
 # TODO
 
--   [ ] Implement modal for buy transaction when selected
+-   [ ] Add Sapper
+-   [x] Implement modal for buy transaction when selected
 -   [ ] Use svelte routing
 -   [x] Create a modal store to fix issue with buy modal display
 -   [x] test

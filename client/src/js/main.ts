@@ -1,8 +1,6 @@
-import io from 'socket.io-client';
 import '../styles/main.css';
 import '../styles/icons.css';
 import '../styles/content.scss';
-import { Observable } from 'rxjs';
 
 // setup svelte app
 const app = document.getElementById('app');
@@ -11,28 +9,6 @@ if (app) {
 		new App.default({ target: app });
 	});
 }
-
-const timeObserver = new Observable((subscriber) => {
-	const intervalId = setInterval(() => {
-		subscriber.next('tick');
-	}, 500);
-	return function unsubscribe() {
-		clearInterval(intervalId);
-	};
-});
-
-timeObserver.subscribe((val) => console.log(val));
-
-// setup sockets
-const socket = io();
-socket.on('connect', () => {
-	console.log('connected ');
-	socket.emit('query', 'query data');
-});
-
-socket.on('update', (msg) => {
-	console.log(msg);
-});
 
 // setup dom elements
 const idTable = {
@@ -61,14 +37,6 @@ const idTable = {
 	},
 	'login-button': {},
 	modal: {},
-	'query-button': {
-		events: {
-			click: () => {
-				console.log('query button click event');
-				socket.emit('query', 'button clicked' + socket.id);
-			},
-		},
-	},
 	'menu-toggle': {
 		events: {
 			click: () => {
