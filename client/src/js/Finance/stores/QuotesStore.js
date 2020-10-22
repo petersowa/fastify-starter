@@ -1,54 +1,43 @@
 import { writable } from 'svelte/store';
 import { getQuote } from '../handle-ajax';
+import { __qq } from '../../utils/qq';
 
 const quotesStore = writable({ symbols: [], quote: {} });
 const MAX_AGE = 1000 * 60 * 5;
-const cache = {};
-
-const getStoreQuote = (symbol) => {
-	let quote;
-	if (cache.quotesData) {
-		quote = cache.quotesData.quote[symbol];
-		console.log('CACHED QUOTE', quote);
-	}
-	return quote;
-};
+const quotesDataCache = new Map();
 
 const fetchQuote = async (symbol) => {
 	let quote;
-	const storeQuote = getStoreQuote(symbol);
-	console.log({ storeQuote });
-	if (!storeQuote || Date.now() - storeQuote.__age > MAX_AGE) {
+	const cachedQuote = quotesDataCache.get(symbol);
+	__qq.log({ cachedQuote });
+	if (!cachedQuote || Date.now() - cachedQuote.__age > MAX_AGE) {
 		quote = await getQuote(symbol);
 	}
 	if (quote) {
+		__qq.log('FRESH QUOTE');
 		quotesStore.update((quotesData) => {
 			if (!quotesData.quote[symbol]) {
 				quotesData.symbols.push(symbol);
 			}
 			quotesData.quote[symbol] = { ...quote, __age: Date.now() };
+			quotesDataCache.set(symbol, quotesData.quote[symbol]);
 			return quotesData;
 		});
+	} else {
+		__qq.log('CACHED QUOTE');
 	}
-	return quote || storeQuote;
+	return quote || cachedQuote;
 };
 
-quotesStore.subscribe((quotesData) => {
-	cache.quotesData = quotesData;
-	// console.log('...quotesStore updated', quotesData);
-});
-
 quotesStore.addPosition = async (symbol) => {
-	if (cache.quotesStore && cache.quotesStore.quote[symbol]) return;
+	if (quotesDataCache.get(symbol)) return;
 
 	await fetchQuote(symbol);
 };
 
 quotesStore.refresh = () => {
-	if (cache.quotesStore) {
-		cache.quotesStore.symbols.forEach(async (symbol) => {
-			await fetchQuote(symbol);
-		});
+	for (const symbol in quotesDataCache) {
+		fetchQuote(symbol);
 	}
 };
 
