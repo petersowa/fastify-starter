@@ -5,6 +5,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
 import autoPreprocess from 'svelte-preprocess';
 import scssPlugin from 'rollup-plugin-scss';
+import replace from '@rollup/plugin-replace';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -37,6 +38,14 @@ export default {
 		production && terser(),
 		scssPlugin({
 			output: '../public/css/main.css',
+		}),
+
+		replace({
+			process: JSON.stringify({
+				env: {
+					isProd: production,
+				},
+			}),
 		}),
 	],
 	watch: {
