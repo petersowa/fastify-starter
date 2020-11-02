@@ -6,7 +6,14 @@
 	import { onMount } from 'svelte';
 	import { quotesStore } from '../stores/QuotesStore';
 
-	let formData = { ...position };
+	let formData = {
+		symbol: '',
+		date: new Date().toISOString(),
+		shares: '0.00',
+		price: '0.00',
+		fee: '0.00',
+		...position,
+	};
 
 	onMount(() => {
 		if (!position) position = {};
@@ -18,28 +25,43 @@
 				.substring(0, 10),
 			shares: position.quantity || '',
 			price: position.purchasePrice || '',
-			fee: position.fees,
+			fee: position.fees || '',
 		};
 	});
 
+	function validateForm(formData) {
+		const fields = [
+			{ name: 'date', type: 'date', required: true },
+			{ name: 'fee', type: 'number', required: true },
+			{ name: 'price', type: 'number', required: true },
+			{ name: 'shares', type: 'number', required: true },
+			{ name: 'symbol', type: 'number', required: true },
+		];
+		return true;
+	}
+
 	function handleSubmit(e) {
 		console.log({ formData });
+		if (validateForm(formData)) {
+			formData.symbol = formData.symbol.toUpperCase();
+			quotesStore
+				.getQuote(formData.symbol)
+				.then((quote) => {
+					console.log('handle submit', { quote });
+					position.type = 'equity';
+					handleData(e, {
+						formData,
+						toggleModal,
+						position,
+						holding,
+					});
+				})
+				.catch((handleSubmitError) =>
+					console.log({ handleSubmitError })
+				);
+		}
 		// validate
 		// if valid date then send to handle buy form
-		formData.symbol = formData.symbol.toUpperCase();
-		quotesStore
-			.getQuote(formData.symbol)
-			.then((quote) => {
-				console.log('handle submit', { quote });
-				position.type = 'equity';
-				handleData(e, {
-					formData,
-					toggleModal,
-					position,
-					holding,
-				});
-			})
-			.catch((handleSubmitError) => console.log({ handleSubmitError }));
 	}
 </script>
 
