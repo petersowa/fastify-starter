@@ -63,6 +63,10 @@
 		// validate
 		// if valid date then send to handle buy form
 	}
+
+	function checkForQuote(e) {
+		console.log('change');
+	}
 </script>
 
 <style>
@@ -86,6 +90,7 @@
 		class="form-input"
 		type="text"
 		placeholder="Symbol"
+		on:change={checkForQuote}
 		bind:value={formData.symbol} />
 	<label for="date-input">Date</label>
 	<input
