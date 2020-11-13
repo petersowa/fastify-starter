@@ -1,10 +1,14 @@
-<script>
+<script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import Spinner from './components/spinner.svelte';
 	import WatchList from './Finance/components/WatchList.svelte';
 	import { setSpinner } from './Finance/stores/stores';
 	import { watchList } from './Finance/stores/WatchList';
-	import { quotesStore } from './Finance/stores/QuotesStore';
+	import {
+		quotesStore,
+		getQuote,
+		refresh,
+	} from './Finance/stores/QuotesStore';
 	import { modalStore } from './Finance/stores/Modal';
 	import Quote from './Finance/components/Quote.svelte';
 	import Accounts from './Finance/components/Accounts.svelte';
@@ -17,7 +21,15 @@
 
 	import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
-	let quote = {};
+	let quote:
+		| {
+				facScore: String;
+				stats: String;
+				symbol: String;
+				error: String;
+		  }
+		| {} = {};
+
 	let symbol = '';
 	let refreshInterval = null;
 	let modal;
@@ -49,7 +61,7 @@
 			console.log('SET REFRESH INTERVAL');
 			refreshInterval = setInterval(() => {
 				refreshWatchlist();
-				quotesStore.refresh();
+				refresh();
 			}, 1000 * 60 * 10);
 		}
 	}
@@ -79,7 +91,7 @@
 					watchListItems
 						.filter((sym) => sym !== null)
 						.map(async (sym) => {
-							return await quotesStore.getQuote(sym);
+							return await getQuote(sym);
 						})
 				);
 				// await quotesStore.refresh();
@@ -105,7 +117,7 @@
 				sessionStorage.getItem('stats:' + symbol)
 			);
 			const [data, stats] = await Promise.all([
-				quotesStore.getQuote(symbol),
+				getQuote(symbol),
 				savedStats || getStats(symbol),
 			]);
 			if (!savedStats && stats) {
