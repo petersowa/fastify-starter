@@ -3,7 +3,7 @@ import '../styles/icons.css';
 import '../styles/content.scss';
 
 // setup svelte app
-const app = document.getElementById('app');
+const app: HTMLElement = document.getElementById('app');
 if (app) {
 	import('./quote.svelte').then((App) => {
 		new App.default({ target: app });
