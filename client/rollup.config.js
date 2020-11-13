@@ -3,8 +3,11 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 // import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
-import autoPreprocess from 'svelte-preprocess';
 import scssPlugin from 'rollup-plugin-scss';
+import replace from '@rollup/plugin-replace';
+// import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
+import autoPreprocess from 'svelte-preprocess';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -14,20 +17,23 @@ export default {
 		sourcemap: true,
 		format: 'es',
 		name: 'app',
-		dir: '../public/js',
-		chunkFileNames: '[name].js',
+		dir: '../public',
+		entryFileNames: 'js/main.js',
+		chunkFileNames: 'js/[name].js',
 	},
 	plugins: [
 		svelte({
 			dev: !production,
 			extensions: ['.svelte'],
+			exclude: 'src/js/main.ts',
 			css: (css) => {
-				css.write('../public/css/main-svelte.css');
+				css.write('css/main-svelte.css');
 			},
 			preprocess: autoPreprocess({
 				sourceMap: !production,
 			}),
 		}),
+		typescript({ sourceMap: !production }),
 		resolve({
 			browser: true,
 			dedupe: ['svelte'],
@@ -37,6 +43,14 @@ export default {
 		production && terser(),
 		scssPlugin({
 			output: '../public/css/main.css',
+		}),
+
+		replace({
+			process: JSON.stringify({
+				env: {
+					isProd: production,
+				},
+			}),
 		}),
 	],
 	watch: {

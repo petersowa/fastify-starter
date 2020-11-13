@@ -5,13 +5,13 @@
 	"exclude": ["node_modules/*", "__sapper__/*", "public/*", "dist/*"],
 	"compilerOptions": {
 		"rootDir": "src",
-		"outDir": "dist",
 		"baseUrl": "/",
 		"paths": {
 			"*": ["node_modules/*", "src/types/*"]
 		},
 		"lib": ["DOM", "ESNext"],
 		"target": "ES2018",
-		"module": "ESNext"
+		"module": "ESNext",
+		"moduleResolution": "node"
 	}
 }

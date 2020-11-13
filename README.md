@@ -85,6 +85,10 @@ week52Low: 48.18
 ytdChange: 0.7465299999999999
 ```
 
+# RESOURCES
+
+-   https://codechips.me/how-to-use-typescript-with-svelte/
+
 # TODO
 
 -   [ ] Add Sapper

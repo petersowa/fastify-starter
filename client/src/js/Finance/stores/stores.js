@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { quotesStore } from '../stores/QuotesStore';
+import { getQuote } from './QuotesStore';
 import {
 	getAccounts,
 	addPosition,
@@ -180,9 +180,7 @@ accountStore.subscribe(async (accountList) => {
 			accountList.holdings.forEach((holding) => {
 				holding.positions.forEach(async (position) => {
 					if (position.symbol in quotes) return;
-					quotes[position.symbol] = await quotesStore.getQuote(
-						position.symbol
-					);
+					quotes[position.symbol] = await getQuote(position.symbol);
 				});
 			});
 
