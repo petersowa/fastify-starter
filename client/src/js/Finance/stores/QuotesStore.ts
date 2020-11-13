@@ -1,12 +1,12 @@
 import { writable } from 'svelte/store';
-import { getQuote } from '../handle-ajax';
-import { __qq } from '../../utils/qq';
+import { getQuote as fetchQuote } from '../handle-ajax';
+import __qq from '../../utils/qq';
 
 const quotesStore = writable({ symbols: [], quote: {} });
 const MAX_AGE = 1000 * 60 * 5;
 const quotesDataCache = new Map();
 
-const fetchQuote = async (symbol) => {
+const checkQuote = async (symbol) => {
 	const cachedQuote = quotesDataCache.get(symbol);
 
 	if (cachedQuote && Date.now() - cachedQuote.__age < MAX_AGE) {
@@ -15,7 +15,7 @@ const fetchQuote = async (symbol) => {
 	}
 
 	try {
-		let quote = await getQuote(symbol);
+		let quote = await fetchQuote(symbol);
 
 		if (quote) {
 			__qq.log('FRESH QUOTE');
@@ -36,18 +36,18 @@ const fetchQuote = async (symbol) => {
 	throw new Error('Unable to access quote data');
 };
 
-quotesStore.addPosition = async (symbol) => {
+const addPosition = async (symbol) => {
 	if (quotesDataCache.get(symbol)) return null;
 
-	await fetchQuote(symbol);
+	await checkQuote(symbol);
 };
 
-quotesStore.refresh = () => {
+const refresh = () => {
 	for (const symbol in quotesDataCache) {
-		fetchQuote(symbol);
+		checkQuote(symbol);
 	}
 };
 
-quotesStore.getQuote = async (symbol) => await fetchQuote(symbol);
+const getQuote = async (symbol) => await checkQuote(symbol);
 
-export { quotesStore };
+export { quotesStore, addPosition, refresh, getQuote };
