@@ -1,10 +1,11 @@
-<script>
+<script lang="ts">
 	export let toggleModal;
 	export let handleData;
 	export let holding;
 	export let position;
 	import { onMount } from 'svelte';
-	import { quotesStore } from '../stores/QuotesStore';
+	import { getQuote } from '../stores/QuotesStore';
+	import __qq from '../../utils/qq';
 
 	let formData = {
 		symbol: '',
@@ -17,7 +18,7 @@
 
 	onMount(() => {
 		if (!position) position = {};
-		console.log({ holding });
+		__qq.log({ holding });
 		formData = {
 			symbol: position.symbol || '',
 			date: new Date(position.date || new Date().toISOString())
@@ -29,25 +30,43 @@
 		};
 	});
 
+	const isType = {
+		string: (val: string) => typeof val == 'string' && val != '',
+		number: (val: string) =>
+			typeof val == 'string' && val != '' && !isNaN(+val),
+		date: (val: string) => Date.parse(val) != NaN,
+	};
+
 	function validateForm(formData) {
+		const error = [];
 		const fields = [
 			{ name: 'date', type: 'date', required: true },
 			{ name: 'fee', type: 'number', required: true },
 			{ name: 'price', type: 'number', required: true },
 			{ name: 'shares', type: 'number', required: true },
-			{ name: 'symbol', type: 'number', required: true },
+			{ name: 'symbol', type: 'string', required: true },
 		];
+		for (const field of fields) {
+			if (!isType[field.type](formData[field.name])) {
+				error.push(
+					`field type mismatch ${
+						formData[field.name]
+					} ${typeof formData[field.name]}`
+				);
+				__qq.log({ error });
+				return false;
+			}
+		}
 		return true;
 	}
 
 	function handleSubmit(e) {
-		console.log({ formData });
+		__qq.log({ formData });
 		if (validateForm(formData)) {
 			formData.symbol = formData.symbol.toUpperCase();
-			quotesStore
-				.getQuote(formData.symbol)
+			getQuote(formData.symbol)
 				.then((quote) => {
-					console.log('handle submit', { quote });
+					__qq.log('handle submit', { quote });
 					position.type = 'equity';
 					handleData(e, {
 						formData,
@@ -56,16 +75,14 @@
 						holding,
 					});
 				})
-				.catch((handleSubmitError) =>
-					console.log({ handleSubmitError })
-				);
+				.catch((handleSubmitError) => __qq.log({ handleSubmitError }));
 		}
 		// validate
 		// if valid date then send to handle buy form
 	}
 
 	function checkForQuote(e) {
-		console.log('change');
+		__qq.log('change');
 	}
 </script>
 
