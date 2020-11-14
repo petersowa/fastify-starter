@@ -17,7 +17,7 @@ function setSpinner() {
 	setTimeout(() => {
 		isMinWait = true;
 		appStore.update((v) => ({ ...v, isMinWait }));
-	}, 1000);
+	}, 200);
 	return () => {
 		appStore.update((v) => ({
 			...v,
