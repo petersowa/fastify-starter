@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import { watchList } from '../stores/WatchList';
 	import { postWatchlist } from '../handle-ajax';
-	import Fa from 'svelte-fa';
+	import Icon from 'svelte-awesome';
 	import {
 		faArrowsAlt,
 		faMinusCircle,
@@ -201,7 +201,7 @@
 			class="watchlist__row"
 			style="--priceColor:{changeColor(quote.changePercent)};--price52WeekColor:{changeColor(quote.latestPrice / quote.week52High - 0.9)}">
 			<div class="grid-handle drag-handle">
-				<Fa icon={faArrowsAlt} />
+				<Icon data={faArrowsAlt} />
 			</div>
 			<span class="grid-symbol">{quote.symbol}</span>
 			<span class="justify-right grid-price">
@@ -226,12 +226,16 @@
 					<button
 						class="btn-control"
 						on:click={removeSymbol(quote.symbol)}>
-						<Fa icon={faMinusCircle} color="red" />
+						<Icon
+							data={faMinusCircle}
+							style="color: red; width: 1em; height: 1em;" />
 					</button>
 					<button
 						class="btn-control"
 						on:click={removeSymbol(quote.symbol)}>
-						<Fa icon={faPlusCircle} color="blue" />
+						<Icon
+							data={faPlusCircle}
+							style="color: blue; width: 1em; height: 1em;" />
 					</button>
 				</span>
 			</div>
