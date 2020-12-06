@@ -17,10 +17,10 @@ const schema: Schema = new Schema({
 
 schema.pre('save', async function (next) {
 	const user = this as UserModel;
-	if (!user.isModified('password')) return next();
+	if (!user.isModified('password')) return next(null);
 	try {
 		user.password = await hash(user.password);
-		return next();
+		return next(null);
 	} catch (err) {
 		return next(err);
 	}
