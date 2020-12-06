@@ -32,26 +32,40 @@
 
 	const isType = {
 		string: (val: string) => typeof val == 'string' && val != '',
-		number: (val: string) =>
-			typeof val == 'string' && val != '' && !isNaN(+val),
+		number: (val: string) => {
+			const res =
+				typeof val == 'number' ||
+				(typeof val == 'string' && val != '' && !isNaN(+val));
+			__qq.log(val, typeof val, res);
+			return res;
+		},
 		date: (val: string) => Date.parse(val) != NaN,
 	};
 
-	function validateForm(formData) {
-		const error = [];
-		const fields = [
+	function validateForm(
+		formData,
+		formFields = [
 			{ name: 'date', type: 'date', required: true },
 			{ name: 'fee', type: 'number', required: true },
 			{ name: 'price', type: 'number', required: true },
 			{ name: 'shares', type: 'number', required: true },
 			{ name: 'symbol', type: 'string', required: true },
-		];
-		for (const field of fields) {
-			if (!isType[field.type](formData[field.name])) {
+		]
+	) {
+		const error = [];
+
+		for (const formField of formFields) {
+			__qq.log(
+				'checking field:',
+				formField.name,
+				formData[formField.name],
+				formField.type
+			);
+			if (!isType[formField.type](formData[formField.name])) {
 				error.push(
 					`field type mismatch ${
-						formData[field.name]
-					} ${typeof formData[field.name]}`
+						formData[formField.name]
+					} ${typeof formData[formField.name]}`
 				);
 				__qq.log({ error });
 				return false;
