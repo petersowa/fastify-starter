@@ -3,10 +3,10 @@ import { connect } from './mongo';
 
 interface CreateModel {
 	DBSchema: Schema | null;
-	createModel<T>(
+	createModel<T extends Document>(
 		name: string,
-		schema: SchemaDefinition
-	): mongoose.Model<Document & T>;
+		schema: Schema<T>
+	): mongoose.Model<T>;
 	getSchema: () => Schema | null;
 }
 
@@ -17,9 +17,12 @@ function db(): CreateModel {
 
 	return {
 		DBSchema: null,
-		createModel<T>(name: string, schema: SchemaDefinition): mongoose.Model<Document & T> {
-			this.DBSchema = new mongoose.Schema(schema);
-			return mongoose.model<Document & T>(name, this.DBSchema);
+		createModel<T extends Document>(
+			name: string,
+			schema: Schema<T>
+		): mongoose.Model<T> {
+			this.DBSchema = new mongoose.Schema(schema as SchemaDefinition);
+			return mongoose.model<T>(name, this.DBSchema);
 		},
 		getSchema(): mongoose.Schema | null {
 			return this.DBSchema;
@@ -30,7 +33,7 @@ function db(): CreateModel {
 try {
 	dbInstance = db();
 } catch (error) {
-	console.log('error connecting to db');
+	console.error('error connecting to db');
 	process.exit(1011);
 }
 
