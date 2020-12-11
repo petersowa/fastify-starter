@@ -20,7 +20,8 @@
 		"build-ts": "tsc",
 		"lint": "eslint . --ext .ts --ext .js",
 		"copy-static-assets": "ts-node copyStaticAssets.ts",
-		"dev:client": "npm run dev --prefix client/"
+		"dev:client": "npm run dev --prefix client/",
+		"bump": "npm version minor --force"
 	},
 	"keywords": [
 		"fastify",
