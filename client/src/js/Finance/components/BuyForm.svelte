@@ -21,12 +21,12 @@
 		__qq.log({ holding });
 		formData = {
 			symbol: position.symbol || '',
-			date: new Date(position.date || new Date().toISOString())
+			date: new Date(position.purchaseDate || new Date().toISOString())
 				.toISOString()
 				.substring(0, 10),
 			shares: position.quantity || '',
 			price: position.purchasePrice || '',
-			fee: position.fees || '',
+			fee: position.fees || '0',
 		};
 	});
 
