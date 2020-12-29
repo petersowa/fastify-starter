@@ -29,7 +29,7 @@ schema.pre('save', async function (next) {
 schema.methods.validatePassword = async function (
 	pw: string
 ): Promise<boolean> {
-	const user = this as UserModel;
+	const user = (this as unknown) as UserModel;
 	return compare(pw, user.password);
 };
 
