@@ -4,7 +4,7 @@
 	import { setModal, clearModal } from '../stores/Modal';
 	import TransactionModal from '../modals/TransactionModal.svelte';
 	import Position from './Position.svelte';
-	import Fa from 'svelte-fa';
+	import Icon from 'svelte-awesome';
 	import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 	export let holding;
@@ -110,6 +110,6 @@
 		class="item-control"
 		aria-label="add position"
 		on:click={handlePositionUpdate(holding)}>
-		<Fa icon={faPlusCircle} color="blue" />
+		<Icon data={faPlusCircle} style="color: blue;" />
 	</button>
 {/if}

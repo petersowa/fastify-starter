@@ -6,7 +6,7 @@
 	import AccountModal from '../modals/Account.svelte';
 	import Positions from './Positions.svelte';
 	import HoldingsSummary from './HoldingsSummary.svelte';
-	import Fa from 'svelte-fa';
+	import Icon from 'svelte-awesome';
 	import {
 		faEdit,
 		faBinoculars,
@@ -149,19 +149,19 @@
 				<i class="fas fa-camera" />
 				<div class="control">
 					<button class="item-control" aria-label="view">
-						<Fa icon={faBinoculars} color="gray" />
+						<Icon data={faBinoculars} style="color: gray;" />
 					</button>
 					<button
 						class="item-control"
 						aria-label="edit"
 						on:click={handleEditAccount}>
-						<Fa icon={faEdit} color="gray" />
+						<Icon data={faEdit} style="color: gray;" />
 					</button>
 					<button
 						class="item-control"
 						aria-label="delete"
 						on:click={handleDeleteAccount(holding._id)}>
-						<Fa icon={faMinusCircle} color="red" />
+						<Icon data={faMinusCircle} style="color: red;" />
 					</button>
 				</div>
 			</li>
@@ -177,7 +177,10 @@
 			class="round"
 			aria-label="add account"
 			on:click={handleEditAccount}>
-			<Fa icon={faPlus} size="2x" color="green" />
+			<Icon
+				data={faPlus}
+				scale="1"
+				style="color: green; width: 2em; height: 2em;" />
 		</button>
 	</div>
 </ul>

@@ -1,12 +1,12 @@
-<script>
+<script lang="ts">
 	import { beforeUpdate } from 'svelte';
-	import Fa from 'svelte-fa';
+	import Icon from 'svelte-awesome';
 	import {
 		faPlusCircle,
 		faArrowAltCircleDown,
 	} from '@fortawesome/free-solid-svg-icons';
 
-	export let quote = {};
+	export let quote;
 	export let addToWatchlist;
 	let symbol = '';
 	let change = '';
@@ -134,7 +134,9 @@
 		</div>
 		<div class="quotes__controls">
 			<button on:click={addToWatchlist}>
-				<Fa icon={faArrowAltCircleDown} color="green" size="2x" />
+				<Icon
+					data={faArrowAltCircleDown}
+					style="color: green; width: 2em; height: 2em" />
 			</button>
 		</div>
 	</div>

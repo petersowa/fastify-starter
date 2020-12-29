@@ -17,36 +17,35 @@
 		getWatchlist,
 		getStats,
 	} from './Finance/handle-ajax';
-	import Fa from 'svelte-fa';
 
 	import { faSearch } from '@fortawesome/free-solid-svg-icons';
+	import __qq from './utils/qq';
+	import Icon from 'svelte-awesome';
 
-	let quote:
-		| {
-				facScore: String;
-				stats: String;
-				symbol: String;
-				error: String;
-		  }
-		| {} = {};
+	let quote: {
+		facScore?: String;
+		stats?: String;
+		symbol?: String;
+		error?: String;
+	} = {};
 
 	let symbol = '';
 	let refreshInterval = null;
 	let modal;
 
-	console.log('ADD VISIBILITY CHANGE LISTENER');
+	__qq.log('ADD VISIBILITY CHANGE LISTENER');
 	document.addEventListener(
 		'visibilitychange',
 		async () => {
 			const { visibilityState } = document;
-			console.log(document.visibilityState);
+			__qq.log(document.visibilityState);
 			if (visibilityState == 'visible' || refreshInterval === null) {
 				await initRefresh();
-				console.log('SET:', { refreshInterval });
+				__qq.log('SET:', { refreshInterval });
 			} else {
 				clearInterval(refreshInterval);
 				refreshInterval = null;
-				console.log('CLEARED REFRESH');
+				__qq.log('CLEARED REFRESH');
 			}
 		},
 		false
@@ -58,7 +57,7 @@
 		clearSpinner();
 
 		if (!refreshInterval) {
-			console.log('SET REFRESH INTERVAL');
+			__qq.log('SET REFRESH INTERVAL');
 			refreshInterval = setInterval(() => {
 				refreshWatchlist();
 				refresh();
@@ -68,7 +67,7 @@
 
 	onMount(async () => {
 		await initRefresh();
-		console.log('MOUNT:', { refreshInterval });
+		__qq.log('MOUNT:', { refreshInterval });
 
 		const appTitle = document.getElementById('app-title');
 		appTitle.innerHTML = 'GraniteCode.com - Investments';
@@ -96,21 +95,21 @@
 				);
 				// await quotesStore.refresh();
 				quotesStore.subscribe((data) =>
-					console.log('quoteStore update', data)
+					__qq.log('quoteStore update', data)
 				);
 				watchList.update(() => {
 					return [...quotes];
 				});
 			}
-			console.log({ watchListItems });
+			__qq.log({ watchListItems });
 		} catch (err) {
-			console.log({ watchlistError: err });
+			__qq.log({ watchlistError: err });
 		}
 	}
 
 	async function handleSubmit() {
 		const clearSpinner = setSpinner();
-		console.log(symbol);
+		__qq.log(symbol);
 		try {
 			symbol = symbol.toUpperCase();
 			const savedStats = JSON.parse(
@@ -126,30 +125,30 @@
 					JSON.stringify(stats)
 				);
 			}
-			console.log({ stats });
+			__qq.log({ stats });
 			if (data) {
 				quote = data;
 				quote.facScore = stats.facScore || 'not found';
 				quote.stats = stats;
-				console.log({ quote, error: data.error });
+				__qq.log({ quote, error: data.error });
 				clearSpinner();
 			}
 		} catch (err) {
-			console.error({ err });
+			__qq.error({ err });
 		}
-		console.log({ quote });
+		__qq.log({ quote });
 		symbol = '';
 	}
 
 	function addToWatchlist() {
 		watchList.update((list) => {
 			if (list.find((item) => item.symbol === quote.symbol)) return list;
-			console.log('list is', list);
+			__qq.log('list is', list);
 
 			const newList = [...list, quote];
 			postWatchlist(newList.map((item) => item.symbol))
-				.then((res) => console.log({ watchlist: res }))
-				.catch((err) => console.error({ watchlist: err }));
+				.then((res) => __qq.log({ watchlist: res }))
+				.catch((err) => __qq.error({ watchlist: err }));
 			return newList;
 		});
 	}
@@ -226,7 +225,7 @@
 				<label for="stock-name">Stock Name:</label>
 				<input id="stock-name" type="string" bind:value={symbol} />
 				<button type="submit">
-					<Fa icon={faSearch} />
+					<Icon data={faSearch} />
 				</button>
 			</form>
 		</div>
