@@ -27,12 +27,13 @@
 		"fastify",
 		"starter",
 		"node",
-		"http-server"
+		"http-server",
+		"svelte"
 	],
 	"author": "Peter Sowa",
 	"license": "ISC",
 	"dependencies": {
-		"axios": "^0.19.2",
+		"axios": "^0.21.1",
 		"bcrypt": "^5.0.0",
 		"chalk": "^4.1.0",
 		"connect-mongo": "^3.2.0",
