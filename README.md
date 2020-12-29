@@ -96,3 +96,10 @@ ytdChange: 0.7465299999999999
 -   [ ] Use svelte routing
 -   [x] Create a modal store to fix issue with buy modal display
 -   [x] test
+
+# IDEAS
+
+-   USE WEBSOCKET to register data updates from server
+-   Server will monitor connection and send updates to client when data changes
+-   Server will also be able to update db with any updates or calculations
+-   Create Admin Monitor for user list, db usage, stats
