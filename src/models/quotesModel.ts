@@ -64,7 +64,7 @@ export interface QuotesInterface extends Document {
 	data: Quote;
 }
 
-const schema: Schema = new Schema({
+const schema: Schema<QuotesInterface> = new Schema({
 	symbol: { type: String, required: true },
 	date: { type: Date, default: Date.now },
 	data: { type: Object },

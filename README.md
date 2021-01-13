@@ -96,6 +96,7 @@ ytdChange: 0.7465299999999999
 -   [ ] Use svelte routing
 -   [x] Create a modal store to fix issue with buy modal display
 -   [x] test
+-   [ ] create generic endpoint for finance data on IEX and RapidAPI
 
 # IDEAS
 

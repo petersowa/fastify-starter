@@ -8,7 +8,7 @@ interface WebStatsModel extends Document {
 	count: number;
 }
 
-const schema: Schema = new Schema({
+const schema: Schema<WebStatsModel> = new Schema({
 	ip: { type: String, required: true, unique: true },
 	header: { type: String },
 	userAgent: { type: String },

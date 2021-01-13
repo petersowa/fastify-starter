@@ -10,7 +10,7 @@ export interface AccountInterface extends Document {
 	transactions: Types.ObjectId;
 }
 
-const account: Schema = new Schema({
+const account: Schema<AccountInterface> = new Schema({
 	updated: { type: Date, default: Date.now },
 	user: {
 		type: Schema.Types.ObjectId,

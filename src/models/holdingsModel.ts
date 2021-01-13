@@ -20,7 +20,7 @@ export interface HoldingsInterface extends Document {
 	positions: Types.Array<PositionInterface>;
 }
 
-const position: Schema = new Schema({
+const position: Schema<PositionInterface> = new Schema({
 	date: { type: Date, default: Date.now },
 	purchaseDate: { type: Date, required: true },
 	symbol: String,
@@ -33,7 +33,7 @@ const position: Schema = new Schema({
 	dividend: Number,
 });
 
-const holdings: Schema = new Schema({
+const holdings: Schema<HoldingsInterface> = new Schema({
 	updated: { type: Date, default: Date.now },
 	name: { type: String, default: 'alpha' },
 	positions: [position],

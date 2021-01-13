@@ -5,7 +5,7 @@ interface DataModelType extends Document {
 	name: string;
 }
 
-const schema: Schema = new Schema({
+const schema: Schema<DataModelType> = new Schema({
 	name: { type: String, required: true },
 });
 

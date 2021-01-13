@@ -8,7 +8,7 @@ export interface StatsInterface extends Document {
 	data: RapidStatsResult;
 }
 
-const schema: Schema = new Schema({
+const schema: Schema<StatsInterface> = new Schema({
 	symbol: { type: String, required: true },
 	date: { type: Date, default: Date.now },
 	data: { type: Object },

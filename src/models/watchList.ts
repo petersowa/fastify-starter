@@ -7,7 +7,7 @@ export interface WatchlistInterface extends Document {
 	symbols: Types.Array<string>;
 }
 
-const schema: Schema = new Schema({
+const schema: Schema<WatchlistInterface> = new Schema({
 	updated: { type: Date, default: Date.now },
 	user: { type: Schema.Types.ObjectId, ref: 'Users', unique: true },
 	symbols: [String],
