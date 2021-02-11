@@ -9,6 +9,8 @@
 	export let onUpdate;
 	export let quote;
 
+	const DEBUG = false;
+
 	$: value = quote
 		? (position.quantity * quote.latestPrice).toFixed(2)
 		: 'loading...';
@@ -16,11 +18,31 @@
 		? (position.quantity * quote.latestPrice - position.cost).toFixed(2)
 		: 'loading...';
 	$: change = quote
-		? (position.quantity * quote.latestPrice * quote.changePercent).toFixed(
-				2
-		  )
+		? (DEBUG && console.log(quote)) ||
+		  (
+				position.quantity *
+				quote.latestPrice *
+				((quote.latestPrice - quote.previousClose) /
+					quote.previousClose)
+		  ).toFixed(2)
 		: 'loading...';
 </script>
+
+<span>{position.symbol.toUpperCase()}</span>
+<span>{format(new Date(position.purchaseDate), 'MM/dd/yyy')}</span>
+<span class="right-justify">{position.quantity}</span>
+<span class="right-justify">{position.cost?.toFixed(2)}</span>
+<span class="right-justify">{value}</span>
+<span class="right-justify">{change}</span>
+<span class="right-justify">{dollarGain}</span>
+<div class="control">
+	<button class="item-control" aria-label="edit" on:click={onUpdate}>
+		<Icon data={faEdit} style="color: blue;" />
+	</button>
+	<button class="item-control" aria-label="delete" on:click={onDelete}>
+		<Icon data={faMinusCircle} style="color: red;" />
+	</button>
+</div>
 
 <style type="text/scss">
 	.control {
@@ -55,19 +77,3 @@
 		}
 	}
 </style>
-
-<span>{position.symbol.toUpperCase()}</span>
-<span>{format(new Date(position.purchaseDate), 'MM/dd/yyy')}</span>
-<span class="right-justify">{position.quantity}</span>
-<span class="right-justify">{position.cost?.toFixed(2)}</span>
-<span class="right-justify">{value}</span>
-<span class="right-justify">{change}</span>
-<span class="right-justify">{dollarGain}</span>
-<div class="control">
-	<button class="item-control" aria-label="edit" on:click={onUpdate}>
-		<Icon data={faEdit} style="color: blue;" />
-	</button>
-	<button class="item-control" aria-label="delete" on:click={onDelete}>
-		<Icon data={faMinusCircle} style="color: red;" />
-	</button>
-</div>
