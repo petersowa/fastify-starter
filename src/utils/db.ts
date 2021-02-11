@@ -21,7 +21,7 @@ function db(): CreateModel {
 			name: string,
 			schema: Schema<T>
 		): mongoose.Model<T> {
-			this.DBSchema = new mongoose.Schema(schema as SchemaDefinition);
+			this.DBSchema = new Schema(schema);
 			return mongoose.model<T>(name, this.DBSchema);
 		},
 		getSchema(): mongoose.Schema | null {
