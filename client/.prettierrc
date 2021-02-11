@@ -1,4 +1,5 @@
 {
+	"svelteSortOrder": "options-scripts-styles-markup",
 	"svelteStrictMode": false,
 	"svelteAllowShorthand": true,
 	"endOfLine": "lf",
