@@ -46,6 +46,7 @@ export default {
 		}),
 
 		replace({
+			preventAssignment: true,
 			process: JSON.stringify({
 				env: {
 					isProd: production,
