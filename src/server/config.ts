@@ -1,12 +1,9 @@
 import fastify from 'fastify';
 import fastifyCookie from 'fastify-cookie';
-
 import path from 'path';
 
-import { Server, IncomingMessage, ServerResponse } from 'http';
 import helmet from 'fastify-helmet';
 import formBody from 'fastify-formbody';
-import fastifyCSRF from 'fastify-csrf';
 
 import socketIo from './socket-io';
 import authRoutes from '../routes/auth';
@@ -18,17 +15,14 @@ import { WebStatsModel } from '../models/webStats';
 import flash from './flash';
 import appState from './app-state';
 
+import fastifyCsrf from 'fastify-csrf';
+
 const PORT: number = parseInt(process.env.PORT || '3999', 10);
 
 const logger = false; //process.env.NODE_ENV !== 'production';
 
-const app: fastify.FastifyInstance<
-	Server,
-	IncomingMessage,
-	ServerResponse
-> = fastify({
+const app = fastify({
 	logger,
-	http2: false,
 	trustProxy: true,
 });
 
@@ -49,12 +43,12 @@ registerSessions(app);
 // 	next();
 // });
 
-app.register(fastifyCSRF, {
-	key: '_csrf',
-	ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
+app.register(fastifyCsrf, {
+	sessionKey: '_csrf',
+	sessionPlugin: 'fastify-session',
 });
 
-app.addHook('preHandler', (request, reply, next) => {
+app.addHook('preHandler', async (request, reply) => {
 	request.session.appState = { ...appState, timeStamp: Date.now() };
 	request.session.flash = flashState;
 
@@ -89,7 +83,7 @@ app.addHook('preHandler', (request, reply, next) => {
 			});
 	}
 
-	next();
+	// next();
 });
 
 const flashState = flash();

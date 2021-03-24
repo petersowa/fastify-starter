@@ -1,12 +1,7 @@
-import { FastifyReply, FastifyRequest } from 'fastify';
-import { ServerResponse } from 'http';
-import AccountModel, { AccountInterface } from '../../models/accountModel';
+import AccountModel from '../../models/accountModel';
 import { HoldingsModel, PositionModel } from '../../models/holdingsModel';
 
-async function getAccounts(
-	request: FastifyRequest,
-	reply: FastifyReply<ServerResponse>
-): Promise<AccountInterface | null> {
+async function getAccounts(request) {
 	const accounts = await AccountModel.findOne({
 		user: request.session.userId,
 	}).populate('holdings');
@@ -15,10 +10,7 @@ async function getAccounts(
 	return accounts;
 }
 
-interface UpdateFunction<T> {
-	(request: FastifyRequest, reply: FastifyReply<{}>): Promise<T>;
-}
-const deletePosition: UpdateFunction<{}> = async function (request, reply) {
+const deletePosition = async function (request, reply) {
 	const { holdingId, positionId } = request.body;
 	if (!holdingId || !positionId) {
 		reply.code(400);
@@ -27,16 +19,16 @@ const deletePosition: UpdateFunction<{}> = async function (request, reply) {
 
 	try {
 		const holdingsDoc = await HoldingsModel.findById(holdingId);
-		const res = holdingsDoc?.positions.remove(positionId);
+		holdingsDoc?.positions.remove(positionId);
 		await holdingsDoc?.save();
 		return { positionId } || {};
 	} catch (err) {
 		reply.code(500);
-		return { status: (err as Error).message };
+		return { status: err.message };
 	}
 };
 
-const addHoldingPosition: UpdateFunction<{}> = async function (request, reply) {
+const addHoldingPosition = async function (request, reply) {
 	const { holdingsId, position } = request.body;
 	if (!holdingsId || !position) {
 		reply.code(400);
@@ -93,14 +85,14 @@ const addHoldingPosition: UpdateFunction<{}> = async function (request, reply) {
 	} catch (err) {
 		console.log({ createNewAccountError: err });
 		reply.code(500);
-		return { status: (err as Error).message };
+		return { status: err.message };
 	}
 
 	return { newPosition };
 };
 
 // const addHoldingsAccount
-const addHoldingsAccount: UpdateFunction<{}> = async function (request, reply) {
+const addHoldingsAccount = async function (request, reply) {
 	const { holdingsName } = request.body;
 
 	if (!holdingsName) {
@@ -137,14 +129,11 @@ const addHoldingsAccount: UpdateFunction<{}> = async function (request, reply) {
 		}
 	} catch (err) {
 		reply.code(500);
-		return { status: (err as Error).message };
+		return { status: err.message };
 	}
 };
 
-const deleteHoldingsAccount: UpdateFunction<{}> = async function (
-	request,
-	reply
-) {
+const deleteHoldingsAccount = async function (request, reply) {
 	const { holdingsId } = request.body;
 
 	if (!holdingsId) {
@@ -171,14 +160,11 @@ const deleteHoldingsAccount: UpdateFunction<{}> = async function (
 	} catch (err) {
 		reply.code(500);
 		console.log({ err });
-		return { status: (err as Error).message };
+		return { status: err.message };
 	}
 };
 
-const updateHoldingPosition: UpdateFunction<{}> = async function (
-	request,
-	reply
-) {
+const updateHoldingPosition = async function (request, reply) {
 	const { position, holdingId } = request.body;
 	if (!position || !holdingId) {
 		reply.code(400);
@@ -200,7 +186,7 @@ const updateHoldingPosition: UpdateFunction<{}> = async function (
 		}
 	} catch (err) {
 		reply.code(500);
-		return { status: (err as Error).message };
+		return { status: err.message };
 	}
 
 	return { status: 'position update request' };

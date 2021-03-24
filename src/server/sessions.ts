@@ -1,31 +1,39 @@
-import fastify from 'fastify';
+import { FastifyInstance, FastifyPluginCallback } from 'fastify';
 import { Server, IncomingMessage, ServerResponse } from 'http';
 import 'fastify-session'; // session types
 
-const mongoose = require('mongoose');
-const MongoStore = require('connect-mongo');
+// import mongoose from 'mongoose';
+import MongoStore from 'connect-mongo';
 
-const fastifySession = require('fastify-session');
-fastifySession.MemoryStore = {}; // MongoStore fails if not added
-const store = MongoStore(fastifySession);
+import fastifySession from 'fastify-session';
+import FastifySessionPlugin from 'fastify-session';
+// fastifySession.MemoryStore = {}; // MongoStore fails if not added
+// const store = MongoStore(session);
 
 const MAX_SESSION_AGE = 2 * 24 * 60 * 60 * 1000;
+const { MONGODB_NAME, SESSION_SECRET, NODE_ENV } = process.env;
 
-const register = (
-	app: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse>
-): void => {
-	app.register(fastifySession, {
-		cookieName: 'qqSessionId',
-		secret: process.env.SESSION_SECRET,
-		resave: false,
-		saveUninitialized: false,
-		cookie: {
-			path: '/',
-			secure: process.env.NODE_ENV === 'production',
-			maxAge: MAX_SESSION_AGE,
-		},
-		store: new store({ mongooseConnection: mongoose.connection }),
-	});
+const register = async (
+	app: FastifyInstance<Server, IncomingMessage, ServerResponse>
+): Promise<void> => {
+	if (!SESSION_SECRET) throw new Error('no session secret found');
+	app.register(
+		fastifySession as FastifyPluginCallback<FastifySessionPlugin.Options>,
+		{
+			cookieName: 'qqSessionId',
+			secret: SESSION_SECRET,
+			saveUninitialized: false,
+			cookie: {
+				path: '/',
+				secure: NODE_ENV === 'production',
+				maxAge: MAX_SESSION_AGE,
+			},
+			store: new MongoStore({
+				// mongooseConnection: mongoose.connection,
+				mongoUrl: MONGODB_NAME,
+			}),
+		}
+	);
 };
 
 export default register;

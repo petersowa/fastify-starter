@@ -1,5 +1,5 @@
 import hbs from 'handlebars';
-import fastify from 'fastify';
+import * as fastify from 'fastify';
 import { Server, IncomingMessage, ServerResponse } from 'http';
 
 import templateRoutes from '../routes/main';
