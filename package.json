@@ -14,7 +14,7 @@
 		"serve": "node dist/app.js",
 		"watch-node": "nodemon --ignore data/ dist/app.js",
 		"watch-ts": "tsc -w",
-		"build": "npm install --only-dev && npm run build:server && npm run build:client",
+		"build": "npm install --only-dev && npm run build:server && npm prune --production && npm run build:client",
 		"build:server": "npm run build-ts && npm run copy-static-assets",
 		"build:client": "cd client/ && npm install && npm run build",
 		"build-ts": "tsc",
