@@ -23,11 +23,14 @@ export default {
 	},
 	plugins: [
 		svelte({
-			dev: !production,
 			extensions: ['.svelte'],
 			exclude: 'src/js/main.ts',
-			css: (css) => {
-				css.write('css/main-svelte.css');
+			emitCss: true,
+			compilerOptions: {
+				dev: !production,
+				// css: (css) => {
+				// 	css.write('css/main-svelte.css');
+				// },
 			},
 			preprocess: autoPreprocess({
 				sourceMap: !production,
