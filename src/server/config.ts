@@ -1,5 +1,6 @@
 import fastify from 'fastify';
 import fastifyCookie from 'fastify-cookie';
+import fastifyStatic from 'fastify-static';
 import path from 'path';
 
 import helmet from 'fastify-helmet';
@@ -95,7 +96,7 @@ app.setErrorHandler((err, request, reply) => {
 });
 
 // add static routes
-app.register(require('fastify-static'), {
+app.register(fastifyStatic, {
 	root: path.join(__dirname, '..', '..', 'public'),
 	prefix: '/',
 });
