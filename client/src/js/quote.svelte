@@ -17,6 +17,7 @@
 		getWatchlist,
 		getStats,
 	} from './Finance/handle-ajax';
+	import EventBoard from './Finance/components/EventBoard.svelte'
 
 	import { faSearch } from '@fortawesome/free-solid-svg-icons';
 	import __qq from './utils/qq';

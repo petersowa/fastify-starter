@@ -1,13 +1,13 @@
-import socket from 'socket.io';
+import io, { Server as socket } from 'socket.io';
 import { Server } from 'http';
 
-function init(server: Server): socket.Server {
-	const io: socket.Server = socket(server);
+function init(server: Server): io.Server {
+	const io: io.Server = new socket(server, {});
 	eventsInit(io);
 	return io;
 }
 
-function eventsInit(io: socket.Server): void {
+function eventsInit(io: io.Server): void {
 	io.on('connection', function (socket) {
 		console.log('a user connected', JSON.stringify(socket.id, null, 2));
 		socket.on('query', (query: any) => {

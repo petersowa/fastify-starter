@@ -74,12 +74,12 @@ app.addHook('preHandler', async (request, reply) => {
 						.then((doc) => {
 							console.log({ WebStatsModel: doc });
 						})
-						.catch((err) => {
+						.catch((err: Error) => {
 							console.error({ WebStatsModel: err.message });
 						});
 				}
 			})
-			.catch((err) => {
+			.catch((err: Error) => {
 				console.error({ WebStatsModel: err.message });
 			});
 	}
