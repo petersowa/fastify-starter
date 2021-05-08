@@ -17,7 +17,7 @@ export default {
 		format: 'es',
 		name: 'app',
 		dir: '../public',
-		// entryFileNames: 'js/main.js',
+		entryFileNames: 'js/main.js',
 		chunkFileNames: 'js/[name].js',
 	},
 	plugins: [
