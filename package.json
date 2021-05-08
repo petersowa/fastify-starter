@@ -5,7 +5,7 @@
 	"main": "dist/app.js",
 	"engines": {
 		"node": "v14.16.1",
-		"npm": "7.11.1"
+		"npm": "7.11.2"
 	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
@@ -38,7 +38,7 @@
 		"bcrypt": "^5.0.1",
 		"chalk": "^4.1.0",
 		"connect-mongo": "^4.4.1",
-		"dotenv": "^8.2.0",
+		"dotenv": "^9.0.0",
 		"express-session": "^1.17.1",
 		"fastify": "^3.14.2",
 		"fastify-cookie": "^5.3.0",
@@ -48,7 +48,7 @@
 		"fastify-helmet": "^5.3.1",
 		"fastify-plugin": "^3.0.0",
 		"fastify-session": "^5.2.1",
-		"fastify-socket.io": "^1.0.2",
+		"fastify-socket.io": "^2.0.0",
 		"fastify-static": "^4.0.1",
 		"handlebars": "^4.7.7",
 		"mongoose": "^5.12.5",
@@ -59,7 +59,7 @@
 		"@babel/eslint-parser": "^7.13.14",
 		"@types/bcrypt": "^3.0.0",
 		"@types/express-session": "^1.17.3",
-		"@types/node": "^14.14.41",
+		"@types/node": "^15.0.1",
 		"@types/shelljs": "^0.8.8",
 		"@types/socket.io": "^2.1.13",
 		"@types/socket.io-client": "^1.4.36",
