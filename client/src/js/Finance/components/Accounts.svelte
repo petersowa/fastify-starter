@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { accountStore, setSpinner } from '../stores/stores';
 	import { quotesStore } from '../stores/QuotesStore';
@@ -13,13 +13,14 @@
 		faMinusCircle,
 		faPlus,
 	} from '@fortawesome/free-solid-svg-icons';
+	import type { Holdings } from '../stores/types/stores';
 
-	let accountList = [];
+	let accountList: Holdings = {} as Holdings;
 	let stockQuotes = {};
 	let holdingSummary = {};
 
-	const unsubscribe = accountStore.subscribe(async (list) => {
-		if (!list || list.length === 0) return;
+	const unsubscribe = accountStore.data.subscribe(async (list) => {
+		if (!list || !list.holdings || list.holdings.length === 0) return;
 		const clearSpinner = setSpinner();
 		try {
 			accountList = list;
@@ -154,13 +155,15 @@
 					<button
 						class="item-control"
 						aria-label="edit"
-						on:click={handleEditAccount}>
+						on:click={handleEditAccount}
+					>
 						<Icon data={faEdit} style="color: gray;" />
 					</button>
 					<button
 						class="item-control"
 						aria-label="delete"
-						on:click={handleDeleteAccount(holding._id)}>
+						on:click={handleDeleteAccount(holding._id)}
+					>
 						<Icon data={faMinusCircle} style="color: red;" />
 					</button>
 				</div>
@@ -169,18 +172,22 @@
 			<Positions {holding} />
 
 			<HoldingsSummary
-				holdingSummary={holding.name in holdingSummary && holdingSummary[holding.name]} />
+				holdingSummary={holding.name in holdingSummary &&
+					holdingSummary[holding.name]}
+			/>
 		{/each}
 	{/if}
 	<div class="control">
 		<button
 			class="round"
 			aria-label="add account"
-			on:click={handleEditAccount}>
+			on:click={handleEditAccount}
+		>
 			<Icon
 				data={faPlus}
 				scale="1"
-				style="color: green; width: 2em; height: 2em;" />
+				style="color: green; width: 2em; height: 2em;"
+			/>
 		</button>
 	</div>
 </ul>
