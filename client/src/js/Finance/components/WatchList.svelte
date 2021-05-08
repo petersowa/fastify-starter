@@ -199,7 +199,12 @@
 		<li
 			data-sym={quote.symbol}
 			class="watchlist__row"
-			style="--priceColor:{changeColor(quote.changePercent)};--price52WeekColor:{changeColor(quote.latestPrice / quote.week52High - 0.9)}">
+			style="--priceColor:{changeColor(
+				quote.changePercent
+			)};--price52WeekColor:{changeColor(
+				quote.latestPrice / quote.week52High - 0.9
+			)}"
+		>
 			<div class="grid-handle drag-handle">
 				<Icon data={faArrowsAlt} />
 			</div>
@@ -215,7 +220,8 @@
 			</span>
 			<span
 				class="justify-right grid-changeYear"
-				id="price_52week-change">
+				id="price_52week-change"
+			>
 				{((quote.latestPrice / quote.week52High - 1) * 100).toFixed(1)}
 			</span>
 			<span class="elipsis justify-right grid-date">
@@ -225,17 +231,21 @@
 				<span class="controls">
 					<button
 						class="btn-control"
-						on:click={removeSymbol(quote.symbol)}>
+						on:click={removeSymbol(quote.symbol)}
+					>
 						<Icon
 							data={faMinusCircle}
-							style="color: red; width: 1em; height: 1em;" />
+							style="color: red; width: 1em; height: 1em;"
+						/>
 					</button>
 					<button
 						class="btn-control"
-						on:click={removeSymbol(quote.symbol)}>
+						on:click={removeSymbol(quote.symbol)}
+					>
 						<Icon
 							data={faPlusCircle}
-							style="color: blue; width: 1em; height: 1em;" />
+							style="color: blue; width: 1em; height: 1em;"
+						/>
 					</button>
 				</span>
 			</div>

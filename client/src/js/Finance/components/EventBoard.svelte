@@ -1,5 +1,5 @@
 <script>
-	import {io} from 'socket.io-client';
+	import { io } from 'socket.io-client';
 	// setup sockets
 	const socket = io();
 

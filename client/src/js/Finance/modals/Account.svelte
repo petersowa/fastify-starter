@@ -41,7 +41,8 @@
 			class="input"
 			type="text"
 			placeholder="Account Name"
-			bind:value={formData.accountName} />
+			bind:value={formData.accountName}
+		/>
 		<button type="submit">Submit</button>
 	</form>
 </Modal>

@@ -122,7 +122,8 @@
 		type="text"
 		placeholder="Symbol"
 		on:change={checkForQuote}
-		bind:value={formData.symbol} />
+		bind:value={formData.symbol}
+	/>
 	<label for="date-input">Date</label>
 	<input
 		id="date-input"
@@ -130,7 +131,8 @@
 		class="form-input"
 		type="date"
 		placeholder="Date"
-		bind:value={formData.date} />
+		bind:value={formData.date}
+	/>
 	<label for="shares-input">Shares</label>
 	<input
 		id="shares-input"
@@ -138,7 +140,8 @@
 		class="form-input"
 		type="text"
 		placeholder="Shares"
-		bind:value={formData.shares} />
+		bind:value={formData.shares}
+	/>
 	<label for="price-input">Price</label>
 	<input
 		id="price-input"
@@ -146,7 +149,8 @@
 		class="form-input"
 		type="text"
 		placeholder="Price"
-		bind:value={formData.price} />
+		bind:value={formData.price}
+	/>
 	<label for="fees-input">Fees</label>
 	<input
 		id="fees-input"
@@ -154,6 +158,7 @@
 		class="form-input"
 		type="text"
 		placeholder="Fees"
-		bind:value={formData.fee} />
+		bind:value={formData.fee}
+	/>
 	<button type="submit">Submit</button>
 </form>

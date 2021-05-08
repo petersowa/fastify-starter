@@ -17,7 +17,7 @@
 		getWatchlist,
 		getStats,
 	} from './Finance/handle-ajax';
-	import EventBoard from './Finance/components/EventBoard.svelte'
+	import EventBoard from './Finance/components/EventBoard.svelte';
 
 	import { faSearch } from '@fortawesome/free-solid-svg-icons';
 	import __qq from './utils/qq';
@@ -243,8 +243,9 @@
 </div>
 
 <div class="attribution">
-	<a href="https://iexcloud.io" rel="noopener" target="_blank">Data provided
-		by IEX Cloud</a>
+	<a href="https://iexcloud.io" rel="noopener" target="_blank"
+		>Data provided by IEX Cloud</a
+	>
 </div>
 <svelte:component this={modal.component} {...modal.data} />
 

@@ -99,9 +99,11 @@
 			{#if position}
 				<Position
 					{position}
-					quote={position.symbol in stockQuotes && stockQuotes[position.symbol]}
+					quote={position.symbol in stockQuotes &&
+						stockQuotes[position.symbol]}
 					onDelete={handlePositionDelete(holding, position)}
-					onUpdate={handlePositionUpdate(holding, position)} />
+					onUpdate={handlePositionUpdate(holding, position)}
+				/>
 			{/if}
 		</li>
 	{/each}
@@ -109,7 +111,8 @@
 	<button
 		class="item-control"
 		aria-label="add position"
-		on:click={handlePositionUpdate(holding)}>
+		on:click={handlePositionUpdate(holding)}
+	>
 		<Icon data={faPlusCircle} style="color: blue;" />
 	</button>
 {/if}

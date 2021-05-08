@@ -28,22 +28,6 @@
 		: 'loading...';
 </script>
 
-<span>{position.symbol.toUpperCase()}</span>
-<span>{format(new Date(position.purchaseDate), 'MM/dd/yyy')}</span>
-<span class="right-justify">{position.quantity}</span>
-<span class="right-justify">{position.cost?.toFixed(2)}</span>
-<span class="right-justify">{value}</span>
-<span class="right-justify">{change}</span>
-<span class="right-justify">{dollarGain}</span>
-<div class="control">
-	<button class="item-control" aria-label="edit" on:click={onUpdate}>
-		<Icon data={faEdit} style="color: blue;" />
-	</button>
-	<button class="item-control" aria-label="delete" on:click={onDelete}>
-		<Icon data={faMinusCircle} style="color: red;" />
-	</button>
-</div>
-
 <style type="text/scss">
 	.control {
 		display: flex;
@@ -77,3 +61,19 @@
 		}
 	}
 </style>
+
+<span>{position.symbol.toUpperCase()}</span>
+<span>{format(new Date(position.purchaseDate), 'MM/dd/yyy')}</span>
+<span class="right-justify">{position.quantity}</span>
+<span class="right-justify">{position.cost?.toFixed(2)}</span>
+<span class="right-justify">{value}</span>
+<span class="right-justify">{change}</span>
+<span class="right-justify">{dollarGain}</span>
+<div class="control">
+	<button class="item-control" aria-label="edit" on:click={onUpdate}>
+		<Icon data={faEdit} style="color: blue;" />
+	</button>
+	<button class="item-control" aria-label="delete" on:click={onDelete}>
+		<Icon data={faMinusCircle} style="color: red;" />
+	</button>
+</div>

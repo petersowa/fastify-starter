@@ -71,7 +71,8 @@
 				class="minor"
 				y1="42"
 				y2="45"
-				transform="rotate({6 * (minute + offset)})" />
+				transform="rotate({6 * (minute + offset)})"
+			/>
 		{/each}
 	{/each}
 
@@ -80,14 +81,16 @@
 		class="hour"
 		y1="2"
 		y2="-20"
-		transform="rotate({30 * hours + minutes / 2})" />
+		transform="rotate({30 * hours + minutes / 2})"
+	/>
 
 	<!-- minute hand -->
 	<line
 		class="minute"
 		y1="4"
 		y2="-30"
-		transform="rotate({6 * minutes + seconds / 10})" />
+		transform="rotate({6 * minutes + seconds / 10})"
+	/>
 
 	<!-- second hand -->
 	<g transform="rotate({6 * seconds})">

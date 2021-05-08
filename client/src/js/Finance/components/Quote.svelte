@@ -136,7 +136,8 @@
 			<button on:click={addToWatchlist}>
 				<Icon
 					data={faArrowAltCircleDown}
-					style="color: green; width: 2em; height: 2em" />
+					style="color: green; width: 2em; height: 2em"
+				/>
 			</button>
 		</div>
 	</div>

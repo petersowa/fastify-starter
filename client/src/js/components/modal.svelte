@@ -6,7 +6,7 @@
 
 	let modal;
 
-	const handle_keydown = e => {
+	const handle_keydown = (e) => {
 		if (e.key === 'Escape') {
 			close();
 			return;
@@ -15,7 +15,7 @@
 		if (e.key === 'Tab') {
 			// trap focus
 			const nodes = modal.querySelectorAll('*');
-			const tabbable = [...nodes].filter(n => n.tabIndex >= 0);
+			const tabbable = [...nodes].filter((n) => n.tabIndex >= 0);
 
 			let index = tabbable.indexOf(document.activeElement);
 			if (index === -1 && e.shiftKey) index = 0;
