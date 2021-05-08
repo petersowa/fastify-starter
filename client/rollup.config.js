@@ -5,7 +5,6 @@ import commonjs from '@rollup/plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
 import scssPlugin from 'rollup-plugin-scss';
 import replace from '@rollup/plugin-replace';
-// import typescript from 'rollup-plugin-typescript2';
 import typescript from '@rollup/plugin-typescript';
 import autoPreprocess from 'svelte-preprocess';
 
@@ -14,11 +13,11 @@ const production = !process.env.ROLLUP_WATCH;
 export default {
 	input: 'src/js/main.ts',
 	output: {
-		sourcemap: true,
+		sourcemap: !production,
 		format: 'es',
 		name: 'app',
 		dir: '../public',
-		entryFileNames: 'js/main.js',
+		// entryFileNames: 'js/main.js',
 		chunkFileNames: 'js/[name].js',
 	},
 	plugins: [
@@ -32,16 +31,14 @@ export default {
 				// 	css.write('css/main-svelte.css');
 				// },
 			},
-			preprocess: autoPreprocess({
-				sourceMap: !production,
-			}),
+			preprocess: autoPreprocess({ sourceMap: !production }),
 		}),
-		typescript({ sourceMap: !production }),
 		resolve({
 			browser: true,
 			dedupe: ['svelte'],
 		}),
 		commonjs(),
+		typescript({ sourceMap: !production, inlineSources: !production }),
 
 		production && terser(),
 		scssPlugin({
@@ -50,10 +47,8 @@ export default {
 
 		replace({
 			preventAssignment: true,
-			process: JSON.stringify({
-				env: {
-					isProd: production,
-				},
+			'process.env': JSON.stringify({
+				isProd: production,
 			}),
 		}),
 	],
