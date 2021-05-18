@@ -1,11 +1,11 @@
 {
 	"name": "fastify-starter",
-	"version": "0.4.0",
+	"version": "0.5.0",
 	"description": "Backend API Fastify server with Typescript support.",
 	"main": "dist/app.js",
 	"engines": {
 		"node": "v14.16.1",
-		"npm": "7.11.2"
+		"npm": "7.13.0"
 	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
@@ -57,12 +57,12 @@
 	},
 	"devDependencies": {
 		"@babel/eslint-parser": "^7.13.14",
-		"@types/bcrypt": "^3.0.0",
+		"@types/bcrypt": "^5.0.0",
 		"@types/express-session": "^1.17.3",
 		"@types/node": "^15.0.1",
 		"@types/shelljs": "^0.8.8",
-		"@types/socket.io": "^2.1.13",
-		"@types/socket.io-client": "^1.4.36",
+		"@types/socket.io": "^3.0.2",
+		"@types/socket.io-client": "^3.0.0",
 		"@typescript-eslint/eslint-plugin": "^4.19.0",
 		"@typescript-eslint/parser": "^4.19.0",
 		"concurrently": "^6.0.2",
@@ -71,7 +71,7 @@
 		"eslint-plugin-eslint-plugin": "^3.0.2",
 		"eslint-plugin-prettier": "^3.3.1",
 		"mocha": "^8.3.2",
-		"node-sass": "^5.0.0",
+		"node-sass": "^6.0.0",
 		"shelljs": "^0.8.4",
 		"ts-loader": "^9.0.2",
 		"ts-node": "^9.1.1",
