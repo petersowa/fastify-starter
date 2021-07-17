@@ -21,6 +21,10 @@ export default {
 		chunkFileNames: 'js/[name].js',
 	},
 	plugins: [
+		replace({
+			preventAssignment: true,
+			'process.env.isProd': JSON.stringify(production),
+		}),
 		svelte({
 			extensions: ['.svelte'],
 			exclude: 'src/js/main.ts',
@@ -43,13 +47,6 @@ export default {
 		production && terser(),
 		scssPlugin({
 			output: '../public/css/main.css',
-		}),
-
-		replace({
-			preventAssignment: true,
-			'process.env': JSON.stringify({
-				isProd: production,
-			}),
 		}),
 	],
 	watch: {
