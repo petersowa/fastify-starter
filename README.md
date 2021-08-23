@@ -91,12 +91,32 @@ ytdChange: 0.7465299999999999
 
 # TODO
 
--   [ ] Add Sapper
 -   [x] Implement modal for buy transaction when selected
--   [ ] Use svelte routing
 -   [x] Create a modal store to fix issue with buy modal display
 -   [x] test
 -   [ ] create generic endpoint for finance data on IEX and RapidAPI
+
+# BUGS
+
+-   [ ] Fix depreciation warning
+```
+	[1] (node:3532) [FSTDEP006] FastifyDeprecation: You are decorating Request/Reply with a reference type. This reference is shared amongst all requests. Use onRequest hook instead. Property: sessionStore
+	[1]     at Object.emit (C:\Users\Electron\Documents\ps\code\heroku\fastify-starter\node_modules\fastify-warning\index.js:52:13)
+	[1]     at checkReferenceType (C:\Users\Electron\Documents\ps\code\heroku\fastify-starter\node_modules\fastify\lib\decorate.js:45:13)
+	[1]     at Object.decorateRequest (C:\Users\Electron\Documents\ps\code\heroku\fastify-starter\node_modules\fastify\lib\decorate.js:89:3)
+	[1]     at session (C:\Users\Electron\Documents\ps\code\heroku\fastify-starter\node_modules\fastify-session\lib\fastifySession.js:21:11)
+	[1]     at Plugin.exec (C:\Users\Electron\Documents\ps\code\heroku\fastify-starter\node_modules\avvio\plugin.js:132:19)
+	[1]     at Boot.loadPlugin (C:\Users\Electron\Documents\ps\code\heroku\fastify-starter\node_modules\avvio\plugin.js:267:10)
+	[1]     at Task.release (C:\Users\Electron\Documents\ps\code\heroku\fastify-starter\node_modules\fastq\queue.js:149:16)
+	[1]     at worked (C:\Users\Electron\Documents\ps\code\heroku\fastify-starter\node_modules\fastq\queue.js:201:10)
+	[1]     at C:\Users\Electron\Documents\ps\code\heroku\fastify-starter\node_modules\avvio\plugin.js:270:7
+	[1]     at done (C:\Users\Electron\Documents\ps\code\heroku\fastify-starter\node_modules\avvio\plugin.js:202:5)
+	[1]     at check (C:\Users\Electron\Documents\ps\code\heroku\fastify-starter\node_modules\avvio\plugin.js:226:9)
+	[1]     at internal/process/task_queues.js:141:7
+	[1]     at AsyncResource.runInAsyncScope (async_hooks.js:197:9)
+	[1]     at AsyncResource.runMicrotask (internal/process/task_queues.js:138:8)
+	[1]     at processTicksAndRejections (internal/process/task_queues.js:95:5)
+```
 
 # IDEAS
 

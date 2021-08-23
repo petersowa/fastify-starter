@@ -34,6 +34,7 @@
 	"author": "Peter Sowa",
 	"license": "ISC",
 	"dependencies": {
+		"@mgcrea/fastify-session": "^0.14.1",
 		"axios": "^0.21.1",
 		"bcrypt": "^5.0.1",
 		"chalk": "^4.1.0",
