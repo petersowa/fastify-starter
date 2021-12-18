@@ -63,7 +63,7 @@
 	}
 </script>
 
-<style type="text/scss">
+<style lang="scss">
 	.watchlist {
 		display: grid;
 		margin: 0;

@@ -155,7 +155,7 @@
 	}
 </script>
 
-<style type="text/scss">
+<style lang="scss">
 	.apps {
 		font-size: calc(0.4em + 0.5vw);
 	}

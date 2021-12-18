@@ -28,7 +28,7 @@
 		: 'loading...';
 </script>
 
-<style type="text/scss">
+<style lang="scss">
 	.control {
 		display: flex;
 		margin-top: 0;

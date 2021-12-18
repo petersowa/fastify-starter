@@ -39,7 +39,7 @@
 	};
 </script>
 
-<style type="text/scss">
+<style lang="scss">
 	.quotes {
 		display: flex;
 		flex-direction: column;

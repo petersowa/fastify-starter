@@ -84,7 +84,7 @@
 	};
 </script>
 
-<style type="text/scss" lang="scss">
+<style lang="scss">
 	.data {
 		display: flex;
 		flex-direction: column;
