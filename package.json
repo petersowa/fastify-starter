@@ -1,6 +1,6 @@
 {
 	"name": "fastify-starter",
-	"version": "0.5.0",
+	"version": "0.5.1",
 	"description": "Backend API Fastify server with Typescript support.",
 	"main": "dist/app.js",
 	"engines": {
