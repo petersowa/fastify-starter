@@ -28,7 +28,7 @@
 		"rxjs": "^7.1.0",
 		"socket.io-client": "^4.0.0",
 		"sortablejs": "^1.13.0",
-		"svelte": "^3.38.3",
+		"svelte": "^3.49.0",
 		"svelte-awesome": "^2.3.2",
 		"svelte-check": "^2.2.0",
 		"svelte-preprocess": "^4.7.3",
