@@ -4,8 +4,8 @@
 	"description": "Backend API Fastify server with Typescript support.",
 	"main": "dist/app.js",
 	"engines": {
-		"node": "v16.13.1",
-		"npm": "8.3.0"
+		"node": "v16.18",
+		"npm": "8.19"
 	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
