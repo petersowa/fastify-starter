@@ -1,10 +1,10 @@
 import fastify from 'fastify';
-import fastifyCookie from 'fastify-cookie';
-import fastifyStatic from 'fastify-static';
+import fastifyCookie from '@fastify/cookie';
+import fastifyStatic from '@fastify/static';
 import path from 'path';
 
 import helmet from 'fastify-helmet';
-import formBody from 'fastify-formbody';
+import formBody from '@fastify/formbody';
 
 import socketIo from './socket-io';
 import authRoutes from '../routes/auth';
