@@ -60,7 +60,7 @@ export interface Quote {
 }
 export interface QuotesInterface extends Document {
 	symbol: string;
-	date: string;
+	date: Date;
 	data: Quote;
 }
 

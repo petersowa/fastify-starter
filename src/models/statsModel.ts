@@ -4,7 +4,7 @@ import { RapidStatsResult } from '../api/types';
 
 export interface StatsInterface extends Document {
 	symbol: string;
-	date: string;
+	date: Date;
 	data: RapidStatsResult;
 }
 

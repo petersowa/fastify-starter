@@ -66,9 +66,8 @@ async function fetchStats(
 	let statsData: RapidStatsResult | null = null;
 
 	try {
-		const cacheStats: HashData<
-			RapidStatsResult
-		> | null = statsCache.getCache(symbol);
+		const cacheStats: HashData<RapidStatsResult> | null =
+			statsCache.getCache(symbol);
 
 		if (cacheStats && cacheStats.data) {
 			cacheStats.data.facScore = calcScore(cacheStats.data);
@@ -80,7 +79,7 @@ async function fetchStats(
 		if (
 			statsDB &&
 			statsDB.data &&
-			!isExpiredData(statsDB.date, MAXAGE_STATS)
+			!isExpiredData(statsDB.date.toString(), MAXAGE_STATS)
 		) {
 			statsData = statsDB.data;
 			console.log('got stats from db');
@@ -135,7 +134,7 @@ async function fetchQuote(
 		if (
 			quoteDB &&
 			quoteDB.data &&
-			!isExpiredData(quoteDB.date, MAXAGE_QUOTE)
+			!isExpiredData(quoteDB.date.toString(), MAXAGE_QUOTE)
 		) {
 			quoteCache.setCache(symbol, quoteDB.data);
 			return quoteDB.data;
@@ -177,7 +176,7 @@ function getLatestSavedQuote(symbol: string): Promise<QuotesInterface | null> {
 async function updateQuoteDB(symbol: string, data: Quote): Promise<boolean> {
 	const quote = await getLatestSavedQuote(symbol);
 	if (quote) {
-		if (!isExpiredData(quote.date, MAXAGE_QUOTE)) {
+		if (!isExpiredData(quote.date.toString(), MAXAGE_QUOTE)) {
 			console.log('found recent quote', symbol);
 			return new Promise((resolve, reject) => resolve(false));
 		}
@@ -230,7 +229,7 @@ async function updateStatsDB(
 ): Promise<boolean> {
 	const stats = await getLatestSavedStats(symbol);
 	if (stats) {
-		if (!isExpiredData(stats.date, MAXAGE_STATS)) {
+		if (!isExpiredData(stats.date.toString(), MAXAGE_STATS)) {
 			console.log('found recent stats in db');
 			return new Promise((resolve, reject) => resolve(false));
 		}

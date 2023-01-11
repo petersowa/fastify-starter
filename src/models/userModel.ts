@@ -22,14 +22,14 @@ schema.pre('save', async function (next) {
 		user.password = await hash(user.password);
 		return next(null);
 	} catch (err) {
-		return next(err);
+		return next(err as undefined);
 	}
 });
 
 schema.methods.validatePassword = async function (
 	pw: string
 ): Promise<boolean> {
-	const user = (this as unknown) as UserModel;
+	const user = this as unknown as UserModel;
 	return compare(pw, user.password);
 };
 

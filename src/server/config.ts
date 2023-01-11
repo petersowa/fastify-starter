@@ -3,7 +3,7 @@ import fastifyCookie from '@fastify/cookie';
 import fastifyStatic from '@fastify/static';
 import path from 'path';
 
-import helmet from 'fastify-helmet';
+import helmet from '@fastify/helmet';
 import formBody from '@fastify/formbody';
 
 import socketIo from './socket-io';
@@ -16,11 +16,11 @@ import { WebStatsModel } from '../models/webStats';
 import flash from './flash';
 import appState from './app-state';
 
-import fastifyCsrf from 'fastify-csrf';
+import fastifyCsrf from '@fastify/csrf-protection';
 
 const PORT: number = parseInt(process.env.PORT || '3999', 10);
 
-const logger = false; //process.env.NODE_ENV !== 'production';
+const logger = true; //process.env.NODE_ENV !== 'production';
 
 const app = fastify({
 	logger,
@@ -31,22 +31,13 @@ console.log('ENV:', process.env.NODE_ENV);
 
 app.register(helmet);
 
-app.register(fastifyCookie);
+app.register(fastifyCookie, { secret: 'test-SECRET-123' });
 app.register(formBody);
 registerSessions(app);
 
-// app.addHook('preHandler', (request, reply, next) => {
-// 	console.log('PREHANDLER', {
-// 		ips: request.ips,
-// 		// userId: request.session.userId,
-// 		// body: request.body,
-// 	});
-// 	next();
-// });
-
 app.register(fastifyCsrf, {
 	sessionKey: '_csrf',
-	sessionPlugin: 'fastify-session',
+	sessionPlugin: '@fastify/session',
 });
 
 app.addHook('preHandler', async (request, reply) => {

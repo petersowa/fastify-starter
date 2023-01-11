@@ -9,11 +9,7 @@ async function connect(connectedFn: CallbackType = null): Promise<void> {
 		console.error('No mongodb name provided');
 		throw new Error('mongodb string not provided');
 	}
-	await mongoose.connect(MONGODB_NAME, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-		useCreateIndex: true,
-	});
+	await mongoose.connect(MONGODB_NAME);
 	const db = mongoose.connection;
 	// console.log({ db });
 	db.on('error', console.error.bind(console, 'connection error:'));

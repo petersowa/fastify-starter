@@ -1,9 +1,9 @@
-function sessionInfo(): {} {
+function sessionInfo(): Record<string, unknown> {
 	let info = {};
-	function getInfo(): {} {
+	function getInfo(): Record<string, unknown> {
 		return info;
 	}
-	function setInfo(data: {}): void {
+	function setInfo(data: Record<string, unknown>): void {
 		info = data;
 	}
 	return { getInfo, setInfo };
