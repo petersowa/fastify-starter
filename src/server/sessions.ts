@@ -3,7 +3,7 @@ import { Server, IncomingMessage, ServerResponse } from 'http';
 import 'fastify-session'; // session types
 
 // import mongoose from 'mongoose';
-import MongoStore from 'connect-mongo';
+// import MongoStore from 'connect-mongo';
 
 import fastifySession from '@fastify/session';
 // import FastifySessionPlugin from '@fastify/session';
@@ -32,10 +32,10 @@ const register = async (
 			secure: NODE_ENV === 'production',
 			maxAge: MAX_SESSION_AGE,
 		},
-		store: new MongoStore({
-			// mongooseConnection: mongoose.connection,
-			mongoUrl: MONGODB_NAME,
-		}),
+		// store: new MongoStore({
+		// 	// mongooseConnection: mongoose.connection,
+		// 	mongoUrl: MONGODB_NAME,
+		// }),
 	});
 };
 

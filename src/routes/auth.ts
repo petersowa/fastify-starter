@@ -9,12 +9,9 @@ async function routes(fastify: fastify.FastifyInstance): Promise<void> {
 		done();
 	});
 
-	fastify.get(
-		'/test',
-		async (): Promise<{ data: 'test' }> => {
-			return { data: 'test' };
-		}
-	);
+	fastify.get('/test', async (): Promise<{ data: 'test' }> => {
+		return { data: 'test' };
+	});
 
 	fastify.post<{ Body: { username: string; password: string } }>(
 		'/login',
@@ -50,6 +47,7 @@ async function routes(fastify: fastify.FastifyInstance): Promise<void> {
 					request.session.flash.add('auth', err.message);
 					return reply.redirect('/login');
 				});
+			return;
 		}
 	);
 

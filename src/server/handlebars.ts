@@ -1,4 +1,5 @@
 import hbs from 'handlebars';
+import view from '@fastify/view';
 import * as fastify from 'fastify';
 import { Server, IncomingMessage, ServerResponse } from 'http';
 
@@ -12,7 +13,7 @@ hbs.registerHelper('debugJSON', (value) => {
 const register = (
 	app: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse>
 ): void => {
-	app.register(require('point-of-view'), {
+	app.register(view, {
 		engine: {
 			handlebars: hbs,
 		},

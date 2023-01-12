@@ -31,6 +31,7 @@ console.log('ENV:', process.env.NODE_ENV);
 
 app.register(helmet);
 
+// CHECK:ME
 app.register(fastifyCookie, { secret: 'test-SECRET-123' });
 app.register(formBody);
 registerSessions(app);
@@ -74,8 +75,6 @@ app.addHook('preHandler', async (request, reply) => {
 				console.error({ WebStatsModel: err.message });
 			});
 	}
-
-	// next();
 });
 
 const flashState = flash();

@@ -1,4 +1,4 @@
-import 'point-of-view'; // import for type support
+import '@fastify/view'; // import for type support
 
 const article = `
 An important change is that the Tab key is no longer the default way to expand Emmet abbreviations. Instead, Emmet abbreviations will now appear in the suggestion list. They can be selected like any other smart completion and on selection, the abbreviation will be expanded.
@@ -14,12 +14,7 @@ const images = [
 
 async function routes(fastify, options) {
 	fastify.get('/', async (request, reply) => {
-		// console.log(
-		// 	'>>>> HOME',
-		// 	request.session,
-		// 	request.session.appState.modal
-		// );
-		reply.view('./pages/index', {
+		const replyData = {
 			name: 'home page',
 			article,
 			username: request.session.username,
@@ -27,7 +22,15 @@ async function routes(fastify, options) {
 			appState: request.session.appState,
 			info: request.session.appState.info.getInfo(), // {{debugJSON info}}
 			whichModal: request.session.appState.modal,
-		});
+		};
+
+		console.log(
+			'>>>> HOME',
+			request.session,
+			request.session.appState.modal,
+			{ replyData }
+		);
+		return reply.view('./pages/index', replyData);
 	});
 
 	fastify.get('/about', (request, reply) => {
@@ -53,7 +56,7 @@ async function routes(fastify, options) {
 		const errors = request.session.flash.get('auth');
 		const csrfToken = await reply.generateCsrf();
 		// console.log({ csrfToken, session: request.session });
-		reply.view('./pages/register', {
+		return reply.view('./pages/register', {
 			name: 'Create Account',
 			article,
 			username: request.session.username,
@@ -69,7 +72,7 @@ async function routes(fastify, options) {
 		// console.log({ csrfToken, session: request.session });
 
 		console.error({ errors });
-		reply.view('./pages/login', {
+		return reply.view('./pages/login', {
 			name: 'Login',
 			article,
 			username: request.session.username,
