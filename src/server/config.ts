@@ -27,12 +27,12 @@ const app = fastify({
 	trustProxy: true,
 });
 
-console.log('ENV:', process.env.NODE_ENV);
+// console.log('ENV:', process.env.NODE_ENV);
 
 app.register(helmet);
 
 // CHECK:ME
-app.register(fastifyCookie, { secret: 'test-SECRET-123' });
+app.register(fastifyCookie, { secret: process.env.COOKIE_SECRET });
 app.register(formBody);
 registerSessions(app);
 

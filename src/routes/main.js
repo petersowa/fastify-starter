@@ -24,12 +24,12 @@ async function routes(fastify, options) {
 			whichModal: request.session.appState.modal,
 		};
 
-		console.log(
-			'>>>> HOME',
-			request.session,
-			request.session.appState.modal,
-			{ replyData }
-		);
+		// console.log(
+		// 	'>>>> HOME',
+		// 	request.session,
+		// 	request.session.appState.modal,
+		// 	{ replyData }
+		// );
 		return reply.view('./pages/index', replyData);
 	});
 
@@ -69,6 +69,7 @@ async function routes(fastify, options) {
 	fastify.get('/login', async (request, reply) => {
 		const errors = request.session.flash.get('auth');
 		const csrfToken = await reply.generateCsrf();
+		// console.log('****************************************************');
 		// console.log({ csrfToken, session: request.session });
 
 		console.error({ errors });

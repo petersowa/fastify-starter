@@ -15,7 +15,7 @@ async function routes(fastify: fastify.FastifyInstance): Promise<void> {
 
 	fastify.post<{ Body: { username: string; password: string } }>(
 		'/login',
-		async (request, reply) => {
+		(request, reply) => {
 			const { password, username } = request.body;
 			UserModel.findOne({ email: username })
 				.then(async (user) => {
@@ -26,13 +26,13 @@ async function routes(fastify: fastify.FastifyInstance): Promise<void> {
 							request.session.isAuth = true;
 							request.session.username = username; // email
 							request.session.userId = user.id;
-							return reply.redirect('/');
+							reply.redirect('/');
 						} else {
 							request.session.flash.add(
 								'auth',
 								'password or username is not correct'
 							);
-							return reply.redirect('/login');
+							reply.redirect('/login');
 						}
 					} else {
 						request.session.flash.add(
@@ -40,14 +40,13 @@ async function routes(fastify: fastify.FastifyInstance): Promise<void> {
 							'password or username is not correct'
 						);
 
-						return reply.redirect('/login');
+						reply.redirect('/login');
 					}
 				})
 				.catch((err) => {
 					request.session.flash.add('auth', err.message);
-					return reply.redirect('/login');
+					reply.redirect('/login');
 				});
-			return;
 		}
 	);
 
@@ -69,7 +68,7 @@ async function routes(fastify: fastify.FastifyInstance): Promise<void> {
 				},
 			},
 		},
-		async (request, reply) => {
+		(request, reply) => {
 			const {
 				password,
 				username,
@@ -79,7 +78,7 @@ async function routes(fastify: fastify.FastifyInstance): Promise<void> {
 			if (password !== passwordMatch) {
 				// request.flash('auth', 'Passwords do not match.');
 				request.session.flash.add('auth', 'passwords do not match');
-				return reply.redirect('/register');
+				reply.redirect('/register');
 			}
 			const newUser = new UserModel({
 				name: username,
@@ -92,21 +91,21 @@ async function routes(fastify: fastify.FastifyInstance): Promise<void> {
 					request.session.isAuth = true;
 					request.session.username = username; // email
 					request.session.userId = user.id;
-					return reply.redirect('/');
+					reply.redirect('/');
 				})
 				.catch((err: Error) => {
 					request.session.flash.add(
 						'auth',
 						'duplicate or unable to register'
 					);
-					return reply.redirect('/register');
+					reply.redirect('/register');
 				});
 		}
 	);
 
 	fastify.get('/logout', async (request, reply) => {
 		if (!request.session.isAuth) return reply.redirect('/');
-		request.destroySession((err) => {
+		request.session.destroy((err) => {
 			if (err) {
 				reply.status(500);
 				return reply.send('Internal Server Error: ES1');
