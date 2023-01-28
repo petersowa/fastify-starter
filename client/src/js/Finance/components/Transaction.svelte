@@ -1,4 +1,4 @@
-<script lang="typescript">
+<script lang="ts">
 	export let setTransactionType;
 </script>
 

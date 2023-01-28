@@ -9,6 +9,7 @@ async function connect(connectedFn: CallbackType = null): Promise<void> {
 		console.error('No mongodb name provided');
 		throw new Error('mongodb string not provided');
 	}
+	mongoose.set('strictQuery', false);
 	await mongoose.connect(MONGODB_NAME);
 	const db = mongoose.connection;
 	// console.log({ db });

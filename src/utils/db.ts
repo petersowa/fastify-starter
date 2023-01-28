@@ -1,13 +1,10 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { connect } from './mongo';
 
 interface CreateModel {
 	DBSchema: Schema | null;
-	createModel<T extends Document>(
-		name: string,
-		schema: Schema<T>
-	): mongoose.Model<T>;
-	getSchema: () => Schema | null;
+	createModel<T>(name: string, schema: Schema<T>): mongoose.Model<T>;
+	getSchema<T>(): Schema<T> | null;
 }
 
 let dbInstance: CreateModel;
@@ -17,14 +14,11 @@ function db(): CreateModel {
 
 	return {
 		DBSchema: null,
-		createModel<T extends Document>(
-			name: string,
-			schema: Schema<T>
-		): mongoose.Model<T> {
-			this.DBSchema = new Schema<T>(schema);
+		createModel<T>(name: string, schema: Schema<T>): mongoose.Model<T> {
+			this.DBSchema = schema;
 			return mongoose.model<T>(name, this.DBSchema);
 		},
-		getSchema(): mongoose.Schema | null {
+		getSchema<T>(): mongoose.Schema<T> | null {
 			return this.DBSchema;
 		},
 	};
