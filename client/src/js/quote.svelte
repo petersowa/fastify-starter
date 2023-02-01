@@ -243,7 +243,7 @@
 </div>
 
 <div class="attribution">
-	<a href="https://iexcloud.io" rel="noopener" target="_blank"
+	<a href="https://iexcloud.io" rel="noreferrer" target="_blank"
 		>Data provided by IEX Cloud</a
 	>
 </div>
