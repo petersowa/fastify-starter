@@ -1,54 +1,65 @@
-import * as fastify from 'fastify';
+import type * as fastify from 'fastify';
 import { UserModel } from '../models/userModel';
 
 async function routes(fastify: fastify.FastifyInstance): Promise<void> {
 	fastify.addHook('preHandler', (request, reply, done) => {
+		console.log('PREHANDLER', request.body, request.method);
 		if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
 			fastify.csrfProtection(request, reply, done);
+		} else {
+			done();
 		}
-		done();
+		console.log('PREHANDLER DONE');
 	});
 
 	fastify.get('/test', async (): Promise<{ data: 'test' }> => {
 		return { data: 'test' };
 	});
 
-	fastify.post<{ Body: { username: string; password: string } }>(
-		'/login',
-		(request, reply) => {
-			const { password, username } = request.body;
-			UserModel.findOne({ email: username })
-				.then(async (user) => {
-					if (user) {
-						const isValidPW = await user.validatePassword(password);
-						if (isValidPW) {
-							// console.log({ user, isValidPW, username });
-							request.session.isAuth = true;
-							request.session.username = username; // email
-							request.session.userId = user.id;
-							reply.redirect('/');
-						} else {
-							request.session.flash.add(
-								'auth',
-								'password or username is not correct'
-							);
-							reply.redirect('/login');
-						}
-					} else {
-						request.session.flash.add(
-							'auth',
-							'password or username is not correct'
-						);
+	fastify.post<{
+		Body: { username: string; password: string };
+	}>('/login', async (request, reply) => {
+		const { password, username } = request.body;
+		// console.trace('POST LOGIN ROUTE', {
+		// 	Body: request.body,
+		// 	Session: request.session,
+		// });
+		try {
+			const user = await UserModel.findOne({ email: username });
 
-						reply.redirect('/login');
-					}
-				})
-				.catch((err) => {
-					request.session.flash.add('auth', err.message);
-					reply.redirect('/login');
+			if (!user) {
+				request.session.flash.add(
+					'auth',
+					'password or username is not correct'
+				);
+				reply.redirect('/login');
+			}
+
+			const isValidPW = await user.validatePassword(password);
+
+			if (isValidPW) {
+				// console.log({ user, isValidPW, username });
+				request.session.isAuth = true;
+				request.session.username = username; // email
+				request.session.userId = user.id;
+				console.log({
+					LoginRedirect: request.session.username,
 				});
+				reply.redirect('/');
+			} else {
+				request.session.flash.add(
+					'auth',
+					'password or username is not correct'
+				);
+				reply.redirect('/login');
+			}
+		} catch (error) {
+			console.error({ LoginError: error });
+			if (error instanceof Error) throw new Error(error.message);
 		}
-	);
+		console.log('RETURN POST LOGIN');
+		await reply;
+	});
 
 	interface Body {
 		username: string;
@@ -104,15 +115,17 @@ async function routes(fastify: fastify.FastifyInstance): Promise<void> {
 	);
 
 	fastify.get('/logout', async (request, reply) => {
-		if (!request.session.isAuth) return reply.redirect('/');
+		console.log('POST LOGOUT ROUTE');
+		if (!request.session.isAuth) reply.redirect('/');
 		request.session.destroy((err) => {
 			if (err) {
 				reply.status(500);
-				return reply.send('Internal Server Error: ES1');
+				reply.send('Internal Server Error: ES1');
 			} else {
-				return reply.redirect('/');
+				reply.redirect('/');
 			}
 		});
+		await reply;
 	});
 }
 
