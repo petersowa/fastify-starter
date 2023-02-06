@@ -1,4 +1,4 @@
-interface Flash {
+export interface Flash {
 	add: (type: string, message: string) => void;
 	get: (type: string) => string;
 }
