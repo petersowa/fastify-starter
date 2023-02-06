@@ -140,7 +140,7 @@ async function fetchQuote(
 			return quoteDB.data;
 		}
 
-		console.log(missCache('FETCHING FROM IEX API', symbol));
+		// console.log(missCache('FETCHING FROM IEX API', symbol));
 		const [quote, stats] = await Promise.all([
 			axios.get<Quote>(
 				`${iexURL}/stock/${symbol}/quote?token=${apiToken}`
