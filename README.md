@@ -16,13 +16,15 @@ After .env file is added run dev server with 'npm run dev', it is configured to 
 Test server side app with svelte client code and handlebar templates.
 
 <p align='center'>
-<img src='https://i.ibb.co/pLyHRB3/Inv-App-Screen-Shot.jpg' width='600' alt='investment app'>
+<a href="https://ibb.co/R9CFbRy"><img src="https://i.ibb.co/R9CFbRy/gc-screenshot-temp-Copy.png" alt="gc-screenshot-temp-Copy" border="0"></a>
 </p>
 
 Backend is using fastify.
 Connecting to mongo db via mongoose.
+Connecting to redis via ioredis
 
 Client is responsive with mobile and desktop views.
+Svelte UI in finance list client
 Uses CSS for styling core server html.
 
 # Using IEX data:
@@ -88,6 +90,8 @@ ytdChange: 0.7465299999999999
 # RESOURCES
 
 -   https://codechips.me/how-to-use-typescript-with-svelte/
+-   covert JSON to typescript via https://transform.tools/json-to-typescript
+-   https://imgbb.com/ for sharing images
 
 # TODO
 
@@ -98,7 +102,8 @@ ytdChange: 0.7465299999999999
 
 # BUGS
 
--   [ ] Fix depreciation warning
+-   [x] Fix depreciation warning
+
 ```
 	[1] (node:3532) [FSTDEP006] FastifyDeprecation: You are decorating Request/Reply with a reference type. This reference is shared amongst all requests. Use onRequest hook instead. Property: sessionStore
 	[1]     at Object.emit (C:\Users\Electron\Documents\ps\code\heroku\fastify-starter\node_modules\fastify-warning\index.js:52:13)
