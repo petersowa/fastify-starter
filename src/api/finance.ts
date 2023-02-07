@@ -149,7 +149,7 @@ async function fetchQuote(
 		]);
 		if (quote) {
 			// quote.data.stats=stats;
-			console.log('FETCHED:', quote.data);
+			// console.log('FETCHED:', quote.data);
 			quoteCache.setCache(symbol, quote.data);
 			await updateQuoteDB(symbol, quote.data);
 			return quote.data;
@@ -176,7 +176,6 @@ function getLatestSavedQuote(symbol: string): Promise<QuotesInterface | null> {
 
 async function updateQuoteDB(symbol: string, data: Quote): Promise<boolean> {
 	const quote = await getLatestSavedQuote(symbol);
-	console.log('UPDATEQUOTEDB');
 	if (quote) {
 		if (!isExpiredData(quote.date.toString(), MAXAGE_QUOTE)) {
 			console.log('found recent quote', symbol);
@@ -189,6 +188,7 @@ async function updateQuoteDB(symbol: string, data: Quote): Promise<boolean> {
 	}
 
 	try {
+		console.log('UPDATEQUOTEDB');
 		const quoteModel = new QuotesModel({
 			symbol,
 			data,

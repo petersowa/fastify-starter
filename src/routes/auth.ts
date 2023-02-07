@@ -3,7 +3,7 @@ import { UserModel } from '../models/userModel';
 
 async function routes(fastify: fastify.FastifyInstance): Promise<void> {
 	fastify.addHook('preHandler', (request, reply, done) => {
-		console.log('PREHANDLER', request.body, request.method);
+		console.log('PREHANDLER'); //, request.body, request.method);
 		if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
 			fastify.csrfProtection(request, reply, done);
 		} else {

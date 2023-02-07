@@ -21,7 +21,7 @@ import fastifyCsrf from '@fastify/csrf-protection';
 
 const PORT: number = parseInt(process.env.PORT || '3999', 10);
 
-const logger = process.env.NODE_ENV !== 'production';
+const logger = false; //process.env.NODE_ENV !== 'production';
 
 const app = fastify({
 	logger,
