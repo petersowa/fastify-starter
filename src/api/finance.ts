@@ -149,12 +149,13 @@ async function fetchQuote(
 		]);
 		if (quote) {
 			// quote.data.stats=stats;
+			console.log('FETCHED:', quote.data);
 			quoteCache.setCache(symbol, quote.data);
 			await updateQuoteDB(symbol, quote.data);
 			return quote.data;
 		}
 	} catch (err) {
-		console.error('Fetch Quote Error: ', (err as Error).message, { err });
+		console.error('Fetch Quote Error: ', (err as Error).message);
 		return null;
 	}
 	return null;
@@ -175,32 +176,28 @@ function getLatestSavedQuote(symbol: string): Promise<QuotesInterface | null> {
 
 async function updateQuoteDB(symbol: string, data: Quote): Promise<boolean> {
 	const quote = await getLatestSavedQuote(symbol);
+	console.log('UPDATEQUOTEDB');
 	if (quote) {
 		if (!isExpiredData(quote.date.toString(), MAXAGE_QUOTE)) {
 			console.log('found recent quote', symbol);
-			return new Promise((resolve, reject) => resolve(false));
+			return false;
 		}
 		if (quote.data.latestUpdate === data.latestUpdate) {
 			console.log('same quote', symbol);
 			return false;
 		}
 	}
-	return new Promise((resolve, reject) => {
-		const quote = new QuotesModel({
+
+	try {
+		const quoteModel = new QuotesModel({
 			symbol,
 			data,
 		});
-		quote
-			.save()
-			.then((doc) => {
-				resolve(true);
-				// console.log('saved quote');
-			})
-			.catch((err) => {
-				reject(false);
-				console.error({ QuoteModel: err.message });
-			});
-	});
+		await quoteModel?.save();
+		return true;
+	} catch (error) {
+		return Promise.reject((error as Error).message);
+	}
 }
 
 function getLatestSavedStats(symbol: string): Promise<StatsInterface | null> {
