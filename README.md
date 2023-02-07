@@ -16,7 +16,7 @@ After .env file is added run dev server with 'npm run dev', it is configured to 
 Test server side app with svelte client code and handlebar templates.
 
 <p align='center'>
-<a href="https://ibb.co/R9CFbRy"><img src="https://i.ibb.co/R9CFbRy/gc-screenshot-temp-Copy.png" alt="gc-screenshot-temp-Copy" border="0"></a>
+<img src="https://i.ibb.co/0cf72Ht/gc-screenshot-temp-Copy.png" alt="screenshot app UI" border="0" />
 </p>
 
 Backend is using fastify.
