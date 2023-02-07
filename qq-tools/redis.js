@@ -50,10 +50,22 @@ function QueryRedis() {
     if (!REDIS_CONNECT)
         throw new Error('No Redis Connect String');
     var redisClient = new ioredis_1["default"](REDIS_CONNECT);
+    redisClient.on('error', function (redisClientError) {
+        console.error('REDIS ERROR:', redisClientError.message);
+        process.exit(0);
+    });
     logRedis(redisClient);
 }
-QueryRedis();
-var interval = setInterval(function () { return QueryRedis(); }, 10000);
+var interval;
+try {
+    QueryRedis();
+    interval = setInterval(function () { return QueryRedis(); }, 10000);
+}
+catch (error) {
+    if (error instanceof Error)
+        console.error(error.message);
+    process.exit(0);
+}
 function logRedis(redisClient) {
     return __awaiter(this, void 0, void 0, function () {
         var stream;

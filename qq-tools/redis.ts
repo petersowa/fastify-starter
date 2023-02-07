@@ -16,12 +16,21 @@ function QueryRedis() {
 	if (!REDIS_CONNECT) throw new Error('No Redis Connect String');
 
 	const redisClient = new Redis(REDIS_CONNECT);
-
+	redisClient.on('error', (redisClientError: Error) => {
+		console.error('REDIS ERROR:', redisClientError.message);
+		process.exit(0);
+	});
 	logRedis(redisClient);
 }
 
-QueryRedis();
-const interval = setInterval(() => QueryRedis(), 10000);
+let interval: NodeJS.Timer;
+try {
+	QueryRedis();
+	interval = setInterval(() => QueryRedis(), 10000);
+} catch (error) {
+	if (error instanceof Error) console.error(error.message);
+	process.exit(0);
+}
 
 async function logRedis(redisClient: Redis) {
 	const stream = redisClient.scanStream({ match: '*', count: 100 });
