@@ -18,7 +18,8 @@
 		"lint": "eslint . --ext .ts --ext .js",
 		"copy-static-assets": "ts-node copyStaticAssets.ts",
 		"dev:client": "npm run dev --prefix client/",
-		"bump": "npm version minor --force"
+		"bump": "npm version minor --force",
+		"tool-redis": "npx tsc qq-tools/redis.ts && node qq-tools/redis.js"
 	},
 	"keywords": [
 		"fastify",
