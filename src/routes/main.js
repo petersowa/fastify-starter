@@ -30,7 +30,7 @@ async function routes(fastify, options) {
 		// 	request.session.appState.modal,
 		// 	{ replyData }
 		// );
-		return reply.view('./pages/index', replyData);
+		await reply.view('./pages/index', replyData);
 	});
 
 	fastify.get('/about', (request, reply) => {
@@ -56,7 +56,7 @@ async function routes(fastify, options) {
 		const errors = request.session.flash.get('auth');
 		const csrfToken = await reply.generateCsrf();
 		// console.log({ csrfToken, session: request.session });
-		return reply.view('./pages/register', {
+		await reply.view('./pages/register', {
 			name: 'Create Account',
 			article,
 			username: request.session.username,
@@ -73,7 +73,7 @@ async function routes(fastify, options) {
 		// console.log({ csrfToken, session: request.session });
 
 		console.error({ errors });
-		return reply.view('./pages/login', {
+		await reply.view('./pages/login', {
 			name: 'Login',
 			article,
 			username: request.session.username,
@@ -89,7 +89,7 @@ async function routes(fastify, options) {
 			async preHandler(request, reply) {
 				if (!request.session.username) reply.redirect('/login');
 				else reply.status(200).send('authorized');
-				return reply;
+				await reply;
 			},
 		},
 		(request, reply) => {
