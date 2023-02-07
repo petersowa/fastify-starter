@@ -2,7 +2,7 @@ import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 // import livereload from 'rollup-plugin-livereload';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import scssPlugin from 'rollup-plugin-scss';
 import replace from '@rollup/plugin-replace';
 import typescript from '@rollup/plugin-typescript';

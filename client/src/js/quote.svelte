@@ -247,6 +247,12 @@
 		>Data provided by IEX Cloud</a
 	>
 </div>
+
+<div class="version">
+	<aside>
+		<pre>20230206</pre>
+	</aside>
+</div>
 <svelte:component this={modal.component} {...modal.data} />
 
 <Spinner />
