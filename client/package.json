@@ -1,6 +1,6 @@
 {
 	"name": "stock-tracker-fe",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"description": "",
 	"main": "js/test.js",
 	"scripts": {
