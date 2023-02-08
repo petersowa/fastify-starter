@@ -65,6 +65,8 @@ async function fetchStats(
 	let stats: AxiosResponse<RapidStatsResult> | null = null;
 	let statsData: RapidStatsResult | null = null;
 
+	console.log('FETCH STATS START');
+
 	try {
 		const cacheStats: HashData<RapidStatsResult> | null =
 			statsCache.getCache(symbol);
@@ -95,6 +97,7 @@ async function fetchStats(
 						'x-rapidapi-host': rapidHost,
 						useQueryString: true,
 					},
+					timeout: 5000,
 				}
 			);
 			if (stats && stats.data) {
@@ -141,15 +144,14 @@ async function fetchQuote(
 		}
 
 		// console.log(missCache('FETCHING FROM IEX API', symbol));
-		const [quote, stats] = await Promise.all([
-			axios.get<Quote>(
-				`${iexURL}/stock/${symbol}/quote?token=${apiToken}`
-			),
-			null,
-		]);
+		const quote = await axios.get<Quote>(
+			`${iexURL}/stock/${symbol}/quote?token=${apiToken}`,
+			{ timeout: 2000 }
+		);
 		if (quote) {
 			// quote.data.stats=stats;
 			// console.log('FETCHED:', quote.data);
+			// if (quote.data === null) return null;
 			quoteCache.setCache(symbol, quote.data);
 			await updateQuoteDB(symbol, quote.data);
 			return quote.data;
@@ -188,7 +190,7 @@ async function updateQuoteDB(symbol: string, data: Quote): Promise<boolean> {
 	}
 
 	try {
-		console.log('UPDATEQUOTEDB');
+		console.log('UPDATEQUOTEDB', symbol);
 		const quoteModel = new QuotesModel({
 			symbol,
 			data,
@@ -200,17 +202,17 @@ async function updateQuoteDB(symbol: string, data: Quote): Promise<boolean> {
 	}
 }
 
-function getLatestSavedStats(symbol: string): Promise<StatsInterface | null> {
-	return new Promise((resolve, reject) => {
-		StatsModel.findOne({ symbol })
-			.sort({ date: -1 })
-			.then((data) => {
-				resolve(data);
-			})
-			.catch((err) => {
-				reject(err);
-			});
-	});
+async function getLatestSavedStats(
+	symbol: string
+): Promise<StatsInterface | null> {
+	try {
+		const data = await StatsModel.findOne({ symbol }).sort({ date: -1 });
+		return data;
+	} catch (errorStatsModelFindOne) {
+		if (errorStatsModelFindOne instanceof Error)
+			console.error(errorStatsModelFindOne.message);
+	}
+	return null;
 }
 
 function isExpiredData(dataDate: string, maxAge: number): boolean {
@@ -228,7 +230,7 @@ async function updateStatsDB(
 	if (stats) {
 		if (!isExpiredData(stats.date.toString(), MAXAGE_STATS)) {
 			console.log('found recent stats in db');
-			return new Promise((resolve, reject) => resolve(false));
+			return Promise.resolve(false);
 		}
 	}
 	return new Promise((resolve, reject) => {
