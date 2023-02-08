@@ -46,7 +46,7 @@ app.register(fastifyCsrf, {
 
 app.addHook('preHandler', async (request, reply) => {
 	// console.log(request.session.flash);
-	request.session.appState = { ...appState, timeStamp: Date.now() };
+	request.session.appState = { ...appState, timeStamp: new Date() };
 	request.session.flash = flashState;
 
 	if (!request.session.isInitialLoad) {

@@ -32,7 +32,7 @@ async function routes(fastify: fastify.FastifyInstance): Promise<void> {
 					'auth',
 					'password or username is not correct'
 				);
-				reply.redirect('/login');
+				return reply.redirect('/login');
 			}
 
 			const isValidPW = await user.validatePassword(password);

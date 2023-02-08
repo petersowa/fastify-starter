@@ -38,17 +38,20 @@ async function logRedis() {
 }
 
 logRedis();
-export interface Session {
-	isInitialLoad: boolean;
-	flash: Flash;
-	appState: {
-		modal: string;
-		info: Record<string, unknown>;
-		timeStamp: Date;
-	};
-	isAuth: boolean;
-	username: string;
-	userId: ObjectId;
+
+declare module 'fastify' {
+	interface Session {
+		isInitialLoad: boolean;
+		flash: Flash;
+		appState: {
+			modal: string;
+			info: Record<string, unknown>;
+			timeStamp: Date;
+		};
+		isAuth: boolean;
+		username: string;
+		userId: ObjectId;
+	}
 }
 
 // import FastifySessionPlugin from '@fastify/session';
