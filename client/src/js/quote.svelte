@@ -120,7 +120,8 @@
 				getQuote(symbol),
 				savedStats || getStats(symbol),
 			]);
-			if (!savedStats && stats) {
+			if (!savedStats && stats && !stats.error) {
+				console.log('caching', { stats });
 				sessionStorage.setItem(
 					'stats:' + symbol,
 					JSON.stringify(stats)
