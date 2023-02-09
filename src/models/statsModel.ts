@@ -1,19 +1,17 @@
 import dbInstance from '../utils/db';
-import { Schema, Document, Types } from 'mongoose';
+import { Schema } from 'mongoose';
 import { RapidStatsResult } from '../api/types';
+import type { Interface } from './model-types';
 
-export interface StatsInterface extends Document {
-	symbol: string;
-	date: Date;
-	data: RapidStatsResult;
-}
-
-const schema: Schema<StatsInterface> = new Schema({
+const schema: Schema<Interface<RapidStatsResult>> = new Schema({
 	symbol: { type: String, required: true },
 	date: { type: Date, default: Date.now },
 	data: { type: Object },
 });
 
-const StatsModel = dbInstance.createModel<StatsInterface>('Stats', schema);
+const StatsModel = dbInstance.createModel<Interface<RapidStatsResult>>(
+	'Stats',
+	schema
+);
 
 export default StatsModel;

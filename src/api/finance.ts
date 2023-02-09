@@ -1,9 +1,10 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import chalk from 'chalk';
-import QuotesModel, { QuotesInterface, Quote } from '../models/quotesModel';
-import StatsModel, { StatsInterface } from '../models/statsModel';
+import QuotesModel, { Quote } from '../models/quotesModel';
+import StatsModel from '../models/statsModel';
 import { HashCache, HashData } from '../utils/hash-cache';
-import { RapidStatsResult } from './types';
+import type { RapidStatsResult } from './types';
+import type { Interface } from '../models/model-types';
 
 const MAXAGE_STATS = 1000 * 60 * 60 * 24 * 30;
 const MAXAGE_QUOTE = 1000 * 60 * 5;
@@ -16,9 +17,6 @@ const rapidKey = process.env.RAPIDAPI_KEY;
 
 const quoteCache = new HashCache<Quote>();
 const statsCache = new HashCache<RapidStatsResult>(MAXAGE_STATS, 997);
-
-const missCache = chalk.bgRed.black;
-const chalkData = chalk.yellow;
 
 function calcScore(stats: RapidStatsResult): number | string {
 	try {
@@ -58,112 +56,101 @@ function calcScore(stats: RapidStatsResult): number | string {
 	}
 }
 
-async function fetchStats(
-	symbol: string,
-	date?: string
-): Promise<RapidStatsResult | null> {
-	let stats: AxiosResponse<RapidStatsResult> | null = null;
-	let statsData: RapidStatsResult | null = null;
-
+async function fetchStats(symbol: string): Promise<RapidStatsResult | null> {
 	console.log('FETCH STATS START');
 
-	try {
-		const cacheStats: HashData<RapidStatsResult> | null =
-			statsCache.getCache(symbol);
+	const statsData = await cacheFetch<RapidStatsResult>({
+		source: {
+			method: 'get',
+			url: `${rapidURL}/get-statistics?region=US&symbol=${symbol
+				.split('.')
+				.join('-')}`,
+			headers: {
+				'x-rapidapi-key': rapidKey,
+				'x-rapidapi-host': rapidHost,
+				useQueryString: true,
+			},
+			timeout: 8000,
+		},
+		maxAge: MAXAGE_STATS,
+		cache: statsCache,
+		dbGetFn: getLatestSavedStats,
+		dbUpdateFn: updateStatsDB,
+		key: symbol,
+	});
 
-		if (cacheStats && cacheStats.data) {
-			cacheStats.data.facScore = calcScore(cacheStats.data);
-			return cacheStats.data;
-		}
-
-		const statsDB = await getLatestSavedStats(symbol);
-		console.log(chalkData(statsDB?.date));
-		if (
-			statsDB &&
-			statsDB.data &&
-			!isExpiredData(statsDB.date.toString(), MAXAGE_STATS)
-		) {
-			statsData = statsDB.data;
-			console.log('got stats from db');
-		} else {
-			console.log(missCache('FETCHING FROM YAHOO API', symbol));
-			stats = await axios.get<RapidStatsResult>(
-				`${rapidURL}/get-statistics?region=US&symbol=${symbol
-					.split('.')
-					.join('-')}`,
-				{
-					headers: {
-						'x-rapidapi-key': rapidKey,
-						'x-rapidapi-host': rapidHost,
-						useQueryString: true,
-					},
-					timeout: 5000,
-				}
-			);
-			if (stats && stats.data) {
-				statsData = stats.data;
-				await updateStatsDB(symbol, statsData);
-			}
-		}
-		if (statsData) {
-			if (statsData.quoteType.quoteType === 'EQUITY')
-				statsData.facScore = calcScore(statsData);
-			statsCache.setCache(symbol, statsData);
-			return statsData;
-		}
-	} catch (err) {
-		console.error('ERROR: fetching stats', { err });
-		return null;
+	if (statsData) {
+		if (statsData.quoteType.quoteType === 'EQUITY')
+			statsData.facScore = calcScore(statsData);
+		statsCache.setCache(symbol, statsData);
+		return statsData;
 	}
-	console.error('UNABLE to FETCH STATS');
-	return null;
+
+	return statsData;
 }
 
 async function fetchQuote(
 	symbol: string,
 	date?: string
 ): Promise<Quote | null> {
-	// let quote: AxiosResponse<Quote> | null = null;
-	// let stats: AxiosResponse<RapidStatsResult> | null = null;
+	return cacheFetch<Quote>({
+		source: {
+			method: 'get',
+			url: `${iexURL}/stock/${symbol}/quote?token=${apiToken}`,
+			timeout: 2000,
+		},
+		maxAge: MAXAGE_QUOTE,
+		cache: quoteCache,
+		dbGetFn: getLatestSavedQuote,
+		dbUpdateFn: updateQuoteDB,
+		key: symbol,
+	});
+}
 
+async function cacheFetch<T>(options: {
+	source: AxiosRequestConfig;
+	maxAge: number;
+	cache: HashCache<T>;
+	dbGetFn: (key: string) => Promise<Interface<T> | null>;
+	dbUpdateFn: (key: string, data: T) => Promise<boolean>;
+	key: string;
+}): Promise<T | null> {
 	try {
-		const cacheData: HashData<Quote> | null = quoteCache.getCache(symbol);
+		const cacheData: HashData<T> | null = options.cache.getCache(
+			options.key
+		);
 		if (cacheData) {
+			console.log(chalk.bgGreen('Mem Cache Hit', options.key));
 			return cacheData.data || null;
 		}
 
-		const quoteDB = await getLatestSavedQuote(symbol);
-		// console.log(chalkData(quoteDB?.date));
+		const dbResult = await options.dbGetFn(options.key);
+		console.log({ dbResult: dbResult?.id, key: options.key });
 		if (
-			quoteDB &&
-			quoteDB.data &&
-			!isExpiredData(quoteDB.date.toString(), MAXAGE_QUOTE)
+			dbResult &&
+			dbResult.data &&
+			!isExpiredData(dbResult.date.toString(), options.maxAge)
 		) {
-			quoteCache.setCache(symbol, quoteDB.data);
-			return quoteDB.data;
+			options.cache.setCache(options.key, dbResult.data);
+			console.log(chalk.bgYellow('DB Cache Hit', options.key));
+			return dbResult.data;
 		}
 
-		// console.log(missCache('FETCHING FROM IEX API', symbol));
-		const quote = await axios.get<Quote>(
-			`${iexURL}/stock/${symbol}/quote?token=${apiToken}`,
-			{ timeout: 2000 }
-		);
-		if (quote) {
-			// quote.data.stats=stats;
-			// console.log('FETCHED:', quote.data);
-			// if (quote.data === null) return null;
-			quoteCache.setCache(symbol, quote.data);
-			await updateQuoteDB(symbol, quote.data);
-			return quote.data;
+		const result = await axios<T>(options.source);
+		if (result) {
+			console.log(chalk.bgRed('FETCHED', options.key));
+			options.cache.setCache(options.key, result.data);
+			await options.dbUpdateFn(options.key, result.data);
+			return result.data;
 		}
-	} catch (err) {
-		console.error('Fetch Quote Error: ', (err as Error).message);
+	} catch (error) {
+		console.error((error as Error).message);
 		return null;
 	}
 	return null;
 }
 
-function getLatestSavedQuote(symbol: string): Promise<QuotesInterface | null> {
+function getLatestSavedQuote(symbol: string): Promise<Interface<Quote> | null> {
 	return new Promise((resolve, reject) => {
 		QuotesModel.findOne({ symbol })
 			.sort({ date: -1 })
@@ -195,7 +182,7 @@ async function updateQuoteDB(symbol: string, data: Quote): Promise<boolean> {
 			symbol,
 			data,
 		});
-		await quoteModel?.save();
+		await quoteModel.save();
 		return true;
 	} catch (error) {
 		return Promise.reject((error as Error).message);
@@ -204,7 +191,7 @@ async function updateQuoteDB(symbol: string, data: Quote): Promise<boolean> {
 
 async function getLatestSavedStats(
 	symbol: string
-): Promise<StatsInterface | null> {
+): Promise<Interface<RapidStatsResult> | null> {
 	try {
 		const data = await StatsModel.findOne({ symbol }).sort({ date: -1 });
 		return data;
@@ -226,28 +213,25 @@ async function updateStatsDB(
 	symbol: string,
 	data: RapidStatsResult
 ): Promise<boolean> {
-	const stats = await getLatestSavedStats(symbol);
-	if (stats) {
-		if (!isExpiredData(stats.date.toString(), MAXAGE_STATS)) {
-			console.log('found recent stats in db');
-			return Promise.resolve(false);
+	try {
+		const savedStats = await getLatestSavedStats(symbol);
+		if (savedStats) {
+			if (!isExpiredData(savedStats.date.toString(), MAXAGE_STATS)) {
+				console.log('found recent stats in db');
+				return false;
+			}
 		}
-	}
-	return new Promise((resolve, reject) => {
 		const stats = new StatsModel({
 			symbol,
 			data,
 		});
-		stats
-			.save()
-			.then((doc) => {
-				resolve(true);
-			})
-			.catch((err) => {
-				reject(false);
-				console.error({ StatsModel: err.message });
-			});
-	});
+		console.log({ SavingStats: stats.id });
+		await stats.save();
+		return true;
+	} catch (updateStatsDBError) {
+		console.error({ updateStatsDBError });
+	}
+	return false;
 }
 
 export { fetchStats, fetchQuote };

@@ -1,5 +1,6 @@
 import dbInstance from '../utils/db';
-import { Schema, Document, Types } from 'mongoose';
+import { Schema } from 'mongoose';
+import type { Interface } from './model-types';
 
 export interface Quote {
 	symbol: string;
@@ -59,18 +60,13 @@ export interface Quote {
 	currency: string;
 	isUSMarketOpen: boolean;
 }
-export interface QuotesInterface extends Document {
-	symbol: string;
-	date: Date;
-	data: Quote;
-}
 
-const schema: Schema<QuotesInterface> = new Schema({
+const schema: Schema<Interface<Quote>> = new Schema({
 	symbol: { type: String, required: true },
 	date: { type: Date, default: Date.now },
 	data: { type: Object },
 });
 
-const QuoteModel = dbInstance.createModel<QuotesInterface>('Quote', schema);
+const QuoteModel = dbInstance.createModel<Interface<Quote>>('Quote', schema);
 
 export default QuoteModel;
