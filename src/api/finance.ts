@@ -52,12 +52,13 @@ function calcScore(stats: RapidStatsResult): number | string {
 		});
 		return facScore;
 	} catch (err) {
-		return 'not found';
+		return 'Error: ' + stats.quoteType.quoteType;
 	}
 }
 
 async function fetchStats(symbol: string): Promise<RapidStatsResult | null> {
 	console.log('FETCH STATS START');
+	// statsCache.list();
 
 	const statsData = await cacheFetch<RapidStatsResult>({
 		source: {
@@ -79,11 +80,21 @@ async function fetchStats(symbol: string): Promise<RapidStatsResult | null> {
 		key: symbol,
 	});
 
+	console.log({ statsData: statsData?.facScore });
 	if (statsData) {
 		if (statsData.quoteType.quoteType === 'EQUITY')
 			statsData.facScore = calcScore(statsData);
-		statsCache.setCache(symbol, statsData);
-		return statsData;
+		else statsData.facScore = 'NA';
+
+		// const item = statsCache.getCache(symbol);
+		// if (item && item.data) {
+		// 	if (item.data.quoteType.quoteType === 'EQUITY')
+		// 		item.data.facScore = calcScore(statsData);
+		// 	else item.data.facScore = 'NA';
+		// }
+
+		// console.log({ itemData: item?.data?.facScore });
+		console.log({ statsData: statsData?.facScore });
 	}
 
 	return statsData;
@@ -97,6 +108,8 @@ async function fetchQuote(
 		console.error('historical date not implemented');
 		return null;
 	}
+	// quoteCache.list();
+
 	return cacheFetch<Quote>({
 		source: {
 			method: 'get',
