@@ -23,7 +23,7 @@
 	},
 	"engines": {
 		"node": "17.x",
-		"npm": "~9.2.0"
+		"npm": "~8.11.0"
 	},
 	"keywords": [
 		"fastify",
