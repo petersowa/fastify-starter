@@ -14,12 +14,16 @@
 		"build": "npm run build:server && npm run build:client",
 		"build:server": "npm run build-ts && npm run copy-static-assets",
 		"build:client": "cd client/ && npm install && npm run build",
-		"build-ts": "tsc",
+		"build-ts": "npx tsc",
 		"lint": "eslint . --ext .ts --ext .js",
 		"copy-static-assets": "ts-node copyStaticAssets.ts",
 		"dev:client": "npm run dev --prefix client/",
 		"bump": "npm version minor --force",
 		"tool-redis": "npx tsc qq-tools/redis.ts && node qq-tools/redis.js"
+	},
+	"engines": {
+		"node": "^18.12.1",
+		"npm": "~9.2.0"
 	},
 	"keywords": [
 		"fastify",
