@@ -22,8 +22,8 @@
 		"tool-redis": "npx tsc qq-tools/redis.ts && node qq-tools/redis.js"
 	},
 	"engines": {
-		"node": "^18.12.1",
-		"npm": "~9.2.0"
+		"node": ">=18.12.1",
+		"npm": ">=9.2.0"
 	},
 	"keywords": [
 		"fastify",
