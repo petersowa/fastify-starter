@@ -44,7 +44,7 @@ app.register(fastifyCsrf, {
 	sessionPlugin: '@fastify/session',
 });
 
-app.addHook('preHandler', async (request, reply) => {
+app.addHook('preHandler', async (request) => {
 	// console.log(request.session.flash);
 	request.session.appState = { ...appState, timeStamp: new Date() };
 	request.session.flash = flashState;
