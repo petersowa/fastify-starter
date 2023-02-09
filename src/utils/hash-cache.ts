@@ -86,13 +86,13 @@ export class HashCache<T> {
 		});
 	}
 
-	hashStringToInt: (str: string) => number = (str) => {
+	hashStringToInt(key: string): number {
 		let hash = 19;
-		for (const char of str) {
+		for (const char of key) {
 			hash = (127 * (hash + char.charCodeAt(0))) % this.maxElements;
 		}
 		return hash;
-	};
+	}
 
 	isExpired(timeStamp: number): boolean {
 		return Date.now() - timeStamp > this.maxIntervalAge;
