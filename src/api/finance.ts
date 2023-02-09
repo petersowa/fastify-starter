@@ -21,7 +21,7 @@ const statsCache = new HashCache<RapidStatsResult>(MAXAGE_STATS, 997);
 function calcScore(stats: RapidStatsResult): number | string {
 	try {
 		const { financialData, price } = stats;
-		const sharePrice = financialData.currentPrice.raw;
+		// const sharePrice = financialData.currentPrice.raw;
 		const marketCap = price.marketCap.raw;
 		const revenue = financialData.totalRevenue.raw;
 		const operatingMargin = financialData.operatingMargins.raw;
@@ -93,6 +93,10 @@ async function fetchQuote(
 	symbol: string,
 	date?: string
 ): Promise<Quote | null> {
+	if (date) {
+		console.error('historical date not implemented');
+		return null;
+	}
 	return cacheFetch<Quote>({
 		source: {
 			method: 'get',
