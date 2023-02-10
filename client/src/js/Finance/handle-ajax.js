@@ -1,12 +1,14 @@
-const WATCHLIST_ROUTE = '/stocks/watchlist';
-const ACCOUNT_ROUTE = '/stocks/account';
-const QUOTE_ROUTE = '/stocks/quote';
-const STATS_ROUTE = '/stocks/stats';
-const HOLDINGS_ROUTE = '/stocks/holdings';
-const POST = 'POST';
-const PATCH = 'PATCH';
-const DELETE = 'DELETE';
-const PUT = 'PUT';
+const HOST = 'http://localhost:3999';
+
+const WATCHLIST_ROUTE = HOST + '/stocks/watchlist';
+const ACCOUNT_ROUTE = HOST + '/stocks/account';
+const QUOTE_ROUTE = HOST + '/stocks/quote';
+const STATS_ROUTE = HOST + '/stocks/stats';
+const HOLDINGS_ROUTE = HOST + '/stocks/holdings';
+const POST = HOST + 'POST';
+const PATCH = HOST + 'PATCH';
+const DELETE = HOST + 'DELETE';
+const PUT = HOST + 'PUT';
 
 async function postWatchlist(list) {
 	return secureFetch(WATCHLIST_ROUTE, POST, {
@@ -70,7 +72,7 @@ async function secureFetch(route, method, body) {
 	try {
 		const res = await fetch(route, {
 			method,
-			credentials: 'same-origin',
+			// credentials: 'include',
 			headers: {
 				'Content-Type': 'application/json',
 				'csrf-token': getTokenCSRF(),
@@ -94,7 +96,10 @@ async function secureFetch(route, method, body) {
 
 async function getFetch(route) {
 	try {
-		const res = await fetch(route);
+		const res = await fetch(route, {
+			credentials: 'include',
+			headers: {},
+		});
 		return res.json();
 	} catch (err) {
 		console.log({ ajaxERROR: err.message });
