@@ -2,6 +2,7 @@ import fastify from 'fastify';
 import fastifyCookie from '@fastify/cookie';
 import type { FastifyCookieOptions } from '@fastify/cookie';
 import fastifyStatic from '@fastify/static';
+import cors, { FastifyCorsOptions } from '@fastify/cors';
 import path from 'path';
 
 import helmet from '@fastify/helmet';
@@ -30,81 +31,109 @@ const app = fastify({
 
 // console.log('ENV:', process.env.NODE_ENV);
 
-app.register(helmet);
+async function setupFastify() {
+	// const corsOptions: FastifyCorsOptions = {
+	// 	origin(origin: string, cb): void {
+	// 		if (origin) {
+	// 			console.log(origin);
+	// 			const hostname = new URL(origin).hostname;
+	// 			if (hostname === 'localhost') {
+	// 				//  Request from localhost will pass
+	// 				cb(null, true);
+	// 				return;
+	// 			}
+	// 			// Generate an error on other origins, disabling access
+	// 			// cb(null, true);
+	// 			cb(new Error('Not allowed ' + hostname), false);
+	// 			return;
+	// 		} else {
+	// 			cb(new Error('Origin missing'), false);
+	// 			return;
+	// 		}
+	// 	},
+	// };
 
-// CHECK:ME
-app.register(fastifyCookie, {
-	secret: process.env.COOKIE_SECRET,
-} as FastifyCookieOptions);
-app.register(formBody);
-registerSessions(app);
+	app.register(cors, {
+		origin: ['localhost', 'http://localhost:4999'],
+	});
+	app.register(helmet);
 
-app.register(fastifyCsrf, {
-	sessionKey: '_csrf',
-	sessionPlugin: '@fastify/session',
-});
+	// CHECK:ME
+	app.register(fastifyCookie, {
+		secret: process.env.COOKIE_SECRET,
+	} as FastifyCookieOptions);
+	app.register(formBody);
+	registerSessions(app);
 
-app.addHook('preHandler', async (request) => {
-	// console.log(request.session.flash);
-	request.session.appState = { ...appState, timeStamp: new Date() };
-	request.session.flash = flashState;
+	app.register(fastifyCsrf, {
+		sessionKey: '_csrf',
+		sessionPlugin: '@fastify/session',
+	});
 
-	if (!request.session.isInitialLoad) {
-		request.session.isInitialLoad = true;
+	app.addHook('preHandler', async (request) => {
+		// console.log(request.session.flash);
+		request.session.appState = { ...appState, timeStamp: new Date() };
+		request.session.flash = flashState;
 
-		// track session
-		WebStatsModel.findOne({ ip: request.ip })
-			.then((doc) => {
-				if (doc) {
-					// console.log(doc);
-					doc.count++;
-					doc.save();
-				} else {
-					const webState = new WebStatsModel({
-						ip: request.ip,
-						header: request.headers['referer'],
-						userAgent: request.headers['user-agent'],
-					});
-					webState
-						.save()
-						.then((doc) => {
-							console.log({ WebStatsModel: doc });
-						})
-						.catch((err: Error) => {
-							console.error({ WebStatsModel: err.message });
+		if (!request.session.isInitialLoad) {
+			request.session.isInitialLoad = true;
+
+			// track session
+			WebStatsModel.findOne({ ip: request.ip })
+				.then((doc) => {
+					if (doc) {
+						// console.log(doc);
+						doc.count++;
+						doc.save();
+					} else {
+						const webState = new WebStatsModel({
+							ip: request.ip,
+							header: request.headers['referer'],
+							userAgent: request.headers['user-agent'],
 						});
-				}
-			})
-			.catch((err: Error) => {
-				console.error({ WebStatsModel: err.message });
-			});
-	}
-});
+						webState
+							.save()
+							.then((doc) => {
+								console.log({ WebStatsModel: doc });
+							})
+							.catch((err: Error) => {
+								console.error({ WebStatsModel: err.message });
+							});
+					}
+				})
+				.catch((err: Error) => {
+					console.error({ WebStatsModel: err.message });
+				});
+		}
+	});
 
-const flashState = flash();
+	const flashState = flash();
 
-app.setErrorHandler((err, request, reply) => {
-	console.error({ ServerError: err });
-	reply.status(500).send({ error: err.message });
-	return;
-});
+	app.setErrorHandler((err, request, reply) => {
+		console.error({ ServerError: err });
+		reply.status(500).send({ error: err.message });
+		return;
+	});
 
-// add static routes
-app.register(fastifyStatic, {
-	root: path.join(__dirname, '..', '..', 'public'),
-	prefix: '/',
-});
+	// add static routes
+	app.register(fastifyStatic, {
+		root: path.join(__dirname, '..', '..', 'public'),
+		prefix: '/',
+	});
 
-registerHandlebars(app);
+	registerHandlebars(app);
 
-app.register(authRoutes, { prefix: '/auth' }); // add auth routes
-app.register(stockRoutes, { prefix: '/stocks' }); // add auth routes
+	app.register(authRoutes, { prefix: '/auth' }); // add auth routes
+	app.register(stockRoutes, { prefix: '/stocks' }); // add auth routes
 
-socketIo.init(app.server);
+	socketIo.init(app.server);
 
-app.listen({ port: PORT, host: '0.0.0.0' }, (err) => {
-	if (err) {
-		app.log.error(err);
-		process.exit(1);
-	}
-});
+	app.listen({ port: PORT, host: '0.0.0.0' }, (err) => {
+		if (err) {
+			app.log.error(err);
+			process.exit(1);
+		}
+	});
+}
+
+setupFastify();
