@@ -1,5 +1,5 @@
-import '../styles/main.css';
-import '../styles/icons.css';
+import '../styles/main.scss';
+import '../styles/icons.scss';
 import '../styles/content.scss';
 
 // setup svelte app

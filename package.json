@@ -21,7 +21,7 @@
 		"bump": "npm version minor --force",
 		"tool-redis": "npx tsc qq-tools/redis.ts && node qq-tools/redis.js"
 	},
-	"engines": {
+	"engines-REMOVEforDeploy": {
 		"node": "17.x",
 		"npm": "~9.2.0"
 	},

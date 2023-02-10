@@ -21,7 +21,6 @@
 		"date-fns": "^2.22.1",
 		"node-sass": "^8.0.0",
 		"rollup": "^3.14.0",
-		"rollup-plugin-livereload": "^2.0.5",
 		"rollup-plugin-scss": "^4.0.0",
 		"rollup-plugin-svelte": "^7.1.0",
 		"rxjs": "^7.1.0",
@@ -38,6 +37,8 @@
 		"@rollup/plugin-terser": "^0.4.0",
 		"@tsconfig/svelte": "^3.0.0",
 		"prettier": "^2.3.2",
-		"prettier-plugin-svelte": "^2.3.1"
+		"prettier-plugin-svelte": "^2.3.1",
+		"rollup-plugin-livereload": "^2.0.5",
+		"rollup-plugin-serve": "^2.0.2"
 	}
 }
