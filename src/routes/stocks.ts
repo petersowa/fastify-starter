@@ -14,6 +14,10 @@ import { FastifyInstance } from 'fastify';
 const options = { preHandler: checkSessionAuth };
 
 async function routes(fastify: FastifyInstance) {
+	fastify.addHook('preHandler', (req, reply, done) => {
+		reply.header('Access-Control-Allow-Credentials', true);
+		done();
+	});
 	fastify.get('/quote/:symbol', options, getQuote);
 	fastify.get('/quote/:symbol/:date', options, getHistoricalQuote);
 	fastify.get('/stats/:symbol', options, getStats);
