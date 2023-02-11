@@ -78,7 +78,7 @@ export default {
 				port: 4999,
 				host: 'localhost',
 			}),
-		!production && livereload(['../public', '../.env']),
+		!production && livereload('../public'),
 		production && terser(),
 	],
 	watch: {
