@@ -22,7 +22,7 @@ import fastifyCsrf from '@fastify/csrf-protection';
 
 const PORT: number = parseInt(process.env.PORT || '3999', 10);
 
-const logger = process.env.NODE_ENV !== 'production';
+const logger = false; //process.env.NODE_ENV !== 'production';
 
 const app = fastify({
 	logger,
@@ -94,8 +94,8 @@ async function setupFastify() {
 
 	app.setErrorHandler((err, request, reply) => {
 		console.error({ ServerError: err });
-		reply.status(500).send({ error: err.message });
-		return;
+		reply.status(500);
+		return { error: err.message };
 	});
 
 	// add static routes
