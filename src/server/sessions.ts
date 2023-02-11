@@ -26,7 +26,22 @@ async function logRedis() {
 	const stream = redisClient.scanStream({ match: '*', count: 100 });
 
 	stream.on('data', function (resultKeys) {
-		resultKeys.forEach((key: string) => console.log({ key }));
+		resultKeys.forEach(async (key: string) => {
+			try {
+				const rawData = await redisClient.get(key);
+				if (rawData) {
+					const data = JSON.parse(rawData);
+					if (data?.cookie?.expires && data?.isAuth) {
+						console.log(key, data.username);
+						const isExpired =
+							new Date(data.cookie.expires) < new Date();
+						console.log(data.cookie.expires, { isExpired });
+					}
+				}
+			} catch (logRedis_error) {
+				console.log({ logRedis_error });
+			}
+		});
 	});
 
 	await redisClient.set('hello', 'world');
