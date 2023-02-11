@@ -2,7 +2,7 @@ import fastify from 'fastify';
 import fastifyCookie from '@fastify/cookie';
 import type { FastifyCookieOptions } from '@fastify/cookie';
 import fastifyStatic from '@fastify/static';
-import cors, { FastifyCorsOptions } from '@fastify/cors';
+import cors from '@fastify/cors';
 import path from 'path';
 
 import helmet from '@fastify/helmet';
@@ -22,39 +22,22 @@ import fastifyCsrf from '@fastify/csrf-protection';
 
 const PORT: number = parseInt(process.env.PORT || '3999', 10);
 
-const logger = false; //process.env.NODE_ENV !== 'production';
+const logger = process.env.NODE_ENV !== 'production';
 
 const app = fastify({
 	logger,
 	trustProxy: true,
 });
 
-// console.log('ENV:', process.env.NODE_ENV);
+console.log('ENV:', process.env.NODE_ENV);
 
 async function setupFastify() {
-	// const corsOptions: FastifyCorsOptions = {
-	// 	origin(origin: string, cb): void {
-	// 		if (origin) {
-	// 			console.log(origin);
-	// 			const hostname = new URL(origin).hostname;
-	// 			if (hostname === 'localhost') {
-	// 				//  Request from localhost will pass
-	// 				cb(null, true);
-	// 				return;
-	// 			}
-	// 			// Generate an error on other origins, disabling access
-	// 			// cb(null, true);
-	// 			cb(new Error('Not allowed ' + hostname), false);
-	// 			return;
-	// 		} else {
-	// 			cb(new Error('Origin missing'), false);
-	// 			return;
-	// 		}
-	// 	},
-	// };
-
 	app.register(cors, {
-		origin: ['localhost', 'http://localhost:4999'],
+		origin: [
+			process.env.NODE_ENV === 'development'
+				? 'http://localhost:4999'
+				: '',
+		],
 	});
 	app.register(helmet);
 
