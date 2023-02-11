@@ -1,6 +1,6 @@
 import { __myAppConfig } from '../utils/env-config';
 
-const HOST = __myAppConfig.env.DEV_HOST;
+const HOST = __myAppConfig.env.DEV_HOST || '';
 console.log({ HOST });
 
 const WATCHLIST_ROUTE = HOST + '/stocks/watchlist';
