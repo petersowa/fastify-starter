@@ -19,6 +19,7 @@
 		"@rollup/plugin-replace": "^5.0.2",
 		"@rollup/plugin-typescript": "^11.0.0",
 		"date-fns": "^2.22.1",
+		"dotenv": "^16.0.3",
 		"node-sass": "^8.0.0",
 		"rollup": "^3.14.0",
 		"rollup-plugin-scss": "^4.0.0",

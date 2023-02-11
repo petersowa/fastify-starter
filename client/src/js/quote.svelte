@@ -22,6 +22,7 @@
 	import { faSearch } from '@fortawesome/free-solid-svg-icons';
 	import __qq from './utils/qq';
 	import Icon from 'svelte-awesome';
+	import { __myAppConfig as myConfig } from './utils/env-config';
 
 	let quote: {
 		facScore?: String;
@@ -251,7 +252,7 @@
 
 <div class="version">
 	<aside>
-		<pre>20230209</pre>
+		<pre>{myConfig.env.__BUILD_DATE}</pre>
 	</aside>
 </div>
 <svelte:component this={modal.component} {...modal.data} />
