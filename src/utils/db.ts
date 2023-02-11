@@ -25,6 +25,7 @@ function db(): CreateModel {
 }
 
 try {
+	console.log('...getting dbinstance');
 	dbInstance = db();
 } catch (error) {
 	console.error('error connecting to db');
