@@ -7,11 +7,11 @@ import { Server, IncomingMessage, ServerResponse } from 'http';
 import fastifySession, { SessionStore } from '@fastify/session';
 import type { Flash } from './flash';
 import { ObjectId } from '@fastify/mongodb';
-import MongoStore from 'connect-mongo';
+// import MongoStore from 'connect-mongo';
 import Redis from 'ioredis';
 import connectRedis from 'connect-redis';
 
-const { MONGODB_NAME, SESSION_SECRET, NODE_ENV, REDIS_CONNECT } = process.env;
+const { SESSION_SECRET, NODE_ENV, REDIS_CONNECT } = process.env;
 if (!REDIS_CONNECT) throw new Error('no redis');
 
 const RedisStore = connectRedis(fastifySession as any);
@@ -30,6 +30,8 @@ async function logRedis() {
 			try {
 				const rawData = await redisClient.get(key);
 				if (rawData) {
+					process.env.NODE_ENV == 'development' &&
+						console.log({ rawData });
 					const data = JSON.parse(rawData);
 					if (data?.cookie?.expires && data?.isAuth) {
 						console.log(key, data.username);
@@ -43,13 +45,6 @@ async function logRedis() {
 			}
 		});
 	});
-
-	await redisClient.set('hello', 'world');
-
-	const data = await redisClient.get('', (err, result) => {
-		console.log({ result });
-	});
-	console.log({ data });
 }
 
 logRedis();
