@@ -71,7 +71,7 @@ async function fetchStats(symbol: string): Promise<RapidStatsResult | null> {
 				'x-rapidapi-host': rapidHost,
 				useQueryString: true,
 			},
-			timeout: 8000,
+			timeout: 32000,
 		},
 		maxAge: MAXAGE_STATS,
 		cache: statsCache,
