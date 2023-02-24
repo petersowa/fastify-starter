@@ -72,7 +72,9 @@
 		__qq.log('MOUNT:', { refreshInterval });
 
 		const appTitle = document.getElementById('app-title');
-		appTitle.innerHTML = 'GraniteCode.com - Investments';
+		if (appTitle) {
+			appTitle.innerHTML = 'GraniteCode.com - Investments';
+		}
 	});
 
 	const unsubscribeModalStore = modalStore.subscribe((store) => {
