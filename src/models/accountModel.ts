@@ -1,6 +1,6 @@
 import dbInstance from '../utils/db';
 import { Schema, Document, Types } from 'mongoose';
-import { HoldingsModel, HoldingsInterface } from './holdingsModel';
+import { HoldingsInterface } from './holdingsModel';
 
 export interface AccountInterface extends Document {
 	updated: Date;
