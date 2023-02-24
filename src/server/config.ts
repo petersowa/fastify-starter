@@ -34,12 +34,38 @@ console.log('ENV:', process.env.NODE_ENV);
 async function setupFastify() {
 	app.register(cors, {
 		origin: [
-			process.env.NODE_ENV === 'development'
-				? 'http://localhost:4999'
-				: '',
+			...(process.env.NODE_ENV === 'development'
+				? ['http://localhost:4999']
+				: []),
 		],
 	});
-	app.register(helmet);
+
+	const defaultSecurityPolicy =
+		helmet.contentSecurityPolicy.getDefaultDirectives();
+	const devPolicy = process.env.NODE_ENV === 'development' && {
+		'script-src': ["'self'", 'http://localhost:35729'],
+		'connect-src': ["'self'", 'ws://localhost:35729'],
+	};
+	console.log('DEVPOLICY', { ...devPolicy });
+	app.register(helmet, {
+		crossOriginEmbedderPolicy: false,
+		contentSecurityPolicy: {
+			useDefaults: true,
+			directives: {
+				...defaultSecurityPolicy,
+				...devPolicy,
+			},
+		},
+	});
+
+	// 'default-src': ['self'],
+	// 'script-src': [
+	// 	'self',
+	// 	'http://localhost:3999',
+	// 	'http://localhost:35729',
+	// ],
+	// 'connect-src': ['ws://localhost:35729'],
+	// script-src http://localhost:35729; connect-src ws://localhost:35729
 
 	// CHECK:ME
 	app.register(fastifyCookie, {
