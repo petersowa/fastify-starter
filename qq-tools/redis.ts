@@ -10,12 +10,13 @@ import Redis from 'ioredis';
 
 dotenv.config();
 
+const { REDIS_CONNECT } = process.env;
+
+if (!REDIS_CONNECT) throw new Error('No Redis Connect String');
+
+const redisClient = new Redis(REDIS_CONNECT);
+
 function QueryRedis() {
-	const { REDIS_CONNECT } = process.env;
-
-	if (!REDIS_CONNECT) throw new Error('No Redis Connect String');
-
-	const redisClient = new Redis(REDIS_CONNECT);
 	redisClient.on('error', (redisClientError: Error) => {
 		console.error('REDIS ERROR:', redisClientError.message);
 		process.exit(0);
@@ -34,6 +35,10 @@ try {
 
 async function logRedis(redisClient: Redis) {
 	const stream = redisClient.scanStream({ match: '*', count: 100 });
+
+	console.log('------------------');
+	console.log('   Redis Keys');
+	console.log('------------------');
 
 	stream.on('data', function (resultKeys: string[]) {
 		resultKeys.forEach(async (key: string) => {
